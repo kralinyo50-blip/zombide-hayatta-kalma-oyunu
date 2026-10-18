@@ -773,6 +773,33 @@
     noise(ctx, s, rng, 10, false);
   }
 
+  function ceilPlaster(ctx, s) {
+    const rng = new U.RNG(137);
+    ctx.fillStyle = '#b9b2a4'; ctx.fillRect(0, 0, s, s);
+    blotches(ctx, s, rng, '#a49c8d', 9, 6, 26, 0.22);
+    blotches(ctx, s, rng, '#c9c2b3', 7, 5, 18, 0.18);
+    // faint stucco hatch
+    ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.lineWidth = 1;
+    for (let i = -s; i < s * 2; i += 9) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + s, s); ctx.stroke();
+    }
+    noise(ctx, s, rng, 7, false);
+  }
+
+  function homeWall(ctx, s) {
+    const rng = new U.RNG(773);
+    ctx.fillStyle = '#b7ae9c'; ctx.fillRect(0, 0, s, s);
+    blotches(ctx, s, rng, '#a89d89', 14, 8, 34, 0.16);
+    blotches(ctx, s, rng, '#c8c1b0', 12, 7, 30, 0.14);
+    // picture rail
+    ctx.fillStyle = 'rgba(96,80,62,.35)'; ctx.fillRect(0, s * .28, s, 2);
+    // skirting board
+    ctx.fillStyle = '#6b573f'; ctx.fillRect(0, s - 15, s, 15);
+    ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(0, s - 16, s, 2);
+    ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(0, s - 3, s, 3);
+    noise(ctx, s, rng, 10, true);
+  }
+
   function ceilStone(ctx, s) {
     const rng = new U.RNG(131);
     stoneFloor(ctx, s);
@@ -808,6 +835,7 @@
     tower_stone: () => towerStone,
     flesh: () => fleshWall,
     whitewash: () => (ctx, s) => whitewash(ctx, s, { window: true }),
+    home_wall: () => homeWall,
     metal_door: () => metalDoor,
     wood_door: () => woodDoor,
     wood_planks: () => (ctx, s) => {
@@ -855,6 +883,7 @@
     }
     const c1 = U.ctx(F, F); ceilDark(c1, F); TEX.ceilings.dark = toTex(c1.canvas);
     const c2 = U.ctx(F, F); ceilStone(c2, F); TEX.ceilings.stone = toTex(c2.canvas);
+    const c3 = U.ctx(F, F); ceilPlaster(c3, F); TEX.ceilings.plaster = toTex(c3.canvas);
     return TEX;
   };
 

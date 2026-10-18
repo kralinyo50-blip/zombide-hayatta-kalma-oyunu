@@ -64,7 +64,7 @@
   };
 
   const $ = U.$;
-  const CHAPTERS = ['ch1', 'ch2', 'ch3'];
+  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'ch1', 'ch2', 'ch3'];
 
   /* ============================================================
      SCREENS
@@ -138,6 +138,7 @@
           bg.style.backgroundImage = opts.bg ? `url(${opts.bg})` : 'none';
           bg.style.opacity = opts.bg ? .55 : 0;
         }
+        if (global.CINE) CINE.set(opts.visual || null);
         const nextBtn = document.getElementById('cine-next');
         if (nextBtn) nextBtn.classList.add('hidden');
       } else {
@@ -154,6 +155,7 @@
     stop() {
       this.active = false;
       this.choiceOpen = false;
+      if (global.CINE) CINE.stop();
       Screens.close('screen-dialogue');
       Screens.close('screen-cinematic');
     },
@@ -161,6 +163,7 @@
     finish() {
       const cb = this.onEnd;
       this.active = false;
+      if (global.CINE) CINE.stop();
       Screens.close('screen-dialogue');
       Screens.close('screen-cinematic');
       if (cb) cb();
@@ -188,12 +191,14 @@
             this.index++; continue;
           case 'chapter':
             this.active = false;
+            if (global.CINE) CINE.stop();
             Screens.close('screen-dialogue');
             Screens.close('screen-cinematic');
             G.startChapter(node.chapter);
             return;
           case 'ending':
             this.active = false;
+            if (global.CINE) CINE.stop();
             Screens.close('screen-dialogue');
             Screens.close('screen-cinematic');
             G.showEnding(node.ending);
@@ -219,6 +224,7 @@
 
     /* ---------- cinematic ---------- */
     showCineLine(node) {
+      if (node.visual && global.CINE) CINE.set(node.visual);
       const wrap = document.getElementById('cine-lines');
       if (!wrap) return;
       const el = document.createElement('div');
@@ -373,6 +379,93 @@
      CHAPTER CONFIG
      ============================================================ */
   const FLOW = {
+    p1: {
+      world: 'ev',
+      sky: 'night',
+      ambience: 'indoor',
+      intro: 'intro',
+      triggers: {},
+      interactions: {
+        anne: { event: 'anne', doneFlag: 'p1_anne', repeat: ['ANNEM', 'Ye bakalım. Sonra babanla konuş.'] },
+        baba: { event: 'baba', doneFlag: 'p1_baba', repeat: ['BABAM', 'Yarın sabah her şey belli olur.'] },
+        ada: { event: 'ada', doneFlag: 'p1_ada', repeat: ['ADA', 'Telefonumun şarjı bitiyor.'] },
+        telefon: { event: 'telefon', doneFlag: 'p1_tel', repeat: ['SEN', 'Sinyal yok.'] },
+        pencere: { event: 'pencere', doneFlag: 'p1_pencere', repeat: ['SEN', 'Sokakta kimse yok gibi.'] },
+        pencere2: { event: 'balkon' },
+        aile_foto: { doc: 'p1', flag: 'read_doc_p1' },
+        buzdolabi: { doc: 'p1b', flag: 'read_doc_p1b' },
+        tv: { event: 'tv', require: (g) => !!g.flags.p1_anne, gateText: 'Önce annemle konuşayım.' },
+        ev_exit: { event: 'cikis', require: (g) => !!g.flags.p1_haber, gateText: 'Önce televizyondaki haberi görmeliyim.' }
+      },
+      objective: { text: 'Annenle konuş', sub: 'Cihangir • 0. Gün, 21:12', target: [23.2, 8.4] },
+      objectives: [
+        { when: (g) => !!g.flags.p1_anne, text: 'Babana haberleri sor', sub: 'Cihangir • 0. Gün, 21:24', target: [7.4, 3.8] },
+        { when: (g) => !!g.flags.p1_baba, text: 'Televizyonu aç', sub: 'Cihangir • 0. Gün, 21:47', target: [8.2, 4.6] },
+        { when: (g) => !!g.flags.p1_haber, text: 'Pencereye git', sub: 'Cihangir • 0. Gün, 22:04', target: [3.5, 6.6] },
+        { when: (g) => !!g.flags.p1_pencere, text: 'Daire kapısına git', sub: 'Cihangir • 0. Gün, 22:19', target: [14, 19.6] }
+      ]
+    },
+    p2: {
+      world: 'ev2',
+      sky: 'dawn',
+      ambience: 'indoor',
+      intro: 'intro',
+      triggers: { salon: 'salon' },
+      interactions: {
+        anne: { event: 'anne2' },
+        ada: { event: 'ada2' },
+        baba_ceket: { doc: 'p2b', flag: 'read_doc_p2b' },
+        telefon: { event: 'telefon2' },
+        buzdolabi: { doc: 'p1b', flag: 'read_doc_p1b' },
+        ev_exit: {
+          event: 'cikis2',
+          require: (g) => !!g.flags.p2_salon && g.zombies.every(z => z.dead),
+          gateText: 'Önce dairedeki sesi temizle.'
+        }
+      },
+      objective: { text: 'Salona git', sub: 'Cihangir • 1. Gün, 06:44', target: [7, 6] }
+    },
+    p3: {
+      world: 'mahalle',
+      sky: 'dawn',
+      ambience: 'street',
+      intro: 'intro',
+      triggers: {
+        mah_cikis: 'cikis',
+        mah_cadde: 'cadde',
+        mah_eczane: 'eczane'
+      },
+      interactions: {
+        mah_apartman_doc: { doc: 'p2', flag: 'read_doc_p2' },
+        mah_meds: {
+          event: 'ilac', doneFlag: 'p3_meds',
+          require: (g) => !!(g.world.doors.get('mah_pharmacy') && g.world.doors.get('mah_pharmacy').open),
+          gateText: 'Eczanenin kapısı kapalı.'
+        },
+        mah_radio: { event: 'radyo', doneFlag: 'heard_leyla' },
+        mah_supplies: { event: 'erzak', doneFlag: 'p3_erzak' },
+        mah_minibus: { event: 'minibus', require: (g) => !!g.flags.p3_ilac, gateText: 'Önce eczaneden ilacı al.' }
+      },
+      objective: { text: 'Eczaneye ulaş', sub: 'Cihangir • 1. Gün, 08:05', target: [27, 27] },
+      objectives: [
+        { when: (g) => !!g.flags.p3_ilac, text: 'Camii avlusundaki minibüse ulaş', sub: 'Cihangir • 1. Gün, 08:31', target: [29.6, 47.4] }
+      ]
+    },
+    p4: {
+      world: 'sahil',
+      sky: 'dawn',
+      ambience: 'street',
+      intro: 'intro',
+      triggers: { sahil_start: 'varis', sahil_gate_t: 'kapi', sahil_end: 'son' },
+      interactions: {
+        sahil_doc: { doc: 'p4', flag: 'read_doc_p4' },
+        sahil_boat: { event: 'tekne' }
+      },
+      objective: { text: 'Karantina kapısına ulaş', sub: 'Sahil yolu • 1. Gün, 17:52', target: [49, 34] },
+      objectives: [
+        { when: (g) => !!g.flags.p4_kapi, text: 'Rıhtıma yürü', sub: 'Sahil yolu • 1. Gün, 18:26', target: [56, 37] }
+      ]
+    },
     ch1: {
       world: 'karakoy',
       ambience: 'street',
@@ -437,6 +530,7 @@
   G.init = function () {
     TEX.init();
     SPR.init();
+    if (global.CINE) CINE.init();
     RAY.init();
 
     G.view = document.getElementById('view');
@@ -795,12 +889,12 @@
     Screens.showHud(false);
     TitleScreen.stop();
     G.mode = 'cine';
-    DLG.start(STORY.prologue, {
+    DLG.start(STORY.opening, {
       cinematic: true,
       title: 'KARANLIK BOĞAZ',
       kicker: 'PROLOG — 09. GÜN, 22:41',
       onEnd: () => {
-        G.startChapter('ch1');
+        G.startChapter('p1');
       }
     });
   };
@@ -821,7 +915,7 @@
     Screens.closeAll();
     Screens.showHud(false);
     TitleScreen.stop();
-    G.startChapter(save.chapter || 'ch1');
+    G.startChapter(save.chapter || 'p1');
   };
 
   G.save = function () {
@@ -884,7 +978,12 @@
       AUD.ambience(cfg.ambience);
     }
     G.loadWorld(cfg.world);
-    G.setObjective(story.objective, story.objectiveSub, ...(cfg.objective.target || []));
+    if (cfg.start) {
+      G.player.x = cfg.start.x;
+      G.player.y = cfg.start.y;
+      G.player.a = cfg.start.a === undefined ? G.player.a : cfg.start.a;
+    }
+    G.setObjective(story.objective, story.objectiveSub, ...((cfg.objective && cfg.objective.target) || []));
     G.chapterCardTimer = 2.6;
     G.chapterCardPending = true;
     G.previewSpawnZombies();
@@ -910,9 +1009,12 @@
     const cfg = FLOW[G.chapterKey];
     const story = STORY[G.chapterKey];
     const nodes = story.intro || [];
-    G.mode = 'dialogue';
+    G.mode = cfg.introCinematic ? 'cine' : 'dialogue';
     DLG.start(nodes, {
-      cinematic: false,
+      cinematic: !!cfg.introCinematic,
+      visual: cfg.introVisual || null,
+      title: story.title,
+      kicker: story.objectiveSub,
       onEnd: () => {
         G.backToPlay();
         G.showSubtitle(story.objectiveSub || '', 2.2);
@@ -941,9 +1043,21 @@
     }
     G.spawnZombies();
     // NPCs
+    const NPC_DEF = {
+      emre: { a: Math.PI * .5, h: 1.85 },
+      deniz: { a: -Math.PI * .5, h: 1.15 },
+      anne: { a: Math.PI, h: 1.64 },
+      baba: { a: -Math.PI * .5, h: 1.82 },
+      ada: { a: Math.PI * .5, h: 1.58 },
+      komsu: { a: Math.PI, h: 1.8 }
+    };
     for (const it of G.world.interactables) {
-      if (it.type === 'emre') G.npcs.push({ type: 'npc', kind: 'emre', x: it.x, y: it.y, a: Math.PI * .5, active: true, sprSet: 'emre' });
-      if (it.type === 'deniz') G.npcs.push({ type: 'npc', kind: 'deniz', x: it.x, y: it.y, a: -Math.PI * .5, active: true, sprSet: 'deniz' });
+      const def = NPC_DEF[it.type];
+      if (!def) continue;
+      G.npcs.push({
+        type: 'npc', kind: it.type, x: it.x, y: it.y, a: def.a,
+        active: !!it.active, sprSet: it.type, worldH: def.h
+      });
     }
     // ensure doors default state
     for (const d of G.world.doors.values()) {
@@ -988,6 +1102,13 @@
     for (const z of G.zombies) {
       if (U.dist(z.x, z.y, G.player.x, G.player.y) < 4) z.dormant = true;
     }
+  };
+
+  G.spawnAt = function (type, x, y) {
+    const spot = G.freeSpot(x, y, type === 'brute' ? .5 : .34);
+    const z = G.makeZombie(type, spot.x, spot.y, { dormant: false });
+    if (z) G.zombies.push(z);
+    return z || null;
   };
 
   G.previewSpawnZombies = function () {
@@ -1215,22 +1336,32 @@
   G.runEvent = function (id) {
     const chapter = STORY[G.chapterKey];
     if (!chapter || !chapter.events) return false;
-    const nodes = chapter.events[id];
-    if (!nodes) return false;
+    const def = chapter.events[id];
+    if (!def) return false;
     if (G.eventsFired[id]) return false;
     G.eventsFired[id] = true;
-    G.mode = 'dialogue';
-    DLG.start(nodes, {
-      cinematic: false,
-      onEnd: () => { G.backToPlay(); G.updateObjectiveCycle(); }
+    const obj = Array.isArray(def) ? { nodes: def } : def;
+    const cine = !!obj.cinematic;
+    G.mode = cine ? 'cine' : 'dialogue';
+    DLG.start(obj.nodes, {
+      cinematic: cine,
+      visual: obj.visual || null,
+      title: obj.title || '',
+      kicker: obj.kicker || '',
+      bg: obj.bg || null,
+      onEnd: () => {
+        if (typeof obj.onEnd === 'function') return obj.onEnd(G);
+        G.backToPlay();
+        G.updateObjectiveCycle();
+      }
     });
     return true;
   };
 
-  G.runSeq = function (nodes, cinematic, title, kicker) {
+  G.runSeq = function (nodes, cinematic, title, kicker, visual) {
     G.mode = cinematic ? 'cine' : 'dialogue';
     DLG.start(nodes, {
-      cinematic: !!cinematic, title, kicker,
+      cinematic: !!cinematic, title, kicker, visual: visual || null,
       onEnd: () => G.backToPlay()
     });
   };
@@ -1752,6 +1883,7 @@
   };
 
   G.useInteractable = function (it) {
+    if (!it) return;
     if (it.type === 'note' || it.type === 'doc') {
       G.showDoc(it.data || 'ch1');
       if (it.id === 'note1' && !G.flags.ch1_note) {
@@ -1784,7 +1916,8 @@
       return;
     }
     if (cfg.require && !cfg.require(G)) {
-      if (it.type === 'boat') G.toast('Henüz değil — önce flakonu bul');
+      if (cfg.gateText) G.toast(cfg.gateText);
+      else if (it.type === 'boat') G.toast('Henüz değil — önce flakonu bul');
       else if (it.type === 'vial') G.toast('Kasa dairesi kapalı');
       else G.toast('Henüz değil');
       return;
@@ -1841,6 +1974,7 @@
       G.updateIdle(dt);
     }
     if (DLG.active) DLG.tick(dt);
+    if (DLG.active && G.mode === 'cine' && global.CINE) CINE.tick(dt);
 
     G.render(dt);
     G.updateHud(dt);
@@ -2169,7 +2303,7 @@
       const spr = SPR.npcs[n.sprSet];
       if (!spr) continue;
       sprites.push({
-        x: n.x, y: n.y, spr, scale: 1, worldH: n.kind === 'deniz' ? 1.15 : 1.85,
+        x: n.x, y: n.y, spr, scale: 1, worldH: n.worldH || (n.kind === 'deniz' ? 1.15 : 1.85),
         floorOffset: 0, lightBoost: 1.05
       });
     }
@@ -2229,7 +2363,7 @@
     if (G.moonChapter !== G.chapterKey) { G.moonChapter = G.chapterKey; G.moonAz = G.player.a + 0.55; }
     if (!G.skyTex || G.skyMode !== G.chapterKey) {
       G.skyMode = G.chapterKey;
-      G.skyTex = TEX.makeSky(G.chapterKey === 'ch3' ? 'red' : 'night');
+      G.skyTex = TEX.makeSky((FLOW[G.chapterKey] && FLOW[G.chapterKey].sky) || (G.chapterKey === 'ch3' ? 'red' : 'night'));
     }
     const scene = {
       world: G.world,
@@ -2238,8 +2372,9 @@
       time: G.time,
       muzzle: G.muzzle,
       tint: [1, 1, 1],
-      fog: G.indoorView ? 0.085 : 0.072,
+      fog: G.world.fog || (G.indoorView ? 0.085 : 0.072),
       skyTex: G.skyTex,
+      noMoon: (FLOW[G.chapterKey] && FLOW[G.chapterKey].sky) === 'dawn',
       moonAz: G.moonAz,
       moonEl: 0.19,
       indoorView: G.indoorView,

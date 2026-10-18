@@ -30,6 +30,7 @@
     { key: 'tower_stone', tex: 'tower_stone', name: 'Kule taşı' },
     { key: 'flesh', tex: 'flesh', name: 'Kızıl duvar' },
     { key: 'whitewash', tex: 'whitewash', name: 'Badanalı duvar' },
+    { key: 'home_wall', tex: 'home_wall', name: 'Ev duvarı' },
     { key: 'metal_door', tex: 'metal_door', name: 'Metal kapı', door: true },
     { key: 'wood_door', tex: 'wood_door', name: 'Ahşap kapı', door: true },
     { key: 'vault_door', tex: 'vault_door', name: 'Kasa kapısı', door: true },
@@ -998,7 +999,299 @@
     return w;
   }
 
-  const BUILDERS = { karakoy: buildKarakoy, galata: buildGalata, kizkulesi: buildKizkulesi };
+
+  /* ============================================================
+     PROLOGUE 1/2 — EV (Cihangir'de bir daire)
+     ============================================================ */
+  function buildEv(siege) {
+    const W = 30, H = 24;
+    const w = new World(W, H);
+    w.defaultFloor = F.wood;
+    w.outdoorBase = 0.10;
+    w.ceilTex = 'plaster';
+    w.fill(0, 0, W, H, M.plaster_warm);
+    w.wallRing(2, 2, 26, 20, M.home_wall);
+    // interior: x3..26, y3..20
+    w.carve(3, 3, 24, 18, F.wood, true);
+    // ---- rooms ----
+    w.carve(3, 3, 8, 7, F.wood, true);        // salon x3..10 y3..9
+    w.carve(12, 3, 4, 18, F.stone, true);     // hol x12..15 y3..20
+    w.carve(17, 3, 10, 7, F.tile, true);      // mutfak x17..26 y3..9
+    w.carve(17, 11, 10, 10, F.wood, true);    // ebeveyn x17..26 y11..20
+    w.carve(3, 11, 8, 10, F.wood, true);      // oda x3..10 y11..20
+    // ---- partitions ----
+    w.fill(3, 11, 1, 18, M.home_wall);        // x=11
+    w.fill(3, 16, 1, 18, M.home_wall);        // x=16
+    w.fill(10, 3, 1, 18, M.home_wall);        // y=10
+    // ---- doorways ----
+    w.carve(11, 5, 1, 3, F.wood, true);
+    w.carve(11, 13, 1, 3, F.wood, true);
+    w.carve(16, 5, 1, 3, F.tile, true);
+    w.carve(16, 16, 1, 3, F.wood, true);
+    w.carve(6, 10, 3, 1, F.wood, true);
+    // entry door on the south shell wall
+    w.addDoor(14, 21, 'wood_door', { id: 'ev_door', label: 'Daire kapısı', open: !!siege });
+
+    // ---- salon ----
+    w.addLight(7.4, 5.4, 7.5, siege ? .95 : 1.12);
+    w.addLight(4.2, 8.2, 3.6, .7);
+    w.addProp('sofa', 5.4, 4.6, { solid: true, radius: .8, worldH: 1.0 });
+    w.addProp('tv', 8.8, 3.6, { solid: true, radius: .55, worldH: 1.25, scale: 1.1 });
+    w.addProp('table', 7.0, 5.4, { solid: true, radius: .6, worldH: .55 });
+    w.addProp('shelf', 3.6, 3.8, { solid: true, radius: .5, worldH: 1.75 });
+    w.addProp('plant', 3.5, 8.4, { solid: true, radius: .3, worldH: 1.2 });
+    w.addProp('lamp', 9.4, 8.4, { solid: false, radius: .12, worldH: 1.9 });
+    w.addInteractable('tv', 'tv', 8.2, 4.6, { radius: 2.0, label: 'Televizyon' });
+    w.addInteractable('pencere', 'window', 3.5, 6.6, { radius: 1.6, label: 'Pencere' });
+    w.addInteractable('pencere2', 'window', 7.6, 8.5, { radius: 1.5, label: 'Balkon kapısı' });
+    w.addInteractable('aile_foto', 'doc', 9.2, 7.6, { radius: 1.4, label: 'Aile fotoğrafı', data: 'p1' });
+
+    // ---- mutfak ----
+    w.addLight(21.5, 6, 8, 1.15);
+    w.addProp('counter', 19.4, 4.2, { solid: true, radius: .66, worldH: .95 });
+    w.addProp('fridge', 25.2, 5.2, { solid: true, radius: .45, worldH: 1.9 });
+    w.addProp('table', 20.4, 8.2, { solid: true, radius: .6, worldH: .55 });
+    w.addProp('plant', 17.6, 4.2, { solid: true, radius: .28, worldH: 1.1 });
+    if (!siege) w.addInteractable('anne', 'anne', 23.2, 8.4, { radius: 1.9, label: 'Annem' });
+    w.addInteractable('buzdolabi', 'fridge', 25.2, 6.6, { radius: 1.5, label: 'Buzdolabı' });
+
+    // ---- ebeveyn odası ----
+    w.addLight(21.5, 15, 7, .9);
+    w.addProp('bed', 19.4, 13.4, { solid: true, radius: .85, worldH: .85 });
+    w.addProp('wardrobe', 25.2, 18.4, { solid: true, radius: .45, worldH: 2.0 });
+    w.addProp('plant', 17.6, 19.2, { solid: true, radius: .3, worldH: 1.1 });
+
+    // ---- oda ----
+    w.addLight(6.6, 16.5, 6.5, .85);
+    w.addProp('bed', 4.6, 18.6, { solid: true, radius: .85, worldH: .85 });
+    w.addProp('wardrobe', 9.2, 19.4, { solid: true, radius: .45, worldH: 2.0 });
+    w.addProp('table', 7.4, 13.4, { solid: true, radius: .55, worldH: .55 });
+    w.addInteractable('telefon', 'phone', 7.4, 12.6, { radius: 1.4, label: 'Telefonun' });
+
+    // ---- hol ----
+    w.addLight(13.6, 6, 6, .8);
+    w.addLight(13.6, 12, 6, .75);
+    w.addLight(13.6, 18, 6, .7);
+    w.addProp('plant', 12.6, 4.2, { solid: true, radius: .26, worldH: 1.05 });
+    w.addInteractable('ev_exit', 'exit', 14, 19.6, { radius: 1.8, label: 'Daire kapısı' });
+
+    if (siege) {
+      w.addInteractable('anne', 'anne', 5.4, 6.4, { radius: 2.0, label: 'Annem' });
+      w.addInteractable('ada', 'ada', 7.4, 7.6, { radius: 2.0, label: 'Kardeşin Ada' });
+      w.addInteractable('baba_ceket', 'doc', 14.6, 12.4, { radius: 1.5, label: 'Babanın ceketi', data: 'p2b' });
+      w.addTrigger('salon', 7, 6.5, 4.5, { once: true });
+    } else {
+      w.addInteractable('baba', 'baba', 7.4, 3.8, { radius: 1.8, label: 'Baban' });
+      w.addInteractable('ada', 'ada', 4.9, 6.4, { radius: 1.8, label: 'Kardeşin Ada' });
+    }
+
+    w.start = siege
+      ? { x: 7.4, y: 17.4, a: -Math.PI / 2 }
+      : { x: 12.8, y: 6.2, a: Math.PI };
+    w.finalize();
+    return w;
+  }
+
+  /* ============================================================
+     PROLOGUE 3 — MAHALLE (Cihangir sokakları)
+     ============================================================ */
+  function buildMahalle() {
+    const W = 60, H = 60;
+    const w = new World(W, H);
+    w.defaultFloor = F.asphalt;
+    w.outdoorBase = 0.44;
+    w.fog = 0.04;
+    w.fill(0, 0, W, H, M.plaster_warm);
+    w.wallRing(0, 0, W, H, M.concrete);
+
+    // ---- streets ----
+    w.carve(13, 4, 6, 52, F.asphalt);      // ana sokak (dikey) x13..18
+    w.carve(4, 26, 53, 6, F.asphalt);      // ana cadde (yatay) y26..31
+    w.carve(4, 11, 53, 4, F.cobble);       // üst sokak y11..14
+    w.carve(35, 6, 5, 50, F.asphalt);      // sağ dikey x35..39
+    w.carve(45, 11, 4, 45, F.asphalt);     // doğu dikey x45..48
+    w.carve(13, 34, 32, 4, F.cobble);      // ara sokak y34..37
+    w.carve(4, 20, 10, 5, F.cobble);       // batı sokağı
+    w.carve(40, 44, 4, 8, F.cobble);       // bakkal sokağı
+    w.carve(50, 31, 6, 4, F.cobble);       // doğu çıkmazı
+
+    // ---- player's apartment (lobby) ----
+    w.carve(5, 44, 8, 8, F.stone, true);
+    w.wallRing(4, 43, 10, 10, M.concrete);
+    w.addDoor(13, 47, 'wood_door', { id: 'mah_apartman', label: 'Apartman girişi', open: true });
+    w.addLight(9, 47.5, 4.2, .55);
+    w.addProp('table', 6.6, 45.6, { solid: true, radius: .45, worldH: .55 });
+    w.addInteractable('mah_apartman_doc', 'doc', 7.6, 44.6, { radius: 1.2, label: 'Kapıcı notu', data: 'p2' });
+
+    // ---- eczane ----
+    w.roomWithDoor(24, 19, 7, 6, F.tile, M.interior_b, 'wood_door', { id: 'mah_pharmacy', label: 'Eczane', prefer: 's' });
+    w.addLight(27, 21.5, 6.5, 1.0);
+    w.addProp('counter', 26.4, 19.8, { solid: true, radius: .62, worldH: .95 });
+    w.addProp('crate', 24.6, 23.2, { solid: true, radius: .34, worldH: .8 });
+    w.addInteractable('mah_meds', 'meds', 29.4, 23.2, { radius: 1.6, label: 'İlaç dolabı' });
+    w.addInteractable('mah_radio', 'radio', 30.4, 20.4, { radius: 1.6, label: 'Eczanenin telsizi' });
+    w.addProp('radio', 30.4, 20.8, { solid: true, radius: .3, worldH: .8 });
+
+    // ---- bakkal ----
+    w.roomWithDoor(50, 39, 6, 7, F.wood, M.interior_c, 'wood_door', { id: 'mah_bakkal', label: 'Bakkal', prefer: 'w' });
+    w.addLight(53, 42, 5, .8);
+    w.addProp('counter', 52.4, 39.9, { solid: true, radius: .6, worldH: .95 });
+    w.addProp('crate', 51.4, 44.2, { solid: true, radius: .34, worldH: .8 });
+    w.addInteractable('mah_supplies', 'supplies', 54.4, 44.2, { radius: 1.6, label: 'Raf' });
+
+    // ---- cami avlusu ----
+    w.carve(20, 37, 3, 12, F.cobble);           // avluya inen ara yol
+    w.carveCircle(27, 46, 5.2, F.cobble);       // avlu
+    w.carveCircle(27, 46, 1.6, F.stone);
+    w.wallRing(23, 40, 10, 5, M.tower_stone);   // cami gövdesi
+    w.carve(24, 41, 8, 3, F.marble, true);
+    w.wallRing(23, 40, 10, 5, M.tower_stone);
+    w.addDoor(27, 44, 'wood_door', { id: 'mah_mosque', label: 'Cami', open: false });
+    w.addLight(27, 42, 4.5, .5);
+    w.addProp('lamp', 20.4, 43.4, { solid: false, radius: .12, worldH: 4.6 });
+    w.addLight(20.4, 43.8, 6.4, .85);
+    w.addProp('minibus', 30.4, 48.4, { solid: true, radius: 1.6, worldH: 2.4 });
+    w.addInteractable('mah_minibus', 'minibus', 29.6, 47.4, { radius: 2.4, label: 'Minibüs' });
+
+    // ---- sokak hayatı ----
+    [[14.4, 29.6], [17.4, 30.4], [41.4, 30.4], [45.4, 33.4], [9.4, 28.4]].forEach(([x, y]) =>
+      w.addProp('barricade', x, y, { solid: true, radius: .6, worldH: .9 }));
+    [[7.4, 28.4], [37.4, 27.4], [46.4, 24.4]].forEach(([x, y]) => {
+      w.addProp('car', x, y, { solid: true, radius: 1.0, worldH: 2.2 });
+    });
+    [[19.4, 13.4], [41.4, 12.4], [12.4, 36.4]].forEach(([x, y]) =>
+      w.addProp('dumpster', x, y, { solid: true, radius: .5, worldH: 1.1 }));
+    [[33.4, 16.4], [44.4, 50.4], [21.4, 32.4]].forEach(([x, y]) =>
+      w.addProp('rubble', x, y, { solid: true, radius: .5, worldH: .6 }));
+    w.addProp('sign', 33.4, 24.4, { solid: false, radius: .1, worldH: 1.7 });
+    w.addProp('cat', 21.4, 30.4, { solid: false, radius: .05, worldH: .4 });
+    w.addProp('teddy', 14.4, 42.4, { solid: false, radius: .05, worldH: .45 });
+    w.addProp('simitcart', 16.4, 22.4, { solid: true, radius: .5, worldH: 1.2 });
+    w.addPickup('ammo', 8.4, 33.4, { amount: 12, id: 'mah_ammo_1' });
+    w.addPickup('medkit', 52.4, 42.6, { amount: 30, id: 'mah_medkit_1' });
+    w.addPickup('simit', 17.4, 24.4, { amount: 20, id: 'mah_simit' });
+
+    // ---- ışıklar ----
+    [[14.2, 50], [14.2, 24], [14.2, 14], [36.4, 20], [36.4, 38], [46.4, 22], [46.4, 44], [7.4, 28], [20.4, 28]].forEach(([x, y]) => {
+      w.addProp('lamp', x, y, { solid: false, radius: .12, worldH: 4.6 });
+      w.addLight(x, y + .3, 6.6, .9);
+    });
+    [[16.4, 40.4], [34.4, 32.4]].forEach(([x, y]) => {
+      w.addProp('firebarrel', x, y, { solid: true, radius: .3, worldH: .8, flicker: 1 });
+      w.addLight(x, y, 4.8, .85);
+    });
+
+    // ---- infected ----
+    [
+      ['walker', 15, 44], ['walker', 20, 38], ['runner', 26, 33], ['walker', 38, 24],
+      ['walker', 41, 40], ['brute', 30, 26], ['walker', 24, 14], ['runner', 44, 18],
+      ['walker', 9, 22], ['walker', 50, 36], ['runner', 17, 20], ['walker', 33, 12],
+      ['walker', 46, 52], ['walker', 28, 15]
+    ].forEach(([t, x, y]) => w.addSpawn(t, x + .5, y + .5));
+
+    w.addTrigger('mah_cikis', 16, 42, 5, { once: true });
+    w.addTrigger('mah_cadde', 16, 31, 5, { once: true });
+    w.addTrigger('mah_eczane', 27, 27, 4.5, { once: true });
+    w.addTrigger('mah_meydan', 21.5, 46, 5, { once: true });
+
+    w.start = { x: 15.4, y: 49.4, a: -Math.PI / 2 };
+    w.finalize();
+    return w;
+  }
+
+  /* ============================================================
+     PROLOGUE 4 — SAHİL (Karaköy'e iniş)
+     ============================================================ */
+  function buildSahil() {
+    const W = 64, H = 46;
+    const w = new World(W, H);
+    w.defaultFloor = F.asphalt;
+    w.outdoorBase = 0.42;
+    w.fog = 0.04;
+    w.fill(0, 0, W, H, M.plaster_warm);
+    w.wallRing(0, 0, W, H, M.concrete);
+
+    // ---- deniz / rıhtım / sahil yolu ----
+    w.carve(0, 42, W, 4, F.water);
+    w.fill(42, 0, W, 4, M.sea_wall);
+    w.carve(0, 37, W, 5, F.pavement);
+    w.carve(0, 29, W, 8, F.asphalt);
+    w.carve(0, 24, W, 4, F.cobble);           // arka sokak
+
+    // ---- sokaklar ----
+    w.carve(14, 6, 3, 24, F.cobble);
+    w.carve(30, 4, 3, 26, F.cobble);
+    w.carve(48, 6, 3, 24, F.cobble);
+
+    // ---- karantina duvarı + kapı ----
+    w.fill(28, 52, 1, 13, M.concrete);
+    w.fill(28, 53, 1, 13, M.concrete);
+    w.addDoor(52, 34, 'metal_door', { id: 'sahil_gate', label: 'Karantina kapısı', open: false });
+    w.setMat(53, 34, 0);
+    w.setFloor(52, 34, F.asphalt);
+    w.setFloor(53, 34, F.asphalt);
+    w.addLight(51.4, 33.4, 4.5, .9);
+    w.addProp('barricade', 50.4, 35.4, { solid: true, radius: .6, worldH: .9 });
+    w.addProp('barricade', 51.4, 31.4, { solid: true, radius: .6, worldH: .9 });
+
+    // ---- depo ----
+    w.roomWithDoor(6, 9, 7, 6, F.stone, M.interior_b, 'metal_door', { id: 'sahil_depot', label: 'Sahil deposu', prefer: 's' });
+    w.addLight(9.5, 12, 5, .65);
+    w.addProp('crate', 7.4, 10.4, { solid: true, radius: .36, worldH: .8 });
+    w.addProp('crate', 11.4, 10.4, { solid: true, radius: .36, worldH: .8 });
+    w.addPickup('ammo', 11.4, 13.4, { amount: 24, id: 'sahil_ammo' });
+    w.addPickup('medkit', 8.4, 13.4, { amount: 40, id: 'sahil_medkit' });
+    w.addPickup('armor', 9.4, 14.2, { name: 'Çelik yelek', id: 'sahil_armor' });
+
+    // ---- bariyerler / araçlar / moloz ----
+    [[8.4, 32.4], [18.4, 34.4], [24.4, 30.4], [36.4, 35.4], [41.4, 30.4], [57.4, 33.4]].forEach(([x, y]) =>
+      w.addProp('barricade', x, y, { solid: true, radius: .6, worldH: .9 }));
+    [[12.4, 30.4], [27.4, 34.4], [39.4, 32.4], [56.4, 30.4]].forEach(([x, y]) =>
+      w.addProp('car', x, y, { solid: true, radius: 1.0, worldH: 2.2 }));
+    [[5.4, 38.4], [22.4, 39.4], [33.4, 39.4], [45.4, 38.4]].forEach(([x, y]) =>
+      w.addProp('sandbag', x, y, { solid: true, radius: .6, worldH: .7 }));
+    [[4.4, 35.4], [20.4, 28.4], [43.4, 36.4], [60.4, 36.4]].forEach(([x, y]) =>
+      w.addProp('dumpster', x, y, { solid: true, radius: .5, worldH: 1.1 }));
+    [[16.4, 26.4], [34.4, 25.4], [47.4, 26.4]].forEach(([x, y]) =>
+      w.addProp('rubble', x, y, { solid: true, radius: .45, worldH: .6 }));
+    w.addProp('teddy', 31.4, 38.4, { solid: false, radius: .05, worldH: .45 });
+    w.addProp('boat', 59.4, 39.2, { solid: true, radius: 1.6, worldH: 2.4, scale: 1.25 });
+    w.addInteractable('sahil_boat', 'boat', 57.8, 37.6, { radius: 2.6, label: 'Rıhtımdaki tekne' });
+    w.addInteractable('sahil_doc', 'doc', 54.4, 30.6, { radius: 1.6, label: 'Karantina ilanı', data: 'p4' });
+    w.addProp('sign', 25.4, 27.4, { solid: false, radius: .1, worldH: 1.7 });
+
+    // ---- ışıklar ----
+    [[10.4, 37.4], [22.4, 37.4], [34.4, 37.4], [46.4, 37.4], [56.4, 37.4], [8.4, 28.4], [20.4, 28.4], [32.4, 28.4], [44.4, 28.4], [56.4, 28.4]].forEach(([x, y]) => {
+      w.addProp('lamp', x, y, { solid: false, radius: .12, worldH: 4.6 });
+      w.addLight(x, y + .4, 6.6, .9);
+    });
+    [[20.4, 33.4], [44.4, 34.4]].forEach(([x, y]) => {
+      w.addProp('firebarrel', x, y, { solid: true, radius: .3, worldH: .8, flicker: 1 });
+      w.addLight(x, y, 4.8, .85);
+    });
+
+    // ---- kalabalık ----
+    [
+      ['walker', 10, 33], ['walker', 17, 31], ['runner', 23, 35], ['walker', 29, 32],
+      ['walker', 35, 34], ['brute', 40, 31], ['runner', 45, 35], ['walker', 49, 31],
+      ['walker', 55, 34], ['walker', 58, 31], ['runner', 32, 38], ['walker', 15, 27],
+      ['walker', 37, 26], ['runner', 51, 26]
+    ].forEach(([t, x, y]) => w.addSpawn(t, x + .5, y + .5));
+
+    w.addTrigger('sahil_start', 6, 32, 4, { once: true });
+    w.addTrigger('sahil_gate_t', 49, 34, 4, { once: true });
+    w.addTrigger('sahil_end', 56, 37, 4.5, { once: true });
+
+    w.start = { x: 4.4, y: 33.4, a: 0 };
+    w.finalize();
+    return w;
+  }
+
+  const BUILDERS = {
+    ev: () => buildEv(false), ev2: () => buildEv(true),
+    mahalle: buildMahalle, sahil: buildSahil,
+    karakoy: buildKarakoy, galata: buildGalata, kizkulesi: buildKizkulesi
+  };
 
   global.WORLD = { World, MATERIALS, M, F, FLOORS, build: (key) => BUILDERS[key]() };
 })(window);

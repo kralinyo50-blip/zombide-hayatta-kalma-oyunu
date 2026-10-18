@@ -114,6 +114,11 @@
   <section id="screen-cinematic" class="screen overlay-screen">
     <div class="cine-bars"></div>
     <div class="cine-bg" id="cine-bg"></div>
+    <div class="cine-stage hidden" id="cine-stage">
+      <canvas id="cine-canvas" width="960" height="540"></canvas>
+      <div class="cine-live" id="cine-live"><i></i><span>CANLI</span></div>
+      <div class="cine-scan"></div>
+    </div>
     <div class="cine-wrap">
       <div class="cine-kicker" id="cine-kicker">KAYIT 001 — KARAKÖY</div>
       <h2 class="cine-title" id="cine-title"></h2>
@@ -315,6 +320,7 @@
 <script src="js/audio.js"></script>
 <script src="js/raycaster.js"></script>
 <script src="js/world.js"></script>
+<script src="js/cine.js"></script>
 <script src="js/story.js"></script>
 <script src="js/istmap.js"></script>
 <script src="js/game.js"></script>
