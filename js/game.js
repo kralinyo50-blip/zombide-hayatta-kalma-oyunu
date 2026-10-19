@@ -2654,9 +2654,8 @@
       chapter: G.chapterKey,
       worldKey: G.world._engId || G.chapterKey
     };
-    // GEÇİCİ: ENGINE3D'yi kapat — duvar siyah sorunu çözülene kadar RAY kullan
-    // const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
-    const use3D = false && (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    // TAM 3D — tekrar açıldı, siyah ekran için hata yakalama eklendi
+    const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
     if (use3D) {
       ENGINE3D.render(scene);
       // Overlay canvas'ı temizle — 3D'nin üstüne sadece vignette/particle çiziyoruz

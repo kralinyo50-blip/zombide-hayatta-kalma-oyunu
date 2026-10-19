@@ -803,6 +803,7 @@
       ENG.show(false);
       return;
     }
+    try {
     // 3D aktifken view canvas'ını gizle, 3D canvas'ı göster
     ENG.show(true);
 
@@ -827,6 +828,11 @@
       // if open, also not colliding - but visually hide
     }
 
+    // DEBUG: 3D çalışıyor mu kontrolü — kırmızı küp
+    if (!ENG.debugCube){
+      ENG.debugCube = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.5,0.5), new THREE.MeshBasicMaterial({color:0xff0000}));
+      ENG.scene.add(ENG.debugCube);
+    }
     // Camera
     const shake = sceneData.shake || global.GAME && GAME.shake || 0;
     const sx = (Math.random() - 0.5) * shake * 0.04;
@@ -839,8 +845,16 @@
       1.62 + Math.sin(headPhase) * 0.03 + headBob * 2 + sy,
       player.y + sx * 0.3
     );
-    ENG.camera.rotation.y = -player.a;
+    // Dünya açısı -> Three açısı dönüşümü: dünya 0=doğu, Three 0=güney (-Z). Fark -90°
+    ENG.camera.rotation.y = -player.a - Math.PI/2;
     ENG.camera.rotation.x = player.pitch || 0;
+    // debug küpü bakılan yöne koy
+    const lookDist = 3;
+    ENG.debugCube.position.set(
+      player.x + Math.cos(player.a)*lookDist,
+      1.0,
+      player.y + Math.sin(player.a)*lookDist
+    );
 
     // Sky - update based on chapter sky
     const skyMode = (sceneData.skyMode || (sceneData.world && sceneData.world === 'kizkulesi' ? 'red' : 'night'));
@@ -890,11 +904,13 @@
       ENG.sunLight.intensity = 0.85 * sceneData.lightMul;
     }
     if (sceneData.indoorView) {
-      ENG.ambient.intensity = 0.62;
-      ENG.sunLight.intensity = 0.12;
-      ENG.hemi.intensity = 0.35;
+      ENG.ambient.intensity = 0.85;
+      ENG.sunLight.intensity = 0.55;
+      ENG.hemi.intensity = 0.6;
+      // sis çok koyu olursa ev içi kararıyor — azalt
+      ENG.scene.fog = new THREE.FogExp2(ENG.fogColor, 0.012);
     } else {
-      ENG.hemi.intensity = 0.55;
+      ENG.hemi.intensity = 0.65;
     }
 
     // Muzzle light
@@ -1117,6 +1133,15 @@
       ENG.renderer.clearDepth();
       ENG.renderer.render(ENG.weaponScene, ENG.weaponCamera);
       ENG.renderer.autoClear = true;
+    }
+    } catch(e){
+      console.error('[3D] render hatası', e);
+      const overlay = document.getElementById('err-overlay');
+      if (overlay) overlay.textContent += '\n[3D] '+(e.message||e);
+      // siyah ekran yerine fallback'e düş
+      ENG.useFallback = true;
+      ENG.show(false);
+      if (global.RAY) RAY.render(sceneData);
     }
   };
 
