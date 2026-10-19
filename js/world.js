@@ -1515,8 +1515,8 @@
     w.addProp('lamp', 40.4, 5.4, { solid: false, radius: .1, worldH: 1.9 });
 
     w.addInteractable('metro_doc', 'doc', 6.4, 4.2, { radius: 1.4, label: 'Sefer tarifesi', data: 'p2' });
-    w.addInteractable('metro_bilet', 'supplies', 28.4, 3.6, { radius: 1.6, label: 'Bilet gişesi' });
-    w.addInteractable('metro_anahtar', 'supplies', 38.4, 17.4, { radius: 1.6, label: 'Bakım dolabı' });
+    w.addInteractable('metro_bilet', 'supplies', 11.4, 3.8, { radius: 1.6, label: 'Bilet gişesi' });
+    w.addInteractable('metro_anahtar', 'supplies', 33.4, 11.4, { radius: 1.6, label: 'Bakım dolabı' });
     w.addInteractable('metro_exit', 'exit', 40, 10.0, { radius: 1.7, label: 'Tünele gir' });
     w.addPickup('ammo', 5.4, 10.2, { amount: 12, id: 'metro_ammo' });
     w.addPickup('medkit', 36.4, 17.4, { id: 'metro_medkit' });

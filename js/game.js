@@ -581,7 +581,7 @@
         metro_anahtar: { event: 'bakim', doneFlag: 'metro_anahtar' },
         metro_exit: { event: 'cikis', require: (g) => !!g.flags.metro_bilet, gateText: 'Perondan geçmek için bilet gerek.' }
       },
-      objective: { text: 'Bilet gişesini bul', sub: 'Karaköy İstasyonu • 02:48', target: [28.4, 3.6] },
+      objective: { text: 'Bilet gişesini bul', sub: 'Karaköy İstasyonu • 02:48', target: [11.4, 3.8] },
       objectives: [
         { when: (g) => !!g.flags.metro_bilet, text: 'Tünel çıkışına ulaş', sub: 'Karaköy İstasyonu • 03:02', target: [40, 10] }
       ]
