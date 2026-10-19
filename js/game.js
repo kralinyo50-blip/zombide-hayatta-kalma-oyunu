@@ -2654,8 +2654,9 @@
       chapter: G.chapterKey,
       worldKey: G.world._engId || G.chapterKey
     };
-    // TAM 3D MOTOR — raycaster yerine ENGINE3D kullan (gerçek WebGL)
-    const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    // GEÇİCİ: ENGINE3D'yi kapat — duvar siyah sorunu çözülene kadar RAY kullan
+    // const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    const use3D = false && (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
     if (use3D) {
       ENGINE3D.render(scene);
       // Overlay canvas'ı temizle — 3D'nin üstüne sadece vignette/particle çiziyoruz
@@ -2959,6 +2960,9 @@
       G.hudTimer = 0;
       G.drawMinimap();
       const timeTag = document.getElementById('objective-sub');
+      // debug: dünya bilgisi
+      const wdbg = document.getElementById('wdbg');
+      if (wdbg && G.world) wdbg.textContent = `WORLD ${G.world.w}x${G.world.h} RAY:${typeof RAY!=='undefined'?'ok':'nok'} 3D:${typeof ENGINE3D!=='undefined'?(ENGINE3D.initialized?'on':'off'):'nok'} | pos ${G.player.x.toFixed(1)},${G.player.y.toFixed(1)} a${G.player.a.toFixed(2)}`;
       // subtle objective pulse
       const obj = document.querySelector('.hud-objective');
       if (obj && G.objectivePulse > 0) obj.style.borderLeftColor = '#f0a93b';
