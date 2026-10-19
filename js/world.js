@@ -482,10 +482,21 @@
       }
       return null;
     }
+    propRadius(p) {
+      if (!p || p.hidden || !p.collide) return 0;
+      const propSet = global.SPR && global.SPR.props && global.SPR.props[p.type];
+      const sprite = Array.isArray(propSet) ? propSet[0] : propSet;
+      if (!sprite || !sprite.w || !sprite.h) return p.radius || 0.28;
+      // Keep physics close to the actual billboard footprint; authored radii on some props
+      // were much larger than their visible size and made empty space feel like a wall.
+      const visibleWidth = ((p.worldH || 1.8) / 3) * (sprite.w / sprite.h) * (p.scale || 1);
+      return Math.min(p.radius || 0.28, Math.max(0.16, visibleWidth * 0.65));
+    }
     _propBlocked(x, y) {
       for (const p of this.props) {
-        if (!p.collide) continue;
-        if (U.dist2(x, y, p.x, p.y) < (p.radius + 0.3) ** 2) return true;
+        if (!p.collide || p.hidden) continue;
+        const r = this.propRadius(p);
+        if (U.dist2(x, y, p.x, p.y) < (r + 0.3) ** 2) return true;
       }
       return false;
     }
@@ -524,7 +535,7 @@
         const n = solidC(cx, cy - 1), s2 = solidC(cx, cy + 1);
         const e = solidC(cx + 1, cy), w2 = solidC(cx - 1, cy);
         const narrow = ((e && w2) !== (n && s2));
-        if (narrow && p.radius + 0.27 >= 0.5) p.radius = 0.18;
+        if (narrow && this.propRadius(p) + 0.27 >= 0.5) p.radius = Math.min(p.radius, 0.18);
       }
       // reachability with doors considered open
       const { seen } = this._bfs(this.start.x, this.start.y, true);
@@ -1706,6 +1717,42 @@
     return w;
   }
 
+  function buildPrelude(number) {
+    const W = 24, H = 16;
+    const w = new World(W, H);
+    const wallSets = [M.brick, M.plaster_olive, M.plaster_ochre, M.concrete, M.plaster_pink];
+    const wall = wallSets[(number - 1) % wallSets.length];
+    w.defaultFloor = number % 3 === 0 ? F.cobble : F.asphalt;
+    w.outdoorBase = .36;
+    w.fog = .018 + (number % 4) * .006;
+    w.fill(0, 0, W, H, wall);
+    w.wallRing(0, 0, W, H, M.concrete);
+    w.carve(1, 6, 22, 4, F.asphalt);
+    w.carve(4, 4, 3, 3, F.pavement);
+    w.carve(15, 9, 4, 3, F.cobble);
+    w.roomWithDoor(2, 2, 6, 3, F.tile, wall, 'wood_door', { id: 'prelude_shop', label: 'Mahalle dükkânı', doorAt: [5, 5], open: true });
+    w.roomWithDoor(13, 11, 7, 3, F.wood, M.interior_b, 'wood_door', { id: 'prelude_shelter', label: 'Sığınak kapısı', doorAt: [16, 10], open: true });
+
+    // Evaporated rain, abandoned stalls, warm windows and small supplies dress each stop.
+    w.addLight(5, 3.5, 4.2, .55);
+    w.addLight(16.5, 12.5, 4.5, .38);
+    w.addLight(11.5, 7.5, 5.5, .28);
+    w.addProp('shelf', 3.2, 3.4, { solid: true, radius: .3, worldH: 1.2 });
+    w.addProp('crate', 6.8, 4.2, { solid: true, radius: .35, worldH: .75 });
+    w.addProp(number % 2 ? 'simitcart' : 'dumpster', 8.8, 8.4, { solid: true, radius: .42, worldH: 1.0 });
+    w.addProp('car', 11.2, 9.4, { solid: true, radius: .62, worldH: 1.25 });
+    w.addProp('lamp', 3.4, 9.4, { solid: false, worldH: 1.8, light: .3 });
+    w.addProp('rubble', 17.4, 7.2, { solid: false, radius: .3 });
+    w.addProp('bench', 17.4, 12.1, { solid: true, radius: .35, worldH: .6 });
+    w.addPickup('ammo', 5.2, 3.4, { amount: 8 });
+    if (number % 3 === 0) w.addPickup('simit', 16.2, 12.8, { amount: 18 });
+    w.addSpawn(number % 5 === 0 ? 'runner' : 'walker', 13.2, 7.5);
+    w.addInteractable('prelude_exit', 'exit', 21.2, 7.5, { radius: 1.5, label: 'Rotada ilerle' });
+    w.start = { x: 2.4, y: 7.5, a: 0 };
+    w.finalize();
+    return w;
+  }
+
   const BUILDERS = {
     ev: () => buildEv('normal'), ev2: () => buildEv('siege'), ev_gece: () => buildEv('dark'),
     mahalle: buildMahalle, sahil: buildSahil,
@@ -1714,5 +1761,8 @@
     rihtim: buildRihtim, ada: buildAda
   };
 
-  global.WORLD = { World, MATERIALS, M, F, FLOORS, build: (key) => BUILDERS[key]() };
+  global.WORLD = { World, MATERIALS, M, F, FLOORS, build: (key) => {
+    if (String(key).startsWith('prelude_')) return buildPrelude(Number(String(key).split('_')[1]) || 1);
+    return BUILDERS[key]();
+  } };
 })(window);

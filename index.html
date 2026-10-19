@@ -8,7 +8,7 @@
 <title>KARANLIK BOĞAZ — İstanbul'da Hayatta Kalma</title>
 <meta name="description" content="İstanbul'da geçen, 2.5D FPS görünümlü, seçimlerinle hikâyeyi yönlendirdiğin zombi hayatta kalma oyunu.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23090d12'/><path d='M32 8 L40 30 L56 40 L40 44 L36 58 L28 44 L8 40 L24 30 Z' fill='%23d8453e'/></svg>">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 <div id="app">
@@ -73,6 +73,7 @@
     <div class="title-top">
       <div class="brand-small"><span class="brand-dot"></span> BOĞAZ PROTOKOLÜ <span class="brand-slash">/</span> 0. GÜN · CİHANGİR</div>
       <div class="title-top-right">
+        <button class="ghost-btn" id="btn-chapter-list">BÖLÜMLER · 50</button>
         <button class="ghost-btn" id="btn-menu-map">İSTANBUL HARİTASI</button>
         <button class="icon-btn" id="btn-sound" title="Ses">♪</button>
       </div>
@@ -88,7 +89,7 @@
           <button class="btn" id="btn-howto"><span>NASIL OYNANIR?</span><small>Kontroller</small></button>
         </div>
         <div class="title-meta">
-          <span>2.5D FPS</span><span>SEÇİMLER HİKÂYEYİ DEĞİŞTİRİR</span><span id="ending-count">SONLAR 0/4</span>
+          <span>2.5D FPS</span><span>SEÇİMLER HİKÂYEYİ DEĞİŞTİRİR</span><span id="chapter-progress">BÖLÜMLER 50 · İLERLEME 0/50</span><span id="ending-count">SONLAR 0/4</span>
         </div>
       </div>
       <div class="title-right">
@@ -108,7 +109,7 @@
     <div class="title-bottom">
       <span>© 2026 BOĞAZ PROTOKOLÜ</span>
       <span class="tb-center">HARİTA GERÇEK İSTANBUL COĞRAFYASI ESAS ALINARAK ÇİZİLMİŞTİR · GOOGLE MAPS'TEN ESİNLENİLMİŞTİR</span>
-      <span id="version-tag">v4.0 · PROLOG + 19 BÖLÜM · 4 SON</span>
+      <span id="version-tag">v13.0 · 30 YENİ BAŞLANGIÇ BÖLÜMÜ + 19 BÖLÜM · 4 SON</span>
     </div>
   </section>
 
@@ -158,7 +159,7 @@
       <h2 class="ch-title" id="ch-title">EV</h2>
       <div class="ch-sub" id="ch-sub">Cihangir'de bir cumartesi akşamı.</div>
       <div class="ch-objective"><span>HEDEF</span><b id="ch-objective">Annenle konuş.</b></div>
-      <div class="ch-loading"><i></i><span>BÖLGE YÜKLENİYOR</span></div>
+      <div class="ch-loading"><span>DEVAM ETMEK İÇİN TIKLA · ENTER</span></div>
     </div>
   </section>
 
@@ -169,6 +170,7 @@
       <h2 class="menu-title">DURAKLATILDI</h2>
       <div class="menu-buttons">
         <button class="menu-btn" id="btn-resume"><b>DEVAM ET</b><span>Esc</span></button>
+        <button class="menu-btn" id="btn-pause-chapters"><b>BÖLÜM LİSTESİ</b><span>50 bölüm</span></button>
         <button class="menu-btn" id="btn-pause-map"><b>İSTANBUL HARİTASI</b><span>Tab</span></button>
         <button class="menu-btn" id="btn-pause-restart"><b>BÖLÜMÜ YENİDEN BAŞLAT</b><span>⟳</span></button>
         <button class="menu-btn" id="btn-pause-help"><b>KONTROLLER</b><span>?</span></button>
@@ -254,6 +256,17 @@
     </div>
   </section>
 
+  <!-- ======== BÖLÜM LİSTESİ ======== -->
+  <section id="screen-chapters" class="screen overlay-screen">
+    <div class="chapters-card">
+      <button class="help-close" id="btn-chapters-close">✕</button>
+      <div class="menu-kicker">HİKÂYE ROTASI</div>
+      <h2 class="menu-title">BÖLÜMLER <span id="chapters-total">50</span></h2>
+      <div class="chapters-summary" id="chapters-summary">İlerlemen yükleniyor…</div>
+      <div class="chapters-list" id="chapters-list"></div>
+    </div>
+  </section>
+
   <!-- ======== YARDIM ======== -->
   <section id="screen-help" class="screen overlay-screen">
     <div class="help-card">
@@ -287,6 +300,7 @@
             <li>Her bölüm sonunda hikâye seçimleri seni bekliyor.</li>
           </ul>
           <div class="help-note">İpucu: Haritada sarı rota hikâyenin gidişatını gösterir. Kırmızı iğneler bölüm hedefleridir.</div>
+          <div class="help-note">Karakter konuşmaları tarayıcının Türkçe konuşma sesiyle seslendirilir; cihazında Türkçe ses yoksa ses çıkmayabilir. Anlatıcı metinleri ekranda kalır.</div>
           <div class="help-note">Fare kilidi tarayıcıda kapalıysa imleci ekranın kenarına götürerek dön; imleci merkeze getirince bakış durur.</div>
         </div>
       </div>
@@ -316,16 +330,16 @@
   <div id="rotate-hint" class="hidden"><div class="rot-icon">⟳</div><b>EN İYİ DENEYİM İÇİN TELEFONUNU YATAY ÇEVİR</b></div>
 </div>
 
-<script src="js/util.js?v=4"></script>
-<script src="js/textures.js?v=4"></script>
-<script src="js/sprites.js?v=4"></script>
-<script src="js/audio.js?v=4"></script>
-<script src="js/raycaster.js?v=4"></script>
-<script src="js/world.js?v=4"></script>
-<script src="js/cine.js?v=4"></script>
-<script src="js/story.js?v=4"></script>
-<script src="js/istmap.js?v=4"></script>
-<script src="js/game.js?v=4"></script>
-<script src="js/main.js?v=4"></script>
+<script src="js/util.js?v=13"></script>
+<script src="js/textures.js?v=13"></script>
+<script src="js/sprites.js?v=13"></script>
+<script src="js/audio.js?v=13"></script>
+<script src="js/raycaster.js?v=13"></script>
+<script src="js/world.js?v=13"></script>
+<script src="js/cine.js?v=13"></script>
+<script src="js/story.js?v=13"></script>
+<script src="js/istmap.js?v=13"></script>
+<script src="js/game.js?v=13"></script>
+<script src="js/main.js?v=13"></script>
 </body>
 </html>

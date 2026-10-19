@@ -43,7 +43,7 @@
     lookTarget: { x: 0, y: 0 },
     noLock: false,
     touch: { active: false, moveX: 0, moveY: 0, lookId: null, lookX: 0, lookY: 0, stickId: null, stickOX: 0, stickOY: 0 },
-    settings: { sens: 0.0022, quality: 0.58 },
+    settings: { sens: 0.0022, quality: 0.70 },
     paused: false,
     mapReturn: 'title',
     saveKey: 'kb_save_v1',
@@ -64,7 +64,7 @@
   };
 
   const $ = U.$;
-  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'p5', 'karantina', 'ch1', 'banka', 'hastane', 'metro',
+  const CHAPTERS = ['p1', 'p2', 'p3', ...(STORY.preludeKeys || []), 'p4', 'p5', 'karantina', 'ch1', 'banka', 'hastane', 'metro',
     'sarnic', 'ch2', 'kulemeydan', 'rihtim', 'tekne', 'ada', 'ch3', 'kizil', 'secim', 'final'];
 
   /* ============================================================
@@ -72,7 +72,7 @@
      ============================================================ */
   const Screens = {
     all: ['title-screen', 'screen-cinematic', 'screen-dialogue', 'screen-chapter', 'screen-pause',
-      'screen-death', 'screen-ending', 'screen-map', 'screen-help', 'screen-doc'],
+      'screen-death', 'screen-ending', 'screen-map', 'screen-help', 'screen-doc', 'screen-chapters'],
     open(id) {
       const el = document.getElementById(id);
       if (el) el.classList.add('active');
@@ -159,6 +159,7 @@
     },
 
     stop() {
+      if (global.AUD && AUD.stopSpeech) AUD.stopSpeech();
       this.active = false;
       this.choiceOpen = false;
       if (global.CINE) CINE.stop();
@@ -167,6 +168,7 @@
     },
 
     finish() {
+      if (global.AUD && AUD.stopSpeech) AUD.stopSpeech();
       const cb = this.onEnd;
       this.active = false;
       if (global.CINE) CINE.stop();
@@ -230,6 +232,7 @@
 
     /* ---------- cinematic ---------- */
     showCineLine(node) {
+      if (global.AUD && AUD.speak) AUD.speak(node);
       if ((node.shot || node.visual) && global.CINE) CINE.start(node.shot || node.visual);
       const wrap = document.getElementById('cine-lines');
       if (!wrap) return;
@@ -265,6 +268,7 @@
 
     /* ---------- in-game dialogue ---------- */
     showDlgLine(node) {
+      if (global.AUD && AUD.speak) AUD.speak(node);
       const nameEl = document.getElementById('dlg-name');
       const roleEl = document.getElementById('dlg-role');
       const textEl = document.getElementById('dlg-text');
@@ -752,6 +756,17 @@
     }
   };
 
+  // Each prologue chapter has its own generated neighborhood slice and a reachable route objective.
+  (STORY.preludeKeys || []).forEach((key) => {
+    const num = Number(key.slice(-2));
+    const targetX = 21.2;
+    FLOW[key] = {
+      world: 'prelude_' + num, ambience: 'street', intro: 'intro', triggers: {},
+      interactions: { prelude_exit: { event: 'routeComplete', doneFlag: 'route_' + num } },
+      objective: { text: STORY[key].objective, sub: STORY[key].objectiveSub, target: [targetX, 7.5] }
+    };
+  });
+
   /* ============================================================
      INIT
      ============================================================ */
@@ -827,6 +842,9 @@
     click('btn-continue', () => G.continueRun());
     click('btn-howto', () => { G.showHelp('title'); });
     click('btn-menu-map', () => { G.openMap('title'); });
+    click('btn-chapter-list', () => G.showChapterList());
+    click('btn-pause-chapters', () => G.showChapterList());
+    click('btn-chapters-close', () => Screens.close('screen-chapters'));
     click('btn-sound', () => {
       AUD.init();
       const m = AUD.setMuted(!AUD.muted);
@@ -1081,6 +1099,36 @@
   /* ============================================================
      FLOW / SCREENS
      ============================================================ */
+  G.showChapterList = function () {
+    const save = U.store.get(G.saveKey, null);
+    const savedIndex = save && Number.isFinite(save.chapterIndex) ? save.chapterIndex : -1;
+    const current = G.started && G.chapterIndex >= 0 ? G.chapterIndex : savedIndex;
+    const list = document.getElementById('chapters-list');
+    const total = document.getElementById('chapters-total');
+    const summary = document.getElementById('chapters-summary');
+    if (total) total.textContent = String(CHAPTERS.length);
+    if (summary) summary.textContent = current < 0
+      ? `Toplam ${CHAPTERS.length} bölüm · Henüz başlamadın.`
+      : `Toplam ${CHAPTERS.length} bölüm · ${Math.min(current + 1, CHAPTERS.length)}. bölümde kaldın: ${STORY[CHAPTERS[current]]?.title || ''}`;
+    if (list) {
+      list.replaceChildren();
+      CHAPTERS.forEach((key, index) => {
+        const chapter = STORY[key] || {};
+        const row = document.createElement('div');
+        row.className = 'chapter-row' + (index === current ? ' current' : '') + (index < current ? ' completed' : '');
+        const num = document.createElement('span'); num.className = 'chapter-row-num'; num.textContent = String(index + 1).padStart(2, '0');
+        const info = document.createElement('span'); info.className = 'chapter-row-info';
+        const title = document.createElement('b'); title.textContent = chapter.title || key;
+        const sub = document.createElement('small'); sub.textContent = chapter.subtitle || chapter.objectiveSub || '';
+        info.append(title, sub);
+        const state = document.createElement('span'); state.className = 'chapter-row-state';
+        state.textContent = index === current ? 'ŞU AN' : index < current ? 'GEÇİLDİ' : 'SIRADAKİ';
+        row.append(num, info, state); list.appendChild(row);
+      });
+    }
+    Screens.open('screen-chapters');
+  };
+
   G.updateMenuState = function () {
     const save = U.store.get(G.saveKey, null);
     const cont = document.getElementById('btn-continue');
@@ -1092,6 +1140,10 @@
       if (cont) cont.disabled = true;
       if (sub) sub.textContent = 'Kayıt bulunamadı';
     }
+    const progress = document.getElementById('chapter-progress');
+    const savedIndex = save && Number.isFinite(save.chapterIndex) ? save.chapterIndex : -1;
+    const currentIndex = G.started && G.chapterIndex >= 0 ? G.chapterIndex : savedIndex;
+    if (progress) progress.textContent = `BÖLÜMLER ${CHAPTERS.length} · İLERLEME ${Math.max(0, currentIndex + 1)}/${CHAPTERS.length}`;
     const endings = U.store.get(G.endingsKey, []);
     const ec = document.getElementById('ending-count');
     if (ec) ec.textContent = 'SONLAR ' + endings.length + '/4';
@@ -1128,7 +1180,7 @@
     });
   };
 
-  G.SAVE_VERSION = 4;
+  G.SAVE_VERSION = 6;
 
   G.continueRun = function () {
     const save = U.store.get(G.saveKey, null);
@@ -1207,7 +1259,7 @@
       sub: document.getElementById('ch-sub'),
       obj: document.getElementById('ch-objective')
     };
-    if (card.kicker) card.kicker.textContent = story.number;
+    if (card.kicker) card.kicker.textContent = `BÖLÜM ${G.chapterIndex + 1}/${CHAPTERS.length}`;
     if (card.title) card.title.textContent = story.title;
     if (card.sub) card.sub.textContent = story.subtitle;
     if (card.obj) card.obj.textContent = story.objective;
@@ -1318,7 +1370,7 @@
     const w = G.world;
     r = r || .34;
     const bad = (px, py) => w.touchesSolid(px, py, r) ||
-      w.props.some(p => p.collide && !p.hidden && U.dist2(px, py, p.x, p.y) < (p.radius + r) ** 2);
+      w.props.some(p => p.collide && !p.hidden && U.dist2(px, py, p.x, p.y) < (w.propRadius(p) + r) ** 2);
     if (!bad(x, y)) return { x, y };
     for (let rad = .7; rad <= 7; rad += .7) {
       for (let i = 0; i < 16; i++) {
@@ -1554,7 +1606,7 @@
     if (t) t.textContent = text || '';
     if (s) s.textContent = sub || '';
     const tag = document.getElementById('chapter-tag');
-    if (tag && STORY[G.chapterKey]) tag.textContent = STORY[G.chapterKey].number;
+    if (tag && STORY[G.chapterKey]) tag.textContent = `BÖLÜM ${G.chapterIndex + 1}/${CHAPTERS.length}`;
     G.objectivePulse = 1;
   };
 
@@ -1817,7 +1869,7 @@
     if (w.touchesSolid(x, y, r)) return true;
     for (const p of w.props) {
       if (!p.collide || p.hidden) continue;
-      if (U.dist2(x, y, p.x, p.y) < (p.radius + r) ** 2) return true;
+      if (U.dist2(x, y, p.x, p.y) < (w.propRadius(p) + r) ** 2) return true;
     }
     for (const n of G.npcs) {
       if (n === ent || !n.active) continue;
@@ -2135,6 +2187,15 @@
     if (v) v.textContent = door.label;
   };
 
+  G.flavorInteraction = function () {
+    const replies = [
+      'Tamamdır, etkileşimi yaptın. Görevle ilgili değil; keyfine bak!',
+      'Bir göz attın. Şimdilik değişen bir şey yok; yoluna devam edebilirsin.',
+      'Kontrol ettin, hepsi bu. Hikâyenin hedefi değişmedi.'
+    ];
+    G.toast(replies[Math.floor(Math.random() * replies.length)]);
+  };
+
   G.useInteractable = function (it) {
     if (!it) return;
     if (it.type === 'note' || it.type === 'doc') {
@@ -2165,7 +2226,7 @@
     if (!cfg) {
       if (it.type === 'boat') { G.toast('Tekne henüz hazır değil — önce flakonu bul'); return; }
       if (it.type === 'tower') { G.runEvent('tower'); return; }
-      G.toast(it.label);
+      G.flavorInteraction();
       return;
     }
     if (cfg.require && !cfg.require(G)) {
@@ -2183,7 +2244,7 @@
           { type: 'end' }
         ], false);
       } else {
-        G.toast(it.label);
+        G.flavorInteraction();
       }
       return;
     }
@@ -2201,7 +2262,7 @@
       }
       return;
     }
-    G.toast(it.label);
+    G.flavorInteraction();
   };
 
   /* ============================================================
@@ -2213,12 +2274,7 @@
     const dt = Math.min(0.05, dtRaw || 0.016);
     G.time += dt;
 
-    if (G.mode === 'chapter') {
-      if (G.chapterCardPending) {
-        G.chapterCardTimer -= dt;
-        if (G.chapterCardTimer <= 0) G.skipChapterCard();
-      }
-    }
+    // Chapter cards stay visible until the player explicitly continues; never auto-skip.
 
     if (G.mode === 'play') {
       G.update(dt);
@@ -2424,7 +2480,7 @@
     if (G.world.touchesSolid(x, y, z.radius * .8)) return true;
     for (const pp of G.world.props) {
       if (!pp.collide || pp.hidden) continue;
-      if (U.dist2(x, y, pp.x, pp.y) < (pp.radius + z.radius * .8) ** 2) return true;
+      if (U.dist2(x, y, pp.x, pp.y) < (G.world.propRadius(pp) + z.radius * .8) ** 2) return true;
     }
     return false;
   };
