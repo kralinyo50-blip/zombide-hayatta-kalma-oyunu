@@ -1438,7 +1438,7 @@
         <span>Atış: <b>${G.stats.shots}</b></span>
         <span>Hasar: <b>${Math.round(G.stats.damageTaken)}</b></span>
         <span>Güven: <b>${(G.flags.trust || 0) >= 0 ? '+' : ''}${G.flags.trust || 0}</b></span>
-        <span>Bölüm: <b>${G.chapterIndex + 1}/3</b></span>`;
+        <span>Bölüm: <b>${G.chapterIndex + 1}/${CHAPTERS.length}</b></span>`;
     }
   };
 
