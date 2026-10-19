@@ -2830,10 +2830,11 @@
       G.skyMode = G.chapterKey;
       G.skyTex = TEX.makeSky((FLOW[G.chapterKey] && FLOW[G.chapterKey].sky) || (G.chapterKey === 'ch3' ? 'red' : 'night'));
     }
-    // Mode badge güncelle
+    // Mode badge güncelle — zorla 3D teşhis
     const badge = document.getElementById('mode-badge');
-    const is3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
-    if (badge) { badge.textContent = is3D ? 'TAM 3D AKTİF' : '2.5D FALLBACK'; badge.style.color = is3D ? '#7af0ff' : '#ff9a7a'; badge.style.borderColor = is3D ? 'rgba(122,200,255,.6)' : 'rgba(255,140,80,.6)'; }
+    const has3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized);
+    const is3D = has3D && !ENGINE3D.useFallback;
+    if (badge) { badge.textContent = is3D ? 'TAM 3D AKTİF' : (has3D ? '3D HAZIR AMA FALLBACK' : '3D YOK'); badge.style.color = is3D ? '#7af0ff' : '#ff9a7a'; badge.style.borderColor = is3D ? 'rgba(122,200,255,.6)' : 'rgba(255,140,80,.6)'; }
     const scene = {
       world: G.world,
       player: p,
@@ -2856,20 +2857,44 @@
       chapter: G.chapterKey,
       worldKey: G.world._engId || G.chapterKey
     };
-    // TAM 3D — tekrar açıldı, siyah ekran için hata yakalama eklendi
-    const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    // ZORLA 3D — kullanıcı komple 3D istedi
+    const use3D = has3D;
     if (use3D) {
-      ENGINE3D.render(scene);
-      // Overlay canvas'ı temizle — 3D'nin üstüne sadece vignette/particle çiziyoruz
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, G.view.width, G.view.height);
-      // muzzle ışığını 3D zaten yapıyor, 2D flash sadece hafif
-      if (G.muzzle > .02) {
-        const g = ctx.createRadialGradient(G.view.width * .72, G.view.height * .72, 10, G.view.width * .72, G.view.height * .72, G.view.width * .55);
-        g.addColorStop(0, `rgba(255,220,150,${.18 * G.muzzle})`);
-        g.addColorStop(1, 'rgba(255,180,80,0)');
-        ctx.fillStyle = g;
+      try {
+        ENGINE3D.render(scene);
+        // Overlay canvas'ı temizle — 3D'nin üstüne sadece vignette/particle çiziyoruz
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, G.view.width, G.view.height);
+        if (G.muzzle > .02) {
+          const g = ctx.createRadialGradient(G.view.width * .72, G.view.height * .72, 10, G.view.width * .72, G.view.height * .72, G.view.width * .55);
+          g.addColorStop(0, `rgba(255,220,150,${.18 * G.muzzle})`);
+          g.addColorStop(1, 'rgba(255,180,80,0)');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, G.view.width, G.view.height);
+        }
+      } catch(e){
+        console.error('3D render fail',e);
+        const ov=document.getElementById('err-overlay');
+        if(ov) ov.textContent='3D HATA: '+e.message+'\n'+e.stack;
+        ENGINE3D.show(false);
+        // fallback RAY
+        RAY.render(scene);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.fillStyle = '#000';
         ctx.fillRect(0, 0, G.view.width, G.view.height);
+        const dpr2 = G.dpr;
+        ctx.save(); ctx.scale(1, 1);
+        const mx2 = Math.abs(sx), my2 = Math.abs(sy);
+        RAY.blit(ctx, G.view.width + mx2 * 2, G.view.height + my2 * 2, -mx2 + sx, -my2 + sy, 0);
+        ctx.restore();
+        if (G.muzzle > .02) {
+          const g = ctx.createRadialGradient(G.view.width * .72, G.view.height * .72, 10, G.view.width * .72, G.view.height * .72, G.view.width * .55);
+          g.addColorStop(0, `rgba(255,220,150,${.30 * G.muzzle})`);
+          g.addColorStop(1, 'rgba(255,180,80,0)');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, G.view.width, G.view.height);
+        }
+        G.drawWeapon(ctx, W * dpr, H * dpr, dpr);
       }
     } else {
       if (typeof ENGINE3D !== 'undefined' && ENGINE3D.canvas) ENGINE3D.show(false);
