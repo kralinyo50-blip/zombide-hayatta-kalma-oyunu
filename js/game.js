@@ -942,9 +942,18 @@
     });
   };
 
+  G.SAVE_VERSION = 3;
+
   G.continueRun = function () {
     const save = U.store.get(G.saveKey, null);
     if (!save) { G.toast('Kayıt bulunamadı'); return; }
+    if (save.v !== G.SAVE_VERSION || !CHAPTERS.includes(save.chapter)) {
+      // eski sürümden kalan kayıt: hikâye baştan kuruldu
+      U.store.del(G.saveKey);
+      G.toast('Eski kayıt sürümü — yeni hikâye başlatılıyor');
+      G.newRun();
+      return;
+    }
     AUD.init();
     AUD.stopMusic();
     G.flags = save.flags || {};
@@ -965,6 +974,7 @@
     if (!G.started) return;
     const cfg = FLOW[G.chapterKey] || {};
     U.store.set(G.saveKey, {
+      v: G.SAVE_VERSION,
       chapter: G.chapterKey,
       chapterIndex: G.chapterIndex,
       chapterTitle: (STORY[G.chapterKey] && STORY[G.chapterKey].title) || '',
