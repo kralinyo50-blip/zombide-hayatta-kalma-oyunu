@@ -66,4 +66,30 @@ hâlâ cebinde mi, Leyla sana güvendi mi. Final galerisi kalıcı olarak `0/4` 
 - `js/world.js`: 14 harita — `ev` / `ev_gece` / `ev2` (17×14 daire), `mahalle`, `sahil`, `karakoy`, `galata`, `kizkulesi`, `banka`, `hastane`, `metro`, `sarnic`, `rihtim`, `ada`.
 - Tüm dokular, sprite'lar ve harita çalışma anında üretilir.
 
-Yerel çalıştırma: `python3 -m http.server 8000` → <http://localhost:8000>
+## Çalıştırma
+
+**Windows'ta en kolay yol:** `Başlat.bat` dosyasına çift tıkla.
+- Oyunu yerel sunucuya alır, Chrome'da (yoksa varsayılan tarayıcıda)
+  `http://localhost:8000/` adresinde açar.
+- Node.js kuruluysa onu kullanır; kurulu değilse Windows'un kendi
+  PowerShell'i ile aynı işi yapar — **hiçbir ek kurulum gerekmez**.
+- 8000 doluysa sırayla 8080 / 8090 / 8123 / 8765 portlarını dener.
+- Sunucuyu durdurmak için açılan siyah pencereyi kapat.
+- Sadece `127.0.0.1` dinler: yönetici izni istemez, dışarıya açılmaz.
+
+Elle çalıştırma (herhangi bir işletim sistemi):
+
+```bash
+node sunucu.js          # Node.js ile (npm install yok)
+python3 -m http.server 8000   # Python ile
+```
+
+Sonra tarayıcıdan <http://localhost:8000> adresini aç.
+`index.html` doğrudan çift tıklanarak da açılır (dosya modunda çalışır),
+ancak önerilen yol yerel sunucudur.
+
+| Dosya | Görev |
+| --- | --- |
+| `Başlat.bat` | Windows başlatıcı (çift tıkla) |
+| `sunucu.js` | Node.js sunucusu + tarayıcı açma (bağımlılık yok) |
+| `sunucu.ps1` | Node yoksa PowerShell sunucusu (yedek) |
