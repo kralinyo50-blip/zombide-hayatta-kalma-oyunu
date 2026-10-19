@@ -9,7 +9,7 @@
   const G = {
     mode: 'title',
     prevMode: null,
-    chapterKey: 'ch1',
+    chapterKey: 'p1',
     chapterIndex: 0,
     world: null,
     player: { x: 2, y: 2, a: 0, pitch: 0, hp: 100, maxHp: 100, stamina: 100, bob: 0, bobPhase: 0 },
@@ -128,6 +128,8 @@
         const shot = opts.shot || opts.visual || null;
         const cw = document.getElementById('screen-cinematic');
         if (cw) cw.classList.toggle('has-shot', !!shot);
+        const stg = document.getElementById('cine-stage');
+        if (stg) stg.classList.remove('hidden');
         if (global.CINE) { CINE.init(); if (shot) CINE.start(shot); else CINE.stop(); }
         const cl = document.getElementById('cine-lines');
         if (cl) cl.innerHTML = '';
