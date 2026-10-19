@@ -64,7 +64,8 @@
   };
 
   const $ = U.$;
-  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'p5', 'ch1', 'ch2', 'ch3'];
+  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'p5', 'karantina', 'ch1', 'banka', 'hastane', 'metro',
+    'sarnic', 'ch2', 'kulemeydan', 'rihtim', 'tekne', 'ada', 'ch3', 'kizil', 'secim', 'final'];
 
   /* ============================================================
      SCREENS
@@ -206,7 +207,7 @@
             if (global.CINE) CINE.stop();
             Screens.close('screen-dialogue');
             Screens.close('screen-cinematic');
-            G.showEnding(node.ending);
+            G.showEnding(node.ending === 'auto' ? (G.flags.final_ending || 'safak') : node.ending);
             return;
           case 'end':
             this.finish();
@@ -403,12 +404,12 @@
         tv: { event: 'tv', require: (g) => !!g.flags.p1_anne, gateText: 'Önce annemle konuşayım.' },
         ev_exit: { event: 'cikis', require: (g) => !!g.flags.p1_haber, gateText: 'Önce televizyondaki haberi görmeliyim.' }
       },
-      objective: { text: 'Annenle konuş', sub: 'Cihangir • 0. Gün, 21:12', target: [23.2, 8.4] },
+      objective: { text: 'Annenle konuş', sub: 'Cihangir • 0. Gün, 21:12', target: [13.4, 3.6] },
       objectives: [
-        { when: (g) => !!g.flags.p1_anne, text: 'Babana haberleri sor', sub: 'Cihangir • 0. Gün, 21:24', target: [7.4, 3.8] },
-        { when: (g) => !!g.flags.p1_baba, text: 'Televizyonu aç', sub: 'Cihangir • 0. Gün, 21:47', target: [8.2, 4.6] },
-        { when: (g) => !!g.flags.p1_haber, text: 'Pencereye git', sub: 'Cihangir • 0. Gün, 22:04', target: [3.5, 6.6] },
-        { when: (g) => !!g.flags.p1_pencere, text: 'Daire kapısına git', sub: 'Cihangir • 0. Gün, 22:19', target: [14, 19.6] }
+        { when: (g) => !!g.flags.p1_anne, text: 'Babana haberleri sor', sub: 'Cihangir • 0. Gün, 21:24', target: [5.2, 3.2] },
+        { when: (g) => !!g.flags.p1_baba, text: 'Televizyonu aç', sub: 'Cihangir • 0. Gün, 21:47', target: [6.0, 3.5] },
+        { when: (g) => !!g.flags.p1_haber, text: 'Pencereye git', sub: 'Cihangir • 0. Gün, 22:04', target: [2.4, 3.6] },
+        { when: (g) => !!g.flags.p1_pencere, text: 'Daire kapısına git', sub: 'Cihangir • 0. Gün, 22:19', target: [10, 11.4] }
       ]
     },
     p2: {
@@ -435,12 +436,12 @@
           gateText: 'Önce dairedeki sesi temizle.'
         }
       },
-      objective: { text: 'Salona git', sub: 'Cihangir • 0. Gün, 23:14', target: [7, 6] },
+      objective: { text: 'Salona git', sub: 'Cihangir • 0. Gün, 23:14', target: [4.6, 4.6] },
       objectives: [
-        { when: (g) => !!g.flags.p2_salon, text: 'Koridordaki sesi kontrol et', sub: 'Cihangir • 0. Gün, 23:19', target: [14, 16.2] },
-        { when: (g) => !!g.flags.p2_kapi, text: 'Balkon kapısını kontrol et', sub: 'Cihangir • 0. Gün, 23:31', target: [7.6, 8.5] },
-        { when: (g) => !!g.flags.p2_balkon && g.zombies.some(z => !z.dead), text: 'Daireyi temizle', sub: 'Cihangir • 0. Gün, 23:41', target: [7, 6] },
-        { when: (g) => !!g.flags.p2_balkon && g.zombies.every(z => z.dead), text: 'Annene ve Ada\'ya dön', sub: 'Cihangir • 0. Gün, 23:52', target: [5.4, 6.4] }
+        { when: (g) => !!g.flags.p2_salon, text: 'Koridordaki sesi kontrol et', sub: 'Cihangir • 0. Gün, 23:19', target: [10, 9.2] },
+        { when: (g) => !!g.flags.p2_kapi, text: 'Balkon kapısını kontrol et', sub: 'Cihangir • 0. Gün, 23:31', target: [2.4, 5.2] },
+        { when: (g) => !!g.flags.p2_balkon && g.zombies.some(z => !z.dead), text: 'Daireyi temizle', sub: 'Cihangir • 0. Gün, 23:41', target: [4.6, 4.6] },
+        { when: (g) => !!g.flags.p2_balkon && g.zombies.every(z => z.dead), text: 'Annene ve Ada\'ya dön', sub: 'Cihangir • 0. Gün, 23:52', target: [3.3, 4.4] }
       ]
     },
     p3: {
@@ -462,9 +463,9 @@
           gateText: 'Önce dairedeki sesi temizle.'
         }
       },
-      objective: { text: 'Salona git', sub: 'Cihangir • 1. Gün, 06:44', target: [7, 6] },
+      objective: { text: 'Salona git', sub: 'Cihangir • 1. Gün, 06:44', target: [4.6, 4.6] },
       objectives: [
-        { when: (g) => !!g.flags.p3_salon, text: 'Daireyi temizle', sub: 'Cihangir • 1. Gün, 06:52', target: [13.8, 18.4] }
+        { when: (g) => !!g.flags.p3_salon, text: 'Daireyi temizle', sub: 'Cihangir • 1. Gün, 06:52', target: [9.8, 6.0] }
       ]
     },
     p4: {
@@ -510,6 +511,189 @@
         { when: (g) => !!g.flags.p4_kapi, text: 'Rıhtıma yürü', sub: 'Sahil yolu • 1. Gün, 18:26', target: [56, 37] }
       ]
     },
+    karantina: {
+      world: 'sahil',
+      sky: 'dawn',
+      ambience: 'street',
+      introCinematic: true,
+      introShot: 'coast',
+      start: { x: 57.4, y: 34.4, a: Math.PI },
+      triggers: { kar_tel: 'tel', kar_doktor: 'doktor', kar_kacis: 'kacis' },
+      interactions: {
+        sahil_doc: { doc: 'p4', flag: 'read_doc_p4' },
+        sahil_boat: { event: 'erzak', doneFlag: 'kar_erzak' }
+      },
+      objective: { text: 'Telin yanına git', sub: 'Sahil kampı • 3. Gün, 09:20', target: [56, 33] },
+      objectives: [
+        { when: (g) => !!g.flags.kar_tel, text: 'Kamp doktoruyla konuş', sub: 'Sahil kampı • 3. Gün, 09:47', target: [58, 29] },
+        { when: (g) => !!g.flags.kar_doktor, text: 'Gece aracına yetiş', sub: 'Sahil kampı • 3. Gün, 21:40', target: [60, 38] }
+      ]
+    },
+    banka: {
+      world: 'banka',
+      sky: 'night',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'field',
+      start: { x: 14, y: 20.4, a: -Math.PI / 2 },
+      triggers: { banka_giris_t: 'giris' },
+      interactions: {
+        banka_doc: { doc: 'ch1', flag: 'read_doc_ch1' },
+        banka_anahtar: { event: 'mudur', doneFlag: 'bank_key' },
+        banka_vault: { event: 'vault', require: (g) => !!g.flags.bank_key, gateText: 'Önce kasa anahtarını bul.' }
+      },
+      objective: { text: 'Müdür odasına gir', sub: 'Karaköy • 01:12', target: [11, 17] },
+      objectives: [
+        { when: (g) => !!g.flags.bank_key, text: 'Kasa dairesini aç', sub: 'Karaköy • 01:26', target: [16, 17] }
+      ]
+    },
+    hastane: {
+      world: 'hastane',
+      sky: 'night',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'home',
+      start: { x: 3.4, y: 6.4, a: 0 },
+      triggers: { has_giris_t: 'giris', has_koridor_t: 'kayit' },
+      interactions: {
+        has_doc: { doc: 'p4', flag: 'read_doc_p4' },
+        has_anahtar: { event: 'morg', doneFlag: 'has_key' },
+        has_gorevli: { doc: 'ch2', flag: 'read_doc_ch2' },
+        has_meds: { event: 'meds', require: (g) => !!g.flags.has_key, gateText: 'Depo kilitli — nöbetçi dolabına bak.' },
+        has_exit: { event: 'meds' }
+      },
+      objective: { text: 'Morgdan anahtarı al', sub: 'Karaköy Hastanesi • 02:05', target: [25, 15] },
+      objectives: [
+        { when: (g) => !!g.flags.has_key, text: 'İlaç dolabını aç', sub: 'Karaköy Hastanesi • 02:21', target: [16, 20] }
+      ]
+    },
+    metro: {
+      world: 'metro',
+      sky: 'night',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'stair',
+      start: { x: 6, y: 10.6, a: 0 },
+      triggers: { metro_platform_t: 'peron' },
+      interactions: {
+        metro_doc: { doc: 'p2', flag: 'read_doc_p2' },
+        metro_bilet: { event: 'bilet', doneFlag: 'metro_bilet' },
+        metro_anahtar: { event: 'bakim', doneFlag: 'metro_anahtar' },
+        metro_exit: { event: 'cikis', require: (g) => !!g.flags.metro_bilet, gateText: 'Perondan geçmek için bilet gerek.' }
+      },
+      objective: { text: 'Bilet gişesini bul', sub: 'Karaköy İstasyonu • 02:48', target: [28.4, 3.6] },
+      objectives: [
+        { when: (g) => !!g.flags.metro_bilet, text: 'Tünel çıkışına ulaş', sub: 'Karaköy İstasyonu • 03:02', target: [40, 10] }
+      ]
+    },
+    sarnic: {
+      world: 'sarnic',
+      sky: 'night',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'bogaz',
+      start: { x: 18, y: 24.6, a: -Math.PI / 2 },
+      triggers: { sarnic_altar_t: 'altar' },
+      interactions: {
+        sarnic_doc: { doc: 'ch1b', flag: 'read_doc_ch1b' },
+        sarnic_exit: { event: 'cikis', require: (g) => !!g.flags.read_doc_ch1b, gateText: 'Önce sunağa bak.' }
+      },
+      objective: { text: 'Sunak taşına ulaş', sub: 'Bazilika Sarnıcı • 03:20', target: [18, 15] }
+    },
+    kulemeydan: {
+      world: 'karakoy',
+      sky: 'night',
+      ambience: 'street',
+      introCinematic: true,
+      introShot: 'street',
+      start: { x: 36, y: 57, a: -Math.PI / 2 },
+      triggers: { square_arrive: 'varis', tower_approach: 'dalga' },
+      interactions: {
+        tower: { event: 'kule', require: (g) => !!g.flags.kulemeydan_temiz, gateText: 'Önce meydanı temizle.' }
+      },
+      objective: { text: 'Meydanı temizle', sub: 'Galata • 03:58', target: [36, 24] },
+      objectives: [
+        { when: (g) => !!g.flags.kulemeydan_temiz, text: 'Rıhtıma in', sub: 'Galata • 04:02', target: [36, 21] }
+      ]
+    },
+    rihtim: {
+      world: 'rihtim',
+      sky: 'night',
+      ambience: 'street',
+      introCinematic: true,
+      introShot: 'coast',
+      start: { x: 6.4, y: 28.4, a: 0 },
+      triggers: { rihtim_in_t: 'varis', rihtim_meydan_t: 'depo' },
+      interactions: {
+        rihtim_doc: { doc: 'p4', flag: 'read_doc_p4' },
+        rihtim_anahtar: { event: 'anahtar', doneFlag: 'rihtim_anahtar' },
+        rihtim_tekne: { event: 'tekne', require: (g) => !!g.flags.rihtim_anahtar, gateText: 'Önce depo anahtarını bul.' }
+      },
+      objective: { text: 'Bekçi kulübesinden anahtarı al', sub: 'Karaköy Rıhtımı • 04:20', target: [44.4, 20.4] },
+      objectives: [
+        { when: (g) => !!g.flags.rihtim_anahtar, text: 'Tekneye bin', sub: 'Karaköy Rıhtımı • 04:40', target: [33.4, 29.6] }
+      ]
+    },
+    tekne: {
+      world: 'rihtim',
+      sky: 'night',
+      ambience: 'street',
+      introCinematic: true,
+      introShot: 'bogaz',
+      start: { x: 34, y: 30, a: -Math.PI / 2 },
+      triggers: {},
+      interactions: {
+        rihtim_tekne: { event: 'gecis' }
+      },
+      objective: { text: "Adaya yaklaş", sub: 'Boğaz • 05:00', target: [33.4, 29.6] }
+    },
+    ada: {
+      world: 'ada',
+      sky: 'night',
+      ambience: 'street',
+      introCinematic: true,
+      introShot: 'bogaz',
+      start: { x: 6.4, y: 14.6, a: 0 },
+      triggers: { ada_in_t: 'varis' },
+      interactions: {
+        ada_doc: { doc: 'ch2', flag: 'read_doc_ch2' },
+        ada_kule: { event: 'kule', require: (g) => !!g.flags.kule_anahtar, gateText: 'Kule kapısı kilitli — anahtar teknede kaldı.' }
+      },
+      objective: { text: 'Kule kapısına ulaş', sub: 'Kız Kulesi • 05:02', target: [15, 13] }
+    },
+    kizil: {
+      world: 'kizkulesi',
+      sky: 'night',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'stair',
+      start: { x: 27.2, y: 44.0, a: -Math.PI / 2 },
+      triggers: { kizil_tepe: 'tepe' },
+      interactions: {},
+      objective: { text: 'Kulenin tepesine çık', sub: 'Kız Kulesi • 04:41', target: [27, 28] }
+    },
+    secim: {
+      world: 'kizkulesi',
+      sky: 'dawn',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'coast',
+      start: { x: 27.2, y: 30.0, a: -Math.PI / 2 },
+      triggers: {},
+      interactions: {},
+      objective: { text: 'Kararını ver', sub: 'Kız Kulesi • 04:51', target: [27, 28] }
+    },
+    final: {
+      world: 'kizkulesi',
+      sky: 'dawn',
+      ambience: 'indoor',
+      introCinematic: true,
+      introShot: 'coast',
+      start: { x: 27.2, y: 30.0, a: -Math.PI / 2 },
+      triggers: {},
+      interactions: {},
+      objective: { text: 'Son', sub: 'Kız Kulesi • 05:00', target: [27, 28] }
+    },
     ch1: {
       world: 'karakoy',
       ambience: 'street',
@@ -531,26 +715,25 @@
       objective: { text: 'Karaköy Meydanı\'na ulaş', sub: 'Karaköy • 22:47', target: [36, 57] }
     },
     ch2: {
-      world: 'galata',
+      world: 'karakoy',
+      sky: 'night',
       ambience: 'street',
       intro: 'intro',
+      introShot: 'street',
+      start: { x: 21, y: 44, a: Math.PI },
       triggers: {
-        ch2_intro: 'arrive',
-        ch2_bank: 'bank'
+        square_arrive: 'arrive',
+        tower_approach: 'finale'
       },
       interactions: {
         deniz: { event: 'deniz', doneFlag: 'met_deniz', repeat: ['DENİZ', 'Ben iyiyim. Sen... kuleye gidiyor musun?'] },
-        safe: { event: 'safe', doneFlag: 'opened_safe' },
-        vial: { event: 'vault', doneFlag: 'took_vial', require: (g) => g.world.doors.get('vault_ch2').open },
         manager_note: { doc: 'ch2', flag: 'read_doc_ch2' },
-        radio2: { event: 'radio' },
-        boat2: { event: 'finale', require: (g) => !!g.flags.vial, doneFlag: 'boat_taken', gate: 'vial' }
+        radio1: { event: 'radio' },
+        tower: { event: 'finale' }
       },
-      objective: { text: 'Bankalar Hanı\'na ulaş', sub: 'Galata • 01:12', target: [13, 46] },
+      objective: { text: 'Bankalar Hanı\'na ulaş', sub: 'Galata • 03:52', target: [13, 46] },
       objectives: [
-        { when: (g) => !!g.flags.opened_safe || !!g.flags.bank_key, text: 'Kasa dairesini aç', sub: 'Bankalar Hanı • 01:52', target: [11, 42] },
-        { when: (g) => g.world && g.world.doors.get('vault_ch2') && g.world.doors.get('vault_ch2').open, text: 'Kasa dairesindeki flakonu al', sub: 'Bankalar Hanı • 02:05', target: [11.4, 40.6] },
-        { when: (g) => !!g.flags.vial, text: 'Karaköy Rıhtımı\'na dön', sub: 'Galata • 03:10', target: [32, 57] }
+        { when: (g) => !!g.flags.met_deniz, text: 'Kule meydanına ulaş', sub: 'Galata • 04:02', target: [36, 24] }
       ]
     },
     ch3: {
@@ -944,7 +1127,7 @@
     });
   };
 
-  G.SAVE_VERSION = 3;
+  G.SAVE_VERSION = 4;
 
   G.continueRun = function () {
     const save = U.store.get(G.saveKey, null);

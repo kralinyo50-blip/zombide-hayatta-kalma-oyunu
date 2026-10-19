@@ -335,8 +335,8 @@
             ME('...Ada, arkaya geç. Şimdi!'),
             FN((g) => {
               g.flags.p2_balkon = true;
-              g.spawnAt('walker', 9.4, 8.2);
-              g.spawnAt('walker', 8.6, 6.4);
+              g.spawnAt('walker', 6.4, 5.6);
+              g.spawnAt('walker', 9.6, 7.2);
               g.toast('Daireye bir şey girdi');
             }),
             N('Mutfak kapısının ardından bir cam kırılışı. Balkon kapısı zorlanıyor.'),
@@ -408,9 +408,9 @@
           LBL('fight'),
           FN((g) => {
             g.flags.p3_salon = true;
-            g.spawnAt('walker', 13.8, 18.4);
-            g.spawnAt('walker', 13.8, 11.4);
-            g.spawnAt('runner', 7.4, 14.4);
+            g.spawnAt('walker', 13.2, 5.2);
+            g.spawnAt('walker', 13.2, 9.8);
+            g.spawnAt('runner', 5.4, 10.2);
           }),
           ME('Şimdi. Silahını kaldır.'),
           O('Daireyi temizle', 'Cihangir • 1. Gün, 06:52'),
@@ -636,20 +636,496 @@
           kicker: '1. GÜN — 18:40',
           nodes: [
             N('Rıhtım. Su, taşlara vuruyor. Şehrin ışıkları teker teker yanıyor — sonra teker teker sönüyor.'),
-            N('Cebinde bir kutu antibiyotik, bir tabanca, ve bir isim: 104.6 MHz.'),
-            N('Yedi gün geçti. Belki sekiz.'),
-            N("Karantina kapısının ardında anneni ve Ada'yı son bir kez gördün: beyaz bir çadır, sarı bir battaniye, bir el sallayışı."),
-            N('Sonra çadırlar taşındı. Sonra kapı kapandı. Sonra telsizler sustu.'),
-            N('Dokuzuncu günün gecesi, Karaköy rıhtımındasın.'),
-            L('BİLİNMEYEN', '104.6 MHz', 'leyla', "...yanında kalan varsa dinlesin. Galata Kulesi'ndeyim. Panzehir burada. Ama tek başıma çıkamam."),
+            N('Cebinde bir kutu antibiyotik, bir tabanca ve bir isim: 104.6 MHz.'),
+            N("Telin ardında annen ve Ada, beyaz bir çadırın önünde. Ada elini kaldırıyor. Sen de kaldırıyorsun."),
+            N('Sonra kapı kapanıyor. Sonra telsizler susuyor.'),
             C('Neden hâlâ ayaktasın?', [
               { label: 'Ailem için.', sub: "Onları geri alacağım.", tag: 'AİLE', flags: { motive: 'aile', motiveText: 'Ailesini geri almak' } },
               { label: 'Panzehir için.', sub: 'Bir doktor, bir flakon, bir şehir.', tag: 'UMUT', flags: { motive: 'panzehir', motiveText: 'Panzehiri bulmak' } },
               { label: 'Hayatta kalmak için.', sub: 'Başka bir sebep kalmadı.', tag: 'HAYATTA KALMA', flags: { motive: 'kalmak', motiveText: 'Sadece hayatta kalmak' } }
             ]),
-            N('Motoru terk ettin. Rıhtımda, sisin içinde bir gölge daha var.'),
-            N('Silahını kavra. Bu şehirde her ses, bir seçim.'),
+            N('Kampın diğer ucunda, çadırların arasında bir sedye taşınıyor.'),
+            N('Üç gün sonra hâlâ buradasın. Telin öbür tarafında hâlâ onlar var.'),
+            { type: 'chapter', chapter: 'karantina' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM V — KARANTİNA ============ */
+    karantina: {
+      key: 'karantina',
+      number: 'BÖLÜM V',
+      title: 'KARANTİNA',
+      subtitle: "Telin bir tarafında sen, diğer tarafında annen ve Ada.",
+      objective: 'Telin yanına git',
+      objectiveSub: 'Sahil kampı • 3. Gün, 09:20',
+      mapKey: 'cihangir',
+      world: 'sahil',
+      intro: [
+        N('Üç gün. Karantina kampında üç gün, çadırda üç gün, sırada üç gün.'),
+        N('Telin öbür tarafında annen ve Ada var. Ateşleri düştü; doktor "iyileşiyorlar" dedi. Ama kimse geçmiyor.'),
+        ANNE('Oğlum? Oğlum, orada mısın?'),
+        ME('Buradayım. Buradayım, anne.'),
+        O('Telin yanına git', 'Sahil kampı • 3. Gün, 09:20'),
+        { type: 'end' }
+      ],
+      events: {
+        tel: [
+          N('Telin dibinde duruyorsunuz. Annenin elleri, iki parmak aralığından uzanıyor.'),
+          ADA('Ağabey, beni duyuyor musun? Ateşim geçti. Yalan söylemiyorum.'),
+          ME('Biliyorum. Görüyorum.'),
+          ANNE('Doktor bir şey söyledi. Bu gece bir araç kalkacakmış. Karaköy\'e. Boş yer varmış.'),
+          ME('Siz binin. Ben arkadan gelirim.'),
+          ANNE('Hayır. Sen bin. Biz... biz burada bekleriz. Ada\'nın ilacı bitmek üzere.'),
+          C('Annen ne istiyor?', [
+            { label: 'Onları geçirmeye çalış.', sub: 'Bir kez daha kuralı zorla.', tag: 'AİLE', flags: { kar_israr: true }, goto: 'a' },
+            { label: 'Sözünü dinle. Sen geçeceksin.', sub: 'Belki arkada bir hayat var.', tag: 'GERÇEK', flags: { kar_kabul: true }, goto: 'b' }
+          ]),
+          LBL('a'),
+          N('Nöbetçiye gidiyorsun. Genç bir asker; yüzü, senden büyük değil.'),
+          L('NÖBETÇİ', 'KARANTİNA HATTI', 'radio', 'Yapamam. Ateşi olan geçemez. Ben de babamı bu telin arkasında bıraktım.'),
+          N('Cevap veremiyorsun. Asker de vermiyor.'),
+          G('c'),
+          LBL('b'),
+          ANNE('Aferin. Aferin oğlum.'),
+          N('Elin, telin arasından kayıyor. Sonra bir el daha. Sonra hiçbiri.'),
+          LBL('c'),
+          { type: 'objective', text: 'Kamp doktoruyla konuş', sub: 'Sahil kampı • 3. Gün, 09:47' },
+          { type: 'end' }
+        ],
+        doktor: [
+          N('Çadırın önünde beyaz önlüklü bir kadın; gözlerinin altı kurşun rengi.'),
+          L('DOKTOR', 'KAMP HEKİMİ', 'leyla', 'Sizin aileye ilaç yazdım. Ama depo dün gece boşaltıldı.'),
+          ME('Nereye?'),
+          L('DOKTOR', 'KAMP HEKİMİ', 'leyla', 'Karaköy\'e. Askeri hastaneye. Oradan alabilirseniz...'),
+          ME('Oradan alabilirsem?'),
+          L('DOKTOR', 'KAMP HEKİMİ', 'leyla', 'Oradan alabilirsen, Ada için bir hafta daha var. Sonrasını konuşmayalım.'),
+          FN((g) => { g.flags.kar_doktor = true; }),
+          { type: 'objective', text: 'Gece aracına yetiş', sub: 'Sahil kampı • 3. Gün, 21:40' },
+          { type: 'end' }
+        ],
+        erzak: [
+          N('Kampın erzak çadırı. Birkaç kutu konserve, birkaç şişe su.'),
+          N('Kimsenin görmediği bir anda, kimsenin ihtiyaç duymadığı şeyleri alıyorsun.'),
+          FN((g) => { g.giveAmmo(8); g.heal(10); }),
+          { type: 'end' }
+        ],
+        kacis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'GECE ARACI',
+          kicker: '3. GÜN — 21:58',
+          nodes: [
+            N('Kamyonun arkasına biniyorsun. Branda kapanıyor; dünya, bir çatlağın içinden görünüyor.'),
+            N('Telin öbür tarafında iki siluet. Annen elini kaldırıyor. Ada, ateşler içinde, başını sallıyor.'),
+            N('Kamyon hareket ediyor. Sahil yolu, sisin içinde bir yara gibi açılıyor.'),
+            N('Karaköy\'e doğru. Altı gün daha.'),
             { type: 'chapter', chapter: 'ch1' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM VII — BANKALAR HANI ============ */
+    banka: {
+      key: 'banka',
+      number: 'BÖLÜM VII',
+      title: 'BANKALAR HANI',
+      subtitle: 'Mermer, toz ve kasa 07.',
+      objective: 'Müdür odasına gir',
+      objectiveSub: 'Karaköy • 01:12',
+      mapKey: 'karakoy',
+      world: 'banka',
+      intro: [
+        N('Hanın kapısı açık. İçeride mermer, toz ve uzaktan gelen bir alarm sesi var.'),
+        LEY('Kasa 07. Müdürün odasındaki duvar kasasında anahtar olmalı.'),
+        ME('İçeride biri var mı?'),
+        LEY('...Bilmiyorum. Ama flakon olmadan yukarı çıkarsan hepimiz kaybederiz.'),
+        O('Müdür odasına gir', 'Karaköy • 01:12'),
+        { type: 'end' }
+      ],
+      events: {
+        giris: [
+          N('Ayak izleri tozun içinde: bir çift bot, iki çift çıplak ayak. Sonra izler kesiliyor.'),
+          N('Gişenin arkasında bir defter. Sayfaları yırtılmış, son sayfa duruyor.'),
+          { type: 'end' }
+        ],
+        mudur: [
+          N('Müdür odası. Masada soğumuş bir çay, duvarda eğri bir tablo.'),
+          N('Tabloyu kaldırıyorsun: duvar kasası. İçinde bir anahtar ve bir not.'),
+          L('NOT', 'MÜDÜR ODASI', 'radio', '"Kasa 07\'nin anahtarı burada. Panzehiri alan kişi bunu hak eder. Ama unutma: flakon konuşur."'),
+          FN((g) => { g.flags.bank_key = true; g.toast('Kasa anahtarı alındı'); }),
+          { type: 'objective', text: 'Kasa dairesini aç', sub: 'Karaköy • 01:26' },
+          { type: 'end' }
+        ],
+        vault: {
+          cinematic: true,
+          shot: 'field',
+          title: 'KASA 07',
+          kicker: 'KARAKÖY — 01:31',
+          nodes: [
+            N('Kasa kapısı. Metal, ağır; açılırken bütün han inliyor.'),
+            N('İçeride bir raf, birkaç boş kutu ve tek bir mavi flakon.'),
+            N('Rafların birinde iki flakon var: biri mavi, biri kırmızı. Yanlarında bir not: "MAVİ = PANZEHİR. KIRMIZI = SİS."'),
+            C('Hangisini alacaksın?', [
+              { label: 'Sadece mavi flakonu al.', sub: 'Panzehir. Gerisi tehlikeli.', tag: 'UMUT', flags: { vial: true }, goto: 'blue' },
+              { label: 'Kırmızıyı da al. İkisi de işe yarayabilir.', sub: 'Sisin kendisi de bir silah olabilir.', tag: 'AÇGÖZLÜ', flags: { vial: true, vial_red: true }, goto: 'red' },
+              { label: 'İkisini de al, rafı da karıştır.', sub: 'Daha fazla bilgi, daha fazla risk.', tag: 'MERAK', flags: { vial: true, vial_red: true, bank_extra: true }, goto: 'both' }
+            ]),
+            LBL('blue'),
+            N('Mavi flakonu alıyorsun. Camın içinde bir sıvı, ışığa göre kırmızıya dönüyor.'),
+            G('after'),
+            LBL('red'),
+            N('Kırmızı flakonu da cebine koyuyorsun. Cam, avucunda bir kalp gibi atıyor.'),
+            FN((g) => g.startAlarm()),
+            G('after'),
+            LBL('both'),
+            N('Rafı çekiyorsun; arkadan bir kutu düşüyor, içinde eski bir defter.'),
+            N('Defterde tek bir cümle: "Kule, sisi çağırmadı. Sisi HATIRLADI."'),
+            FN((g) => { g.startAlarm(); g.flags.bank_defter = true; }),
+            LBL('after'),
+            LEY('Onu buldun mu? Tanrım, buldun.'),
+            ME('Buldum. Ama bununla ne yapacağımı bilmiyorum.'),
+            LEY('Hastaneye git. Karaköy\'deki askeri hastane. Orada bir laboratuvar var; flakonu analiz etmeden yukarı çıkmak intihar.'),
+            N('Hanın kapısından gelen ses: metal, tırnak, sabır.'),
+            LEY('Ve... çıkarken koş.'),
+            FN((g) => { g.flags.vial = true; g.weapons.shotgun.owned = true; }),
+            { type: 'chapter', chapter: 'hastane' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM VIII — HASTANE ============ */
+    hastane: {
+      key: 'hastane',
+      number: 'BÖLÜM VIII',
+      title: 'HASTANE',
+      subtitle: 'Koridorlar boş; sedyeler dolu.',
+      objective: 'Eczane deposunu aç',
+      objectiveSub: 'Karaköy Hastanesi • 02:05',
+      mapKey: 'karakoy',
+      world: 'hastane',
+      intro: [
+        N('Hastanenin jeneratörü hâlâ çalışıyor. Koridorlarda floresan var, ses yok.'),
+        N('Sedyelerin üstünde örtüler; örtülerin altında şekiller.'),
+        LEY('Depo kilitli olabilir. Morgdaki nöbetçi dolabında yedek anahtar var.'),
+        O('Eczane deposunu aç', 'Karaköy Hastanesi • 02:05'),
+        { type: 'end' }
+      ],
+      events: {
+        giris: [
+          N('Danışmadaki bilgisayar açık: "SON GİRİŞ — 21:47 — KIZIL SİS VAKASI".'),
+          N('Ekranda bir isim var: senin adın. Kayıt saatinden iki saat önce.'),
+          { type: 'end' }
+        ],
+        kayit: [
+          N('Hasta kayıt defteri. Son sayfada aynı el yazısı, aynı tarih.'),
+          N('"Ateş 39.4. Hastada saldırganlık. Karantinaya alınamadı. Aile bilgilendirilemedi."'),
+          ME('Bu... benim kaydım.'),
+          FN((g) => { g.flags.hastane_kayit = true; }),
+          LEY('Sakin ol. Kayıt, sadece kayıttır.'),
+          { type: 'end' }
+        ],
+        morg: [
+          N('Morg. Soğuk, mavi, sessiz. Duvarda bir dolap, içinde nöbetçi anahtarları ve bir defter.'),
+          N('Defterde son üç günün kaydı: on dokuz isim, on dokuz çizik.'),
+          L('DEFTER', 'MORG KAYDI', 'radio', '"Kasa anahtarı nöbetçi dolabında. Kimse gelmedi. Kimse gelmeyecek."'),
+          FN((g) => { g.flags.has_key = true; g.toast('Eczane deposu anahtarı alındı'); }),
+          { type: 'objective', text: 'İlaç dolabını aç', sub: 'Karaköy Hastanesi • 02:21' },
+          { type: 'end' }
+        ],
+        meds: {
+          cinematic: true,
+          shot: 'home',
+          title: 'İLAÇ',
+          kicker: 'KARAKÖY HASTANESİ — 02:24',
+          nodes: [
+            N('Depo. Raflar, kutular, etiketler. Ateş düşürücü, antibiyotik, serum.'),
+            N('Ada için bir kutu. Anne için bir kutu. Kendin için hiçbir şey.'),
+            LEY('Analiz sonucu elimde: flakon gerçek. Ama tek doz. Tek bir şehir.'),
+            ME('Kuleye çıkmalıyım.'),
+            LEY('Önce metro. Yer altından Galata\'ya; sokaklar artık geçilmiyor.'),
+            FN((g) => { g.flags.has_meds = true; g.heal(35); g.giveAmmo(10); g.flags.metro_anahtar = true; }),
+            { type: 'chapter', chapter: 'metro' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM IX — METRO ============ */
+    metro: {
+      key: 'metro',
+      number: 'BÖLÜM IX',
+      title: 'METRO',
+      subtitle: 'Yer altında ses daha yavaş yayılır.',
+      objective: 'Perondan geç',
+      objectiveSub: 'Karaköy İstasyonu • 02:48',
+      mapKey: 'karakoy',
+      world: 'metro',
+      intro: [
+        N('İstasyonun ışıkları yarı yarıya yanıyor. Turnikeler açık; kimse ödememiş.'),
+        N('Rayların üstünde bir tren, kapıları açık, içi boş.'),
+        LEY('Peron kapısı bilet istiyor. Gişedeki kartlardan al.'),
+        O('Perondan geç', 'Karaköy İstasyonu • 02:48'),
+        { type: 'end' }
+      ],
+      events: {
+        giris: [
+          N('Duvarda bir sefer tarifesi: son tren 21:12. Senin eve geldiğin saat.'),
+          N('Altında kurşun kalemle: "Buradan geçen ilk kişi geri dönmedi."'),
+          { type: 'end' }
+        ],
+        bilet: [
+          N('Gişenin çekmecesinde bir bilet, kırık bir fincan ve bir de anahtar.'),
+          N('Anahtarın etiketi: "BAKIM — TÜNEL 4".'),
+          FN((g) => { g.flags.metro_bilet = true; g.flags.metro_anahtar = true; g.toast('Bilet ve bakım anahtarı alındı'); }),
+          { type: 'end' }
+        ],
+        peron: [
+          N('Peron. Trenin kapıları açık; içeride bir çanta, bir ayakkabı, bir çocuk oyuncağı.'),
+          N('Vagonun camına yazılmış: "SİS TÜNELE İNMEDİ. TESİSAT ODASINA BAK."'),
+          { type: 'end' }
+        ],
+        bakim: [
+          N('Bakım odası. Duvarda bir harita, masada bir jeneratör anahtarı.'),
+          N('Haritada kırmızı bir kalemle işaretlenmiş yer: SARNIÇ.'),
+          ME('Yer altından Galata\'ya... sarnıç üzerinden.'),
+          FN((g) => { g.flags.metro_harita = true; g.giveAmmo(12); }),
+          { type: 'objective', text: 'Tünel çıkışına ulaş', sub: 'Karaköy İstasyonu • 03:02' },
+          { type: 'end' }
+        ],
+        cikis: {
+          cinematic: true,
+          shot: 'stair',
+          title: 'TÜNEL',
+          kicker: '03:05',
+          nodes: [
+            N('Tünelin sonunda bir kapı, kapının ardında su sesi.'),
+            N('Sarnıç. Şehrin altında, yüzyıllardır bekleyen bir boşluk.'),
+            LEY('Oradan geçebilirsin. Ama dikkatli ol — sarnıcın suyu, sisin ilk çıktığı yer.'),
+            { type: 'chapter', chapter: 'sarnic' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM X — SARNIÇ ============ */
+    sarnic: {
+      key: 'sarnic',
+      number: 'BÖLÜM X',
+      title: 'SARNIÇ',
+      subtitle: 'Suyun altında bir şehir daha var.',
+      objective: 'Sunak taşına ulaş',
+      objectiveSub: 'Bazilika Sarnıcı • 03:20',
+      mapKey: 'karakoy',
+      world: 'sarnic',
+      intro: [
+        N('Merdivenler suya iniyor. Sütunlar karanlıkta bir orman gibi.'),
+        N('Her adımda su, taşlara vuruyor; yankı, sanki biri cevap veriyor.'),
+        LEY('Sarnıcın ortasında eski bir sunak var. Sisin ilk örnekleri orada bulunmuş.'),
+        O('Sunak taşına ulaş', 'Bazilika Sarnıcı • 03:20'),
+        { type: 'end' }
+      ],
+      events: {
+        in: [
+          N('Su dizlerine kadar. Soğuk, ama tuhaf biçimde... canlı.'),
+          N('Sütunların birinde bir yazıt: "SUYA BAKMA. SU SENİ GÖRÜR."'),
+          { type: 'end' }
+        ],
+        yazit: [
+          N('Taş yazıt. Altında bir defter, naylonla sarılmış.'),
+          N('"Kızıl Sis, sarnıçta üretilmedi. Sarnıçta UYANDI. Kule onu çağırdı."'),
+          ME('Kule... onu çağırdı?'),
+          FN((g) => { g.flags.read_doc_ch1b = true; g.toast('Sarnıç notları alındı'); }),
+          { type: 'end' }
+        ],
+        altar: {
+          cinematic: true,
+          shot: 'bogaz',
+          title: 'SUNAK',
+          kicker: '03:41',
+          nodes: [
+            N('Sunak taşının üstünde bir kase, içinde koyu bir su. Su, sen yaklaşınca kımıldıyor.'),
+            N('Kasede kendi yüzünü görüyorsun. Sonra yüzünün arkasında bir başka yüz.'),
+            L('SES', 'SARNIÇ', 'kizil', '...gel... gel... gel...'),
+            ME('Hayır.'),
+            N('Kaseyi deviriyorsun. Su, taşların arasından akıp gidiyor; sarnıç, ilk kez sessiz.'),
+            LEY('İyi yaptın. Şimdi Galata\'ya. Kule, seni bekliyor.'),
+            { type: 'chapter', chapter: 'ch2' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM XII — KULE MEYDANI ============ */
+    kulemeydan: {
+      key: 'kulemeydan',
+      number: 'BÖLÜM XII',
+      title: 'KULE MEYDANI',
+      subtitle: 'Meydan dolu; hiçbiri insan değil.',
+      objective: 'Meydanı temizle',
+      objectiveSub: 'Galata • 04:05',
+      mapKey: 'karakoy',
+      world: 'galata',
+      intro: [
+        N('Galata Meydanı. Kule, sisin içinde bir iğne gibi.'),
+        N('Meydanda yüzlerce gölge var; hepsi aynı yöne, kuleye doğru yürüyor.'),
+        LEY('Kuleye giden yol kapalı. Ama sen geçebilirsin.'),
+        ME('Nasıl?'),
+        LEY('Kalabalığı yararak.'),
+        O('Meydanı temizle', 'Galata • 04:05'),
+        { type: 'end' }
+      ],
+      events: {
+        varis: [
+          N('Ayaklarının altında cam kırıkları, yaprak, bir bebek arabası.'),
+          LEY('Dikkat et. Bu kalabalık, seni görürse hepsi birden gelir.'),
+          FN((g) => g.wave('kulemeydan')),
+          { type: 'end' }
+        ],
+        dalga: [
+          N('Sis, meydanın ortasında bir kapı gibi açılıyor. Arkasından bir ses.'),
+          L('SES', 'KULE', 'kizil', '...bekledim... hep bekledim...'),
+          LEY('Cevap verme! Ne derse desin, cevap verme.'),
+          FN((g) => { g.wave('kulemeydan2'); g.flags.kulemeydan_temiz = true; }),
+          { type: 'end' }
+        ],
+        kule: [
+          N('Kule kapısı. Taş, demir ve sis. Kilitli değil; sadece ağır.'),
+          LEY('Ama kuleye giden yol kapalı. Tek yol sudan geçiyor: rıhtım, tekne, ada.'),
+          { type: 'chapter', chapter: 'rihtim' }
+        ]
+      }
+    },
+
+    /* ============ BÖLÜM XIII — RIHTIM ============ */
+    rihtim: {
+      key: 'rihtim',
+      number: 'BÖLÜM XIII',
+      title: 'RIHTIM',
+      subtitle: 'Kuleye giden tek yol, sudan geçiyor.',
+      objective: 'Tekneyi bul',
+      objectiveSub: 'Karaköy Rıhtımı • 04:20',
+      mapKey: 'karakoy',
+      world: 'rihtim',
+      intro: [
+        N('Rıhtım. Sis, denizden şehre doğru yürüyor.'),
+        N('Limanın ışıkları yanıyor ama kimse yok; sadece vinçler ve boş konteynerler.'),
+        LEY('Kuleye tekneyle gideceksin. Depoda yakıt, iskelede bir tekne olmalı.'),
+        O('Tekneyi bul', 'Karaköy Rıhtımı • 04:20'),
+        { type: 'end' }
+      ],
+      events: {
+        varis: [
+          N('Rıhtımda bir bekçi kulübesi. İçeride bir radyo, bir çay ocağı, bir tabanca.'),
+          N('Radyo açık: "…Boğaz hattında hareketlilik… teknelere yaklaşmayın…"'),
+          { type: 'end' }
+        ],
+        depo: [
+          N('Depo kapısı kilitli. Bekçi kulübesinde bir anahtar olmalı.'),
+          { type: 'end' }
+        ],
+        anahtar: [
+          N('Kulübe. Masanın üstünde bir anahtar ve bir de fotoğraf.'),
+          N('Fotoğrafta bir aile; aralarında senin yaşında bir çocuk.'),
+          FN((g) => { g.flags.rihtim_anahtar = true; g.toast('Depo anahtarı alındı'); }),
+          { type: 'objective', text: 'Depodan yakıt al', sub: 'Karaköy Rıhtımı • 04:32' },
+          { type: 'end' }
+        ],
+        tekne: {
+          cinematic: true,
+          shot: 'coast',
+          title: 'TEKNE',
+          kicker: '04:40',
+          nodes: [
+            N('Deponun arkasında bir tekne. Motoru eski, kürekleri sağlam.'),
+            N('Yakıt bidonunu yerleştiriyorsun. Boğaz, önünde karanlık bir yol gibi.'),
+            LEY('Motoru çalıştır. Kuleye git. Ve... flakonu kimseye verme.'),
+            FN((g) => { g.flags.kule_anahtar = true; g.flags.tekne_alindi = true; }),
+            { type: 'chapter', chapter: 'tekne' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM XIV — TEKNE ============ */
+    tekne: {
+      key: 'tekne',
+      number: 'BÖLÜM XIV',
+      title: 'TEKNE',
+      subtitle: 'Suda sis; küreklerde korku.',
+      objective: 'Boğaz\'ı geç',
+      objectiveSub: 'Boğaz • 04:52',
+      mapKey: 'karakoy',
+      world: 'rihtim',
+      intro: [
+        N('Motor çalışıyor. Tekne, suyun üstünde bir bıçak gibi ilerliyor.'),
+        N('Karaköy geride kalıyor; Kız Kulesi, sisin içinde bir mum gibi.'),
+        L('SES', 'BOĞAZ', 'kizil', '...dön... dön...'),
+        C('Sese ne yapacaksın?', [
+          { label: 'Motoru aç. Sesi bastır.', sub: 'Korku, hızdan başka bir şeyle geçmez.', tag: 'İNAT', flags: { tek_hiz: true }, goto: 'hiz' },
+          { label: 'Kürekleri al. Sessiz ol.', sub: 'Belki de seni duymuyordur.', tag: 'SESSİZLİK', flags: { tek_sessiz: true }, goto: 'sessiz' }
+        ]),
+        LBL('hiz'),
+        N('Motor homurdanıyor. Ses, sisin içinde yankılanıyor — ama cevap gelmiyor.'),
+        G('ada'),
+        LBL('sessiz'),
+        N('Kürekler suya giriyor. Boğaz, nefesini tutuyor.'),
+        LBL('ada'),
+        O('Adaya yaklaş', 'Boğaz • 05:00'),
+        { type: 'end' }
+      ],
+      events: {
+        gecis: {
+          cinematic: true,
+          shot: 'bogaz',
+          title: 'ADA',
+          kicker: '05:02',
+          nodes: [
+            N('Ada, önünde. Kule, bir diş gibi yükseliyor.'),
+            N('Tekneyi iskeleye bağlıyorsun. Su, taşların arasından çekiliyor.'),
+            LEY('Geldik. Şimdi... kapıyı aç.'),
+            { type: 'chapter', chapter: 'ada' }
+          ]
+        }
+      }
+    },
+
+    /* ============ BÖLÜM XV — ADA ============ */
+    ada: {
+      key: 'ada',
+      number: 'BÖLÜM XV',
+      title: 'ADA',
+      subtitle: 'Kulenin dibi; taş, yosun, rüzgâr.',
+      objective: 'Kule kapısına ulaş',
+      objectiveSub: 'Kız Kulesi • 05:02',
+      mapKey: 'karakoy',
+      world: 'ada',
+      intro: [
+        N('Tekneyi iskeleye bağlıyorsun. Ada, ayaklarının altında soğuk.'),
+        N('Kule kapısı kapalı; taşların arasından bir uğultu geliyor.'),
+        LEY('Anahtar sende. Ama kapıyı açmadan önce... bir şey daha var.'),
+        O('Kule kapısına ulaş', 'Kız Kulesi • 05:02'),
+        { type: 'end' }
+      ],
+      events: {
+        varis: [
+          N('Adanın taşları ıslak. Rıhtımda bir fener, bir de eski bir sandal.'),
+          N('Kule kapısının önünde bir levha: "KIZ KULESİ — 408 YIL".'),
+          { type: 'end' }
+        ],
+        kule: {
+          cinematic: true,
+          shot: 'stair',
+          title: 'KULE KAPISI',
+          kicker: '05:12',
+          nodes: [
+            N('Anahtarı kilide sokuyorsun. Kilit, yıllardır bekliyormuş gibi açılıyor.'),
+            L('SES', 'KULE', 'kizil', '...hoş geldin...'),
+            LEY('Şimdi. Gir. Ve sesini duyarsan, cevap verme.'),
+            { type: 'chapter', chapter: 'ch3' }
           ]
         }
       }
@@ -658,7 +1134,7 @@
     /* ============ CHAPTER 1 ============ */
     ch1: {
       key: 'ch1',
-      number: 'BÖLÜM V',
+      number: 'BÖLÜM VI',
       title: 'KARAKÖY',
       subtitle: 'Kızıl Sis\'in dokuzuncu gecesi. Rıhtımda bir sinyal yanıyor.',
       objective: 'Karaköy Meydanı\'na ulaş',
@@ -824,55 +1300,52 @@
           LBL('go'),
           N('Yokuş aşağı. Bankalar Caddesi, sisin içinde bir tünel gibi açılıyor.'),
           O('Bankalar Hanı\'na ulaş', 'Galata • 01:12'),
-          { type: 'chapter', chapter: 'ch2' }
+          { type: 'chapter', chapter: 'banka' }
         ]
       }
     },
 
-    /* ============ CHAPTER 2 ============ */
+    /* ============ BÖLÜM XI — GALATA ============ */
     ch2: {
       key: 'ch2',
-      number: 'BÖLÜM V',
-      title: 'BANKALAR CADDESİ',
-      subtitle: 'Mermerin üzerinde kan, kasaların içinde umut.',
+      number: 'BÖLÜM XI',
+      title: 'GALATA',
+      subtitle: 'Sarnıçtan çıktın; şehir aynı, sen değilsin.',
       objective: 'Bankalar Hanı\'na ulaş',
-      objectiveSub: 'Galata • 01:12',
-      mapKey: 'galata',
+      objectiveSub: 'Galata • 03:52',
+      mapKey: 'karakoy',
       world: 'galata',
       intro: [
-        N('Kule seni yukarı çağırmadı. Kule seni aşağı, Bankalar Caddesi\'ne gönderdi.'),
-        LEY('Işıklar söndü. Kasa dairesindeki flakon... tek kopya değil. Ama diğerleri bankanın alt katında. Yolu bilmiyorum.'),
-        ME('Ben bulurum.'),
-        LEY('Bir de... Bankalar Hanı\'nda bir çocuk olabilir. Adı Deniz. Annesi benim ekibimdendi.'),
-        O('Bankalar Hanı\'na ulaş', 'Galata • 01:12'),
+        N('Sarnıcın merdivenleri seni Galata\'nın taş sokaklarına bırakıyor. Sis, burada daha kalın.'),
+        LEY('Beni duyuyor musun? Sarnıçta ne olduysa... sesin titriyor.'),
+        ME('İyiyim. Sadece... suyun içinde bir şey gördüm.'),
+        LEY('Dinle. Bankalar Hanı\'nda bir çocuk var. Adı Deniz. Annesi benim ekibimdendi.'),
+        LEY('Onu bul. Sonra kule meydanına gel. Ama dikkatli ol — sokaklar artık geçilmiyor.'),
+        O('Bankalar Hanı\'na ulaş', 'Galata • 03:52'),
         { type: 'end' }
       ],
       events: {
+        arrive: [
+          N('Sokak lambaları yanıp sönüyor. Bir vitrinde, kendi yansımanı görüyorsun.'),
+          LEY('Han, caddenin batısında. Kırmızı tabelayı ara.'),
+          { type: 'end' }
+        ],
+        bank: [
+          N('Bankalar Hanı. Mermer toz, devrilmiş bir avize, kasaların arasından geçen bir uğultu.'),
+          N('Bir çocuk sesi: "...kim var orada?"'),
+          LEY('Deniz! Deniz, korkma. O, benim dostum.'),
+          { type: 'end' }
+        ],
         deniz: [
-          N('Banka holü. Mermer bankoların arkasında küçük bir sarı yağmurluk.'),
+          N('Mermer bankoların arkasında küçük bir sarı yağmurluk. İçinde bir çocuk.'),
           DENIZ('Sen... sen de onlardan mısın?'),
           ME('Hayır. Bende silah var ama... ısırmıyorum.'),
           DENIZ('Annem onların içinde. Gördüm. Kasanın orada.'),
-          LEY('Deniz! Deniz, orada mısın? Ona iyi bak. Lütfen.'),
+          LEY('Deniz, beni dinle. Onu bulacağız. Ama önce senin güvende olman lazım.'),
           C('Deniz\'i ne yapacaksın?', [
-            {
-              label: 'Onu kasanın yanına götürme. Güvende kal.',
-              sub: 'Bekle, sessiz ol, ben flakonu alıp döneceğim.', tag: 'KORUMA',
-              flags: { deniz_safe: true, trust: 1 }, toast: 'Deniz bankoda saklanıyor',
-              goto: 'safe'
-            },
-            {
-              label: 'Yanına al. Yalnız bırakma.',
-              sub: 'Bu şehirde yalnız kalan herkes kayboluyor.', tag: 'YOLDAŞ',
-              flags: { deniz_follow: true, trust: 1 }, heal: 10, toast: 'Deniz peşinde',
-              goto: 'follow'
-            },
-            {
-              label: 'Görmezden gel. Kasa dairesine git.',
-              sub: 'Flakon her şeyden önce gelir.', tag: 'SOĞUK',
-              flags: { deniz_ignored: true, trust: -2 }, toast: 'Deniz arkanda kaldı',
-              goto: 'ignore'
-            }
+            { label: 'Onu burada, bankoda sakla.', sub: 'Bekle, sessiz ol, geri döneceğim.', tag: 'KORUMA', flags: { deniz_safe: true, trust: 1 }, toast: 'Deniz bankoda saklanıyor', goto: 'safe' },
+            { label: 'Yanına al. Yalnız bırakma.', sub: 'Bu şehirde yalnız kalan herkes kayboluyor.', tag: 'YOLDAŞ', flags: { deniz_follow: true, deniz_boat: true, trust: 1 }, heal: 10, toast: 'Deniz peşinde', goto: 'follow' },
+            { label: 'Görmezden gel. Kuleye git.', sub: 'Panzehir her şeyden önce gelir.', tag: 'SOĞUK', flags: { deniz_ignored: true, trust: -2 }, toast: 'Deniz arkanda kaldı', goto: 'ignore' }
           ]),
           LBL('safe'),
           DENIZ('Tamam. Ben... ben burada saklanırım. Ama sen dön, olur mu?'),
@@ -882,92 +1355,31 @@
           G('deniz_end'),
           LBL('ignore'),
           N('Arkana bakmıyorsun. Bu, şehirde ayakta kalmanın ilk kuralı.'),
-          G('deniz_end'),
           LBL('deniz_end'),
+          FN((g) => { g.flags.met_deniz = true; }),
+          { type: 'objective', text: 'Kule meydanına ulaş', sub: 'Galata • 04:02' },
           { type: 'end' }
         ],
-        bank: [
-          N('Ana hol. Kasa dairesi kapısı, arkasında biri varmış gibi titriyor.'),
-          LEY('Müdürün notunu bul. Kasa anahtarı olmadan o kapıyı açamazsın.'),
-          N('Duvarda bir kasa var. Kilitli.')
-        ],
-        safe: [
-          N('Duvar kasası açıldı. İçinde bir zarf, bir anahtar ve bir fotoğraf.'),
-          F({ bank_key: true }),
-          N('Fotoğrafta Leyla ve Deniz\'in annesi, Galata Kulesi\'nin önünde gülüyorlar.'),
+        sokak: [
+          N('Hanın kapısından çıkıyorsun. Sokak, sisin altında bir nehir gibi akıyor.'),
+          LEY('Kalabalık! Arkanda! Koş!'),
+          FN((g) => { g.wave('ch2_sokak'); g.flags.sokak_savasi = true; }),
           { type: 'end' }
         ],
-        vault: [
-          N('Kasa dairesi. Yerde parçalanmış cam ve kurumuş bir göl.'),
-          N('Masanın üstünde iki flakon. Biri mavi. Diğeri... kırmızı.'),
-          LEY('Mavi olan panzehir. Kırmızı olan... onu açma. Onu asla açma.'),
-          C('Hangisini alacaksın?', [
-            {
-              label: 'Mavi flakon. Panzehir.',
-              sub: 'Leyla\'nın istediği. Umut.', tag: 'UMUT',
-              flags: { vial: true, took_blue: true }, toast: 'Mavi flakon alındı',
-              goto: 'blue'
-            },
-            {
-              label: 'Kırmızı flakon. Ya da hiçbiri.',
-              sub: 'Kırmızı, Kızıl Ana\'nın sesiyle atıyor.', tag: 'RİSK',
-              flags: { vial_red: true, trust: -1 }, toast: 'Kırmızı flakon alındı',
-              goto: 'red'
-            },
-            {
-              label: 'İkisini de al ve kasayı kapat.',
-              sub: 'Bazen tek bir seçim yetmez.', tag: 'AÇGÖZLÜ',
-              flags: { vial: true, vial_red: true }, toast: 'İki flakon da alındı',
-              goto: 'both'
-            }
-          ]),
-          LBL('blue'),
-          N('Flakonu cebine koyuyorsun. Mavi ışık, parmaklarının arasından sızıyor.'),
-          G('vault_end'),
-          LBL('red'),
-          N('Kırmızı flakon elinde sıcak. Bir kalp gibi değil — bir ağız gibi atıyor.'),
-          KIZIL('...akıllı çocuk.'),
-          G('vault_end'),
-          LBL('both'),
-          N('İkisini de alıyorsun. Kasa kapanınca alarm çalıyor. Bütün bina çığlık atıyor.'),
-          FN((g) => g.startAlarm()),
-          G('vault_end'),
-          LBL('vault_end'),
-          FN((g) => g.afterVial()),
-          O("Karaköy Rıhtımı'na dön", 'Galata • 03:10'),
-          { type: 'end' }
-        ],
-        arrive: [
-          N('Rıhtım sessiz. Tekneler bağlı, dalgalar sisin altında kayboluyor.'),
-          LEY("Bankalar Caddesi'ni takip et. Han, caddenin batısında."),
-          { type: 'end' }
-        ],
-        alarm: [
-          N('Alarm. Bütün banka sarsılıyor. Kapılar açılıyor, koridorlarda ayak sesleri.'),
-          LEY('Ne yaptın?! Çık oradan! Şimdi!'),
-          N('Kalabalık geliyor. Çok kalabalık.'),
+        radio: [
+          N('Telsiz cızırdıyor. Pilleri neredeyse bitmiş.'),
+          LEY('Kule meydanında bir kalabalık var. Ama kuleye giden tek yol oradan geçiyor.'),
+          ME('Yani kalabalığı yaracağım.'),
+          LEY('Evet. Ve... bir şey daha. Kule kapısı kilitli değil. Ama kule kilitli.'),
           { type: 'end' }
         ],
         finale: [
-          N('Rıhtım. Sis, denizden şehre doğru yürüyor.'),
-          LEY('Flakon sende. Deniz\'i buldun mu? ...Peki. Şimdi Kız Kulesi\'ne gelmelisin. Tekne var.'),
-          C('Rıhtımdaki tekneye bin?', [
-            {
-              label: 'Tekneye bin. Kız Kulesi\'ne git.',
-              sub: 'Suda sis, küreklerde korku.', tag: 'KIZ KULESİ',
-              flags: { boat: true }, goto: 'go'
-            },
-            {
-              label: 'Deniz\'i de al. Kimseyi bırakma.',
-              sub: 'Bir çocuk, bir kurey, bir şehir.', tag: 'YOLDAŞ',
-              flags: { boat: true, deniz_boat: true, trust: 1 }, toast: 'Deniz de teknede',
-              goto: 'go'
-            }
-          ]),
-          LBL('go'),
-          N('Kürekler suya giriyor. Arkanda Galata, önünde kule. Boğaz, sisin altında nefes alıyor.'),
-          F({ has_boat: true }),
-          { type: 'chapter', chapter: 'ch3' }
+          N('Galata Kulesi meydanı. Kule, sisin içinde bir iğne gibi.'),
+          N('Meydanda yüzlerce gölge; hepsi aynı yöne, kuleye doğru yürüyor.'),
+          LEY('İşte. Şimdi geçmelisin.'),
+          FN((g) => { g.wave('ch2_meydan'); }),
+          O('Kule meydanını geç', 'Galata • 04:05'),
+          { type: 'chapter', chapter: 'kulemeydan' }
         ]
       }
     },
@@ -975,51 +1387,40 @@
     /* ============ CHAPTER 3 ============ */
     ch3: {
       key: 'ch3',
-      number: 'BÖLÜM VII',
+      number: 'BÖLÜM XVI',
       title: 'KIZ KULESİ',
       subtitle: 'Boğaz\'ın ortasında, tek başına bir kule.',
-      objective: 'Kuleye gir',
-      objectiveSub: 'Üsküdar açıkları • 04:05',
-      mapKey: 'kizkulesi',
+      objective: 'Kule kapısına ulaş',
+      objectiveSub: 'Kız Kulesi • 05:12',
+      mapKey: 'karakoy',
       world: 'kizkulesi',
       intro: [
-        N('Ada. Taş, yosun ve rüzgâr. Kule, sisin içinden bir diş gibi yükseliyor.'),
-        LEY('Geldin. Kule kapısı... açık. Ama içeride o var.'),
-        ME('O kim?'),
-        LEY('Kızıl Ana. Sis\'in ta kendisi. Panzehiri içeride saklıyor.'),
-        LEY('Silahını hazır tut. Ve... sesini duyarsan, cevap verme.'),
-        N('Kule kapısına doğru yürüyorsun. Adımların suda yankılanıyor.'),
+        N('Kule kapısı ardına kadar açık. İçeriden gelen sıcaklık, bir nefes gibi yüzüne vuruyor.'),
+        LEY('Geldin. İçeride o var. Kızıl Ana.'),
+        ME('Kim o?'),
+        LEY('Sis\'in ta kendisi. Ama bir yüz takmış. Benimle dokuz gün önce konuştu; bir teklif yaptı.'),
+        ME('Kabul ettin mi?'),
+        LEY('...Hayır. Bu yüzden şimdi senin sesini duyuyor.'),
+        N('Kule kapısından içeri giriyorsun. Basamaklar kırmızı damarlarla sarılmış.'),
         { type: 'end' }
       ],
       events: {
         arrive: [
-          N('Ada. Kule. Rüzgârın içinde bir ses, sanki taşlar nefes alıyor.'),
-          LEY('Kule kapısına gir. Ama önce... sesini duyarsan, cevap verme.'),
+          N('Kulenin gövdesi. Duvarlar nefes alıyor; tavan, kırmızı damarlarla dolu.'),
+          LEY('Tepede. Silahını hazır tut. Ve sesini duyarsan, cevap verme.'),
           { type: 'end' }
         ],
         boss: [
-          N('Kule holü. Duvarlar nefes alıyor. Tavan, kırmızı damarlarla dolu.'),
+          N('Kulenin en üstü. Şehir ayaklarının altında; Boğaz, kızıl ve maviye bölünmüş.'),
+          N('Duvarlardan bir yüz çıkıyor. Sis, kuleyi kendi bedeni gibi giymiş.'),
           KIZIL('Sonunda. Bana doğru yürüyen bir kalp.'),
-          ME('Sen... Leyla nerede?'),
+          ME('Leyla nerede?'),
           KIZIL('Leyla mı? O, dokuz gün önce benimle konuştu. Ben de ona bir teklif yaptım. O kabul etmedi.'),
-          N('Kulenin tepesinde bir şey hareket ediyor. Kızıl Ana, kuleyi kendi bedeni gibi giymiş.'),
           KIZIL('Panzehir senin elinde. Onu bana ver, ben de sana bu şehri veririm. Ya da... onu bana verme, ben de seni alırım.'),
           C('Kızıl Ana\'ya ne diyeceksin?', [
-            {
-              label: '"Panzehir senin değil. Bu şehir de."',
-              sub: 'Silahını doğrult ve ateş et.', tag: 'DİREN',
-              flags: { defy: true }, goto: 'fight'
-            },
-            {
-              label: '"Belki bir anlaşma yapabiliriz."',
-              sub: 'Konuşmak, bir mermiden daha az kan akıtır.', tag: 'PAZARLIK',
-              flags: { bargained: true, trust: -1 }, goto: 'talk'
-            },
-            {
-              label: '"Bu şehirde kalmak istemiyorum."',
-              sub: 'Tekneyle çıkıp gitmek. Flakonu bırakmak.', tag: 'KAÇIŞ',
-              flags: { flee: true }, goto: 'flee'
-            }
+            { label: '"Panzehir senin değil. Bu şehir de."', sub: 'Silahını doğrult ve ateş et.', tag: 'DİREN', flags: { defy: true }, goto: 'fight' },
+            { label: '"Belki bir anlaşma yapabiliriz."', sub: 'Konuşmak, bir mermiden daha az kan akıtır.', tag: 'PAZARLIK', flags: { bargained: true, trust: -1 }, goto: 'talk' },
+            { label: '"Bu şehirde kalmak istemiyorum."', sub: 'Tekneyle çıkıp gitmek. Flakonu bırakmak.', tag: 'KAÇIŞ', flags: { flee: true }, goto: 'flee' }
           ]),
           LBL('talk'),
           KIZIL('Anlaşma mı? İnsanlar hep aynı şeyi söyler. Sonra hep aynı şeyi yapar.'),
@@ -1030,21 +1431,13 @@
           KIZIL('Kapıyı açık bıraktım. Tekne seni bekliyor. Ama flakonu bırakırsan...'),
           N('Elinde flakon, arkan dönük. Kulenin kapısı gerçekten açık.'),
           C('Flakonu bırakıp kaçacak mısın?', [
-            {
-              label: 'Flakonu bırak ve kaç.',
-              sub: 'Boğaz\'da bir tekne, açık deniz, bir hayat.', tag: 'FİNAL',
-              flags: { left_vial: true }, goto: 'fight'
-            },
-            {
-              label: 'Hayır. Flakon benimle kalacak.',
-              sub: 'Kaçarken bile umut taşınır.', tag: 'DİREN',
-              flags: { defy: true }, goto: 'fight'
-            }
+            { label: 'Flakonu bırak ve kaç.', sub: 'Boğaz\'da bir tekne, açık deniz, bir hayat.', tag: 'KAÇIŞ', flags: { left_vial: true }, goto: 'fight' },
+            { label: 'Hayır. Flakon benimle kalacak.', sub: 'Kaçarken bile umut taşınır.', tag: 'DİREN', flags: { defy: true }, goto: 'fight' }
           ]),
           LBL('fight'),
           N('Silahını kaldırıyorsun. Tavan, kırmızı bir çığlıkla yarılıyor.'),
           FN((g) => g.startBossFight()),
-          O('Kızıl Ana\'yı yen', 'Kız Kulesi • 04:20'),
+          O('Kızıl Ana\'yı yen', 'Kız Kulesi • 05:20'),
           { type: 'end' }
         ],
         defeated: [
@@ -1053,47 +1446,87 @@
           N('Kulenin tepesinde bir lamba yanıyor. Leyla\'nın sesi, ilk kez net.'),
           LEY('Yukarı gel. Ve flakonu getir. Son bir seçim var.'),
           FN((g) => g.onBossDefeated()),
-          { type: 'objective', text: 'Kulenin tepesindeki telsize ulaş', sub: 'Kız Kulesi • 04:41' },
-          { type: 'end' }
-        ],
-        final: [
-          N('Kulenin en üstü. Şehir ayaklarının altında; Boğaz, kızıl ve maviye bölünmüş.'),
-          LEY('Panzehir tek bir flakon. Ama şehirde hâlâ nefes alan binlerce insan var.'),
-          ME('Ne yapacağım?'),
-          LEY('Flakonu laboratuvardaki reaktöre dök. Sis dağılır. Ama bu kule, bu şehir, bu an... hepsi değişir.'),
-          LEY('Ya da flakonu kendin için sakla. ya da... yak. Bu şehri kurtarmak zorunda değilsin.'),
-          C('Son seçim. Bu şehir ne olacak?', [
-            {
-              label: 'Reaktöre dök. Panzehiri yay.',
-              sub: 'Şehri kurtar. Sonuçlarına katlan.', tag: 'UMUT',
-              flags: { ending: 'safak' }, goto: 'ending_safak'
-            },
-            {
-              label: 'Kulenin tepesinden şehre bak. Flakonu sakla.',
-              sub: 'Gücü elinde tut. Sisin yeni sahibi ol.', tag: 'KIZIL TAHT',
-              flags: { ending: 'taht' }, goto: 'ending_taht'
-            },
-            {
-              label: 'Flakonu al, tekneye bin, Boğaz\'dan çık.',
-              sub: 'Bu şehri kendi kaderine bırak.', tag: 'GEMİ',
-              flags: { ending: 'gemi' }, goto: 'ending_gemi'
-            },
-            {
-              label: 'Flakonu yak. Sis de sen de bitsin.',
-              sub: 'Hiç kimse bu gücü hak etmiyor.', tag: 'SESSİZLİK',
-              flags: { ending: 'sessizlik' }, goto: 'ending_sessizlik'
-            }
-          ]),
-          LBL('ending_safak'),
-          { type: 'ending', ending: 'safak' },
-          LBL('ending_taht'),
-          { type: 'ending', ending: 'taht' },
-          LBL('ending_gemi'),
-          { type: 'ending', ending: 'gemi' },
-          LBL('ending_sessizlik'),
-          { type: 'ending', ending: 'sessizlik' }
+          { type: 'chapter', chapter: 'kizil' }
         ]
       }
+    },
+
+    /* ============ BÖLÜM XVIII — KIZIL ANA ============ */
+    kizil: {
+      key: 'kizil',
+      number: 'BÖLÜM XVII',
+      title: 'KIZIL ANA',
+      subtitle: 'Sis dağılırken geriye bir ses kalır.',
+      objective: 'Kulenin tepesine çık',
+      objectiveSub: 'Kız Kulesi • 05:26',
+      mapKey: 'karakoy',
+      world: 'kizkulesi',
+      intro: [
+        N('Kulenin gövdesi sessiz. Duvarlardaki damarlar, sanki utangaçmış gibi çekiliyor.'),
+        LEY('Nefes al. Sadece nefes al.'),
+        ME('O... öldü mü?'),
+        LEY('Öldü demek yanlış olur. O bir sesti. Sen sesi kestin.'),
+        N('Basamakları çıkıyorsun. Her basamakta şehir biraz daha aşağıda kalıyor.'),
+        LEY('Tepede bir telsiz var. Şehir frekansı. Panzehiri nasıl yayacağımızı oradan konuşacağız.'),
+        N('Kulenin tepesine varıyorsun. Rüzgâr, ilk kez ılık.'),
+        { type: 'chapter', chapter: 'secim' }
+      ],
+      events: {
+        tepe: [
+          N('Kulenin tepesi. Şehir ayaklarının altında; Boğaz, kızıl ve maviye bölünmüş.'),
+          LEY('Telsiz burada. Ama ondan önce... cebindeki flakonu bir daha düşün.'),
+          { type: 'chapter', chapter: 'secim' }
+        ]
+      }
+    },
+
+    /* ============ BÖLÜM XIX — SON SEÇİM ============ */
+    secim: {
+      key: 'secim',
+      number: 'BÖLÜM XVIII',
+      title: 'SON SEÇİM',
+      subtitle: 'Tek flakon. Binlerce insan. Bir şehir.',
+      objective: 'Kararını ver',
+      objectiveSub: 'Kız Kulesi • 05:31',
+      mapKey: 'karakoy',
+      world: 'kizkulesi',
+      intro: [
+        N('Kulenin en üstü. Şehir ayaklarının altında; Boğaz, kızıl ve maviye bölünmüş.'),
+        N('Elinde tek bir flakon var. Camın içinde mavi bir sıvı, ışığa göre kırmızıya dönüyor.'),
+        LEY('Panzehir tek bir flakon. Ama şehirde hâlâ nefes alan binlerce insan var.'),
+        ME('Ne yapacağım?'),
+        LEY('Flakonu laboratuvardaki reaktöre dök. Sis dağılır. Ama bu kule, bu şehir, bu an... hepsi değişir.'),
+        LEY('Ya da flakonu kendin için sakla. Ya da... onu yok et. Bu şehri kurtarmak zorunda değilsin.'),
+        C('Son seçim. Bu şehir ne olacak?', [
+          { label: 'Reaktöre dök. Panzehiri yay.', sub: 'Şehri kurtar. Sonuçlarına katlan.', tag: 'UMUT', flags: { final_ending: 'safak', ending_safak: true }, goto: 'e' },
+          { label: 'Kulenin tepesinden şehre bak. Flakonu sakla.', sub: 'Gücü elinde tut. Sisin yeni sahibi ol.', tag: 'KIZIL TAHT', flags: { final_ending: 'taht', ending_taht: true }, goto: 'e' },
+          { label: 'Flakonu al, tekneye bin, Boğaz\'dan çık.', sub: 'Bu şehri kendi kaderine bırak.', tag: 'GEMİ', flags: { final_ending: 'gemi', ending_gemi: true }, goto: 'e' },
+          { label: 'Flakonu yak. Sis de sen de bitsin.', sub: 'Hiç kimse bu gücü hak etmiyor.', tag: 'SESSİZLİK', flags: { final_ending: 'sessizlik', ending_sessizlik: true }, goto: 'e' }
+        ]),
+        LBL('e'),
+        N('Kararını veriyorsun. Rüzgâr, sanki bir şeyi onaylıyormuş gibi esiyor.'),
+        { type: 'chapter', chapter: 'final' }
+      ],
+      events: {}
+    },
+
+    /* ============ BÖLÜM XX — SON ============ */
+    final: {
+      key: 'final',
+      number: 'BÖLÜM XIX',
+      title: 'SON',
+      subtitle: 'Bir şehir, bir sabah, bir kişi.',
+      objective: 'Son',
+      objectiveSub: 'Kız Kulesi • 05:40',
+      mapKey: 'karakoy',
+      world: 'kizkulesi',
+      intro: [
+        N('Boğaz\'ın üstünde ilk ışık. Sis, sanki bir şeyden korkuyormuş gibi çekiliyor.'),
+        N('Kule, ayaklarının altında sessiz. Şehir, aşağıda, nefesini tutuyor.'),
+        N('Ve sen, elinde bir flakonla, dünyanın en yaşlı şehrine bakıyorsun.'),
+        { type: 'ending', ending: 'auto' }
+      ],
+      events: {}
     },
 
     /* ============ DOCUMENTS ============ */
