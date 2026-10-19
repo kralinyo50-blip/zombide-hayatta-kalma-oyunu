@@ -1707,12 +1707,558 @@
   }
 
   const BUILDERS = {
-    ev: () => buildEv('normal'), ev2: () => buildEv('siege'), ev_gece: () => buildEv('dark'),
+    ev: () => buildEv('normal'),
+    taksim: () => build_taksim(),
+    istiklal: () => build_istiklal(),
+    eminonu: () => build_eminonu(),
+    sultanahmet: () => build_sultanahmet(),
+    eyup: () => build_eyup(),
+    balat: () => build_balat(),
+    fener: () => build_fener(),
+    besiktas: () => build_besiktas(),
+    ortakoy: () => build_ortakoy(),
+    yerebatan: () => build_yerebatan(),
+    kapalicarsi: () => build_kapalicarsi(),
+    uskudar: () => build_uskudar(),
+    kadikoy: () => build_kadikoy(),
+    camlica: () => build_camlica(),
+    belgrad: () => build_belgrad(), ev2: () => buildEv('siege'), ev_gece: () => buildEv('dark'),
     mahalle: buildMahalle, sahil: buildSahil,
     karakoy: buildKarakoy, galata: buildGalata, kizkulesi: buildKizkulesi,
     banka: buildBanka, hastane: buildHastane, metro: buildMetro, sarnic: buildSarnic,
     rihtim: buildRihtim, ada: buildAda
   };
+
+
+  function build_taksim() {
+    const W=64, H=64;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'taksim_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'taksim_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'taksim_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'taksim_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Taksim Meydanı çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_istiklal() {
+    const W=64, H=64;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'istiklal_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'istiklal_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'istiklal_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'istiklal_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'İstiklal Caddesi çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_eminonu() {
+    const W=64, H=64;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'eminonu_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'eminonu_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'eminonu_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'eminonu_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Eminönü • Yeni Cami çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_sultanahmet() {
+    const W=64, H=64;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'sultanahmet_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'sultanahmet_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'sultanahmet_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'sultanahmet_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Sultanahmet Meydanı çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_eyup() {
+    const W=50, H=50;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'eyup_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'eyup_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'eyup_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'eyup_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Eyüp Sultan çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_balat() {
+    const W=54, H=54;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'balat_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'balat_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'balat_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'balat_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Balat Sokakları çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_fener() {
+    const W=54, H=54;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'fener_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'fener_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'fener_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'fener_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Fener • Balat çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_besiktas() {
+    const W=60, H=60;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'besiktas_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'besiktas_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'besiktas_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'besiktas_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Beşiktaş İskele çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_ortakoy() {
+    const W=60, H=60;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'ortakoy_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'ortakoy_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'ortakoy_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'ortakoy_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Ortaköy Meydan çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_yerebatan() {
+    const W=36, H=28;
+    const w=new World(W,H);
+    w.defaultFloor=F.stone;
+    w.outdoorBase=0.06;
+    w.indoorBase=0.38;
+    w.ceilTex='stone';
+    w.fill(0,0,W,H,M.bank_stone);
+    w.wallRing(1,1,34,26,M.bank_stone);
+    w.carve(4,4,28,18,F.stone,true);
+    w.carve(8,8,20,10,F.marble,true);
+    w.fill(8,13,20,1,M.bank_marble);
+    w.addDoor(17,13,'metal_door',{id:'yerebatan_door',label:'Sarnıç kapısı',open:false});
+    w.carve(17,3,2,1,F.stone,true);
+    w.addDoor(17,3,'metal_door',{id:'yerebatan_enter',label:'Giriş',open:true});
+    w.carve(17,22,2,4,F.stone,true);
+    w.addDoor(17,26,'wood_door',{id:'yerebatan_exit',label:'Çıkış',open:true});
+    w.addLight(17,14,9,1.0);
+    w.addLight(8,8,5,0.7);
+    w.addLight(26,8,5,0.7);
+    w.addLight(8,20,5,0.6);
+    w.addLight(26,20,5,0.6);
+    w.addProp('shelf',10,10,{solid:true,radius:.4,worldH:1.5});
+    w.addProp('shelf',24,10,{solid:true,radius:.4,worldH:1.5});
+    w.addInteractable('cikis','exit',17,26,{radius:1.8,label:'Yerebatan Sarnıcı çıkışı'});
+    w.addProp('lamp',12,14,{solid:false,radius:.12,worldH:4.6});
+    w.addProp('lamp',22,14,{solid:false,radius:.12,worldH:4.6});
+    w.addTrigger('exit_t',17,24,4,{once:true});
+    w.addSpawn('walker',12,14); w.addSpawn('runner',22,14); w.addSpawn('walker',17,8); w.addSpawn('brute',17,18);
+    w.start={x:17,y:5,a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_kapalicarsi() {
+    const W=40, H=40;
+    const w=new World(W,H);
+    w.defaultFloor=F.wood;
+    w.outdoorBase=0.08;
+    w.indoorBase=0.55;
+    w.ceilTex='plaster';
+    w.fill(0,0,W,H,M.interior_a);
+    w.wallRing(1,1,38,38,M.interior_a);
+    // labirent dükkanlar
+    w.carve(4,4,32,32,F.stone,true);
+    w.fill(4,12,32,1,M.interior_b);
+    w.fill(4,20,32,1,M.interior_c);
+    w.fill(4,28,32,1,M.interior_b);
+    w.fill(12,4,1,32,M.interior_b);
+    w.fill(20,4,1,32,M.interior_a);
+    w.fill(28,4,1,32,M.interior_b);
+    w.carve(12,12,1,1,F.wood,true);
+    w.carve(20,12,1,1,F.wood,true);
+    w.carve(28,12,1,1,F.wood,true);
+    w.carve(12,20,1,1,F.wood,true);
+    w.carve(20,20,2,1,F.wood,true);
+    w.carve(28,20,1,1,F.wood,true);
+    w.carve(12,28,1,1,F.wood,true);
+    w.carve(20,28,1,1,F.wood,true);
+    w.carve(28,28,1,1,F.wood,true);
+    w.addDoor(20,2,'wood_door',{id:'kapalicarsi_in',label:'Kapalıçarşı giriş',open:true});
+    w.addDoor(20,38,'metal_door',{id:'kapalicarsi_out',label:'Çıkış',open:true});
+    w.addLight(20,20,12,0.9);
+    w.addProp('shelf',8,8,{solid:true,radius:.4,worldH:1.5});
+    w.addProp('shelf',32,8,{solid:true,radius:.4,worldH:1.5});
+    w.addProp('crate',10,24,{solid:true,radius:.35,worldH:.8});
+    w.addProp('crate',30,24,{solid:true,radius:.35,worldH:.8});
+    w.addInteractable('cikis','exit',20,38,{radius:1.8,label:'Kapalıçarşı çıkışı'});
+    w.addTrigger('exit_t',20,36,4,{once:true});
+    w.addSpawn('walker',12,10); w.addSpawn('walker',28,10); w.addSpawn('runner',20,16); w.addSpawn('brute',20,24);
+    w.start={x:20,y:6,a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_uskudar() {
+    const W=50, H=50;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'uskudar_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'uskudar_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'uskudar_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'uskudar_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Üsküdar Meydan çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_kadikoy() {
+    const W=50, H=50;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'kadikoy_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'kadikoy_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'kadikoy_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'kadikoy_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Kadıköy Çarşı çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_camlica() {
+    const W=50, H=50;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'camlica_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'camlica_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'camlica_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'camlica_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Çamlıca Tepesi çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
+
+  function build_belgrad() {
+    const W=50, H=50;
+    const w=new World(W,H);
+    w.defaultFloor=F.asphalt;
+    w.outdoorBase=0.22;
+    w.fog=0.05;
+    w.fill(0,0,W,H,M.plaster_warm);
+    w.wallRing(0,0,W,H,M.concrete);
+    w.carve(8,8,W-16,H-16,F.asphalt);
+    w.carve(W/2-3,4,6,H-8,F.cobble);
+    w.carve(4,H/2-3,W-8,6,F.asphalt);
+    // binalar
+    w.roomWithDoor(10,10,6,6,F.wood,M.interior_a,'wood_door',{id:'belgrad_bina1',label:'Bina'});
+    w.roomWithDoor(W-16,10,6,6,F.wood,M.interior_b,'wood_door',{id:'belgrad_bina2',label:'Dükkan'});
+    w.roomWithDoor(10,H-16,6,6,F.tile,M.interior_c,'wood_door',{id:'belgrad_bina3',label:'Eczane'});
+    w.roomWithDoor(W-16,H-16,6,6,F.wood,M.interior_a,'wood_door',{id:'belgrad_bina4',label:'Apartman'});
+    w.addLight(W/2, H/2, 10, 1.0);
+    w.addLight(12,12,6,0.7);
+    w.addLight(W-12,H-12,6,0.7);
+    w.addProp('car', W/2-6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('car', W/2+6, H/2, {solid:true,radius:1.0,worldH:2.2});
+    w.addProp('barricade', W/2, H/2-6, {solid:true,radius:.6,worldH:.9});
+    w.addProp('lamp', W/2, H/2-10, {solid:false,radius:.12,worldH:4.6});
+    w.addLight(W/2, H/2-10, 6.5, 0.9);
+    w.addProp('simitcart', 14, H/2, {solid:true,radius:.5,worldH:1.2});
+    w.addInteractable('cikis','exit',W/2, H-4, {radius:2.2,label:'Belgrad Ormanı çıkışı'});
+    w.addTrigger('exit_t',W/2, H-6,4,{once:true});
+    w.addSpawn('walker', W/2-8, H/2-8); w.addSpawn('runner', W/2+8, H/2+8); w.addSpawn('walker', 14,14); w.addSpawn('brute', W-14, H-14);
+    w.addPickup('ammo', 12, H/2, {amount:12});
+    w.addPickup('medkit', W-12, H/2, {amount:35});
+    w.start={x:W/2, y:10, a:1.57};
+    w.finalize();
+    return w;
+  }
 
   global.WORLD = { World, MATERIALS, M, F, FLOORS, build: (key) => BUILDERS[key]() };
 })(window);

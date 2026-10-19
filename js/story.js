@@ -721,7 +721,7 @@
             N('Telin öbür tarafında iki siluet. Annen elini kaldırıyor. Ada, ateşler içinde, başını sallıyor.'),
             N('Kamyon hareket ediyor. Sahil yolu, sisin içinde bir yara gibi açılıyor.'),
             N('Karaköy\'e doğru. Altı gün daha.'),
-            { type: 'chapter', chapter: 'ch1' }
+            { type: 'chapter', chapter: 'taksim' }
           ]
         }
       }
@@ -791,7 +791,7 @@
             N('Hanın kapısından gelen ses: metal, tırnak, sabır.'),
             LEY('Ve... çıkarken koş.'),
             FN((g) => { g.flags.vial = true; g.weapons.shotgun.owned = true; }),
-            { type: 'chapter', chapter: 'hastane' }
+            { type: 'chapter', chapter: 'eyup' }
           ]
         }
       }
@@ -848,7 +848,7 @@
             ME('Kuleye çıkmalıyım.'),
             LEY('Önce metro. Yer altından Galata\'ya; sokaklar artık geçilmiyor.'),
             FN((g) => { g.flags.has_meds = true; g.heal(35); g.giveAmmo(10); g.flags.metro_anahtar = true; }),
-            { type: 'chapter', chapter: 'metro' }
+            { type: 'chapter', chapter: 'balat' }
           ]
         }
       }
@@ -905,7 +905,7 @@
             N('Tünelin sonunda bir kapı, kapının ardında su sesi.'),
             N('Sarnıç. Şehrin altında, yüzyıllardır bekleyen bir boşluk.'),
             LEY('Oradan geçebilirsin. Ama dikkatli ol — sarnıcın suyu, sisin ilk çıktığı yer.'),
-            { type: 'chapter', chapter: 'sarnic' }
+            { type: 'chapter', chapter: 'besiktas' }
           ]
         }
       }
@@ -953,7 +953,7 @@
             ME('Hayır.'),
             N('Kaseyi deviriyorsun. Su, taşların arasından akıp gidiyor; sarnıç, ilk kez sessiz.'),
             LEY('İyi yaptın. Şimdi Galata\'ya. Kule, seni bekliyor.'),
-            { type: 'chapter', chapter: 'ch2' }
+            { type: 'chapter', chapter: 'yerebatan' }
           ]
         }
       }
@@ -1044,7 +1044,7 @@
             N('Yakıt bidonunu yerleştiriyorsun. Boğaz, önünde karanlık bir yol gibi.'),
             LEY('Motoru çalıştır. Kuleye git. Ve... flakonu kimseye verme.'),
             FN((g) => { g.flags.kule_anahtar = true; g.flags.tekne_alindi = true; }),
-            { type: 'chapter', chapter: 'tekne' }
+            { type: 'chapter', chapter: 'uskudar' }
           ]
         }
       }
@@ -1087,7 +1087,7 @@
             N('Ada, önünde. Kule, bir diş gibi yükseliyor.'),
             N('Tekneyi iskeleye bağlıyorsun. Su, taşların arasından çekiliyor.'),
             LEY('Geldik. Şimdi... kapıyı aç.'),
-            { type: 'chapter', chapter: 'ada' }
+            { type: 'chapter', chapter: 'kadikoy' }
           ]
         }
       }
@@ -1125,7 +1125,7 @@
             N('Anahtarı kilide sokuyorsun. Kilit, yıllardır bekliyormuş gibi açılıyor.'),
             L('SES', 'KULE', 'kizil', '...hoş geldin...'),
             LEY('Şimdi. Gir. Ve sesini duyarsan, cevap verme.'),
-            { type: 'chapter', chapter: 'ch3' }
+            { type: 'chapter', chapter: 'camlica' }
           ]
         }
       }
@@ -1300,7 +1300,7 @@
           LBL('go'),
           N('Yokuş aşağı. Bankalar Caddesi, sisin içinde bir tünel gibi açılıyor.'),
           O('Bankalar Hanı\'na ulaş', 'Galata • 01:12'),
-          { type: 'chapter', chapter: 'banka' }
+          { type: 'chapter', chapter: 'eminonu' }
         ]
       }
     },
@@ -1452,6 +1452,487 @@
     },
 
     /* ============ BÖLÜM XVIII — KIZIL ANA ============ */
+
+    /* ============ EK BÖLÜM 1 — TAKSİM ============ */
+    taksim: {
+      key: 'taksim',
+      number: 'EK BÖLÜM 1',
+      title: 'TAKSİM',
+      subtitle: 'Meydan bomboş, bir otobüs yanıyor.',
+      objective: 'Taksim Meydanı çıkışına ulaş',
+      objectiveSub: 'Taksim Meydanı • 3. Gün, 22:30',
+      mapKey: 'taksim',
+      world: 'taksim',
+      intro: [
+        N('Taksim Meydanı... Meydan bomboş, bir otobüs yanıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('TAKSİM üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Taksim Meydanı çıkışına ulaş', 'Taksim Meydanı • 3. Gün, 22:30'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'TAKSİM',
+          kicker: '3. Gün, 22:30 — TAKSIM MEYDANI',
+          nodes: [
+            N('Taksim Meydanı çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'istiklal' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 2 — İSTİKLAL ============ */
+    istiklal: {
+      key: 'istiklal',
+      number: 'EK BÖLÜM 2',
+      title: 'İSTİKLAL',
+      subtitle: 'Kepenkler kapalı, bir keman sesi geliyor.',
+      objective: 'İstiklal Caddesi çıkışına ulaş',
+      objectiveSub: 'İstiklal Caddesi • 3. Gün, 23:10',
+      mapKey: 'istiklal',
+      world: 'istiklal',
+      intro: [
+        N('İstiklal Caddesi... Kepenkler kapalı, bir keman sesi geliyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('İSTİKLAL üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('İstiklal Caddesi çıkışına ulaş', 'İstiklal Caddesi • 3. Gün, 23:10'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'İSTİKLAL',
+          kicker: '3. Gün, 23:10 — İSTIKLAL CADDESI',
+          nodes: [
+            N('İstiklal Caddesi çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'ch1' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 3 — EMİNÖNÜ ============ */
+    eminonu: {
+      key: 'eminonu',
+      number: 'EK BÖLÜM 3',
+      title: 'EMİNÖNÜ',
+      subtitle: 'Vapur kornası, sis düdükle karışıyor.',
+      objective: 'Eminönü • Yeni Cami çıkışına ulaş',
+      objectiveSub: 'Eminönü • Yeni Cami • 4. Gün, 00:05',
+      mapKey: 'eminonu',
+      world: 'eminonu',
+      intro: [
+        N('Eminönü • Yeni Cami... Vapur kornası, sis düdükle karışıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('EMİNÖNÜ üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Eminönü • Yeni Cami çıkışına ulaş', 'Eminönü • Yeni Cami • 4. Gün, 00:05'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'EMİNÖNÜ',
+          kicker: '4. Gün, 00:05 — EMINÖNÜ • YENI CAMI',
+          nodes: [
+            N('Eminönü • Yeni Cami çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'sultanahmet' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 4 — SULTANAHMET ============ */
+    sultanahmet: {
+      key: 'sultanahmet',
+      number: 'EK BÖLÜM 4',
+      title: 'SULTANAHMET',
+      subtitle: 'Meydanda atların sesi, kimse yok.',
+      objective: 'Sultanahmet Meydanı çıkışına ulaş',
+      objectiveSub: 'Sultanahmet Meydanı • 4. Gün, 00:42',
+      mapKey: 'sultanahmet',
+      world: 'sultanahmet',
+      intro: [
+        N('Sultanahmet Meydanı... Meydanda atların sesi, kimse yok.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('SULTANAHMET üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Sultanahmet Meydanı çıkışına ulaş', 'Sultanahmet Meydanı • 4. Gün, 00:42'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'SULTANAHMET',
+          kicker: '4. Gün, 00:42 — SULTANAHMET MEYDANI',
+          nodes: [
+            N('Sultanahmet Meydanı çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'banka' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 5 — EYÜP ============ */
+    eyup: {
+      key: 'eyup',
+      number: 'EK BÖLÜM 5',
+      title: 'EYÜP',
+      subtitle: 'Caminin avlusunda kediler toplanmış.',
+      objective: 'Eyüp Sultan çıkışına ulaş',
+      objectiveSub: 'Eyüp Sultan • 4. Gün, 02:10',
+      mapKey: 'eyup',
+      world: 'eyup',
+      intro: [
+        N('Eyüp Sultan... Caminin avlusunda kediler toplanmış.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('EYÜP üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Eyüp Sultan çıkışına ulaş', 'Eyüp Sultan • 4. Gün, 02:10'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'EYÜP',
+          kicker: '4. Gün, 02:10 — EYÜP SULTAN',
+          nodes: [
+            N('Eyüp Sultan çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'hastane' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 6 — BALAT ============ */
+    balat: {
+      key: 'balat',
+      number: 'EK BÖLÜM 6',
+      title: 'BALAT',
+      subtitle: 'Renkli evler, kırık bir bisiklet.',
+      objective: 'Balat Sokakları çıkışına ulaş',
+      objectiveSub: 'Balat Sokakları • 4. Gün, 02:45',
+      mapKey: 'balat',
+      world: 'balat',
+      intro: [
+        N('Balat Sokakları... Renkli evler, kırık bir bisiklet.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('BALAT üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Balat Sokakları çıkışına ulaş', 'Balat Sokakları • 4. Gün, 02:45'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'BALAT',
+          kicker: '4. Gün, 02:45 — BALAT SOKAKLARI',
+          nodes: [
+            N('Balat Sokakları çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'fener' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 7 — FENER ============ */
+    fener: {
+      key: 'fener',
+      number: 'EK BÖLÜM 7',
+      title: 'FENER',
+      subtitle: 'Rum evleri, bir radyo hâlâ çalıyor.',
+      objective: 'Fener • Balat çıkışına ulaş',
+      objectiveSub: 'Fener • Balat • 4. Gün, 03:15',
+      mapKey: 'fener',
+      world: 'fener',
+      intro: [
+        N('Fener • Balat... Rum evleri, bir radyo hâlâ çalıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('FENER üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Fener • Balat çıkışına ulaş', 'Fener • Balat • 4. Gün, 03:15'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'FENER',
+          kicker: '4. Gün, 03:15 — FENER • BALAT',
+          nodes: [
+            N('Fener • Balat çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'metro' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 8 — BEŞİKTAŞ ============ */
+    besiktas: {
+      key: 'besiktas',
+      number: 'EK BÖLÜM 8',
+      title: 'BEŞİKTAŞ',
+      subtitle: 'İskele boş, bir vapur yanaşmıyor.',
+      objective: 'Beşiktaş İskele çıkışına ulaş',
+      objectiveSub: 'Beşiktaş İskele • 4. Gün, 03:40',
+      mapKey: 'besiktas',
+      world: 'besiktas',
+      intro: [
+        N('Beşiktaş İskele... İskele boş, bir vapur yanaşmıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('BEŞİKTAŞ üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Beşiktaş İskele çıkışına ulaş', 'Beşiktaş İskele • 4. Gün, 03:40'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'BEŞİKTAŞ',
+          kicker: '4. Gün, 03:40 — BEŞIKTAŞ İSKELE',
+          nodes: [
+            N('Beşiktaş İskele çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'ortakoy' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 9 — ORTAKÖY ============ */
+    ortakoy: {
+      key: 'ortakoy',
+      number: 'EK BÖLÜM 9',
+      title: 'ORTAKÖY',
+      subtitle: 'Köprü ışıkları sisin içinde kayboluyor.',
+      objective: 'Ortaköy Meydan çıkışına ulaş',
+      objectiveSub: 'Ortaköy Meydan • 4. Gün, 04:05',
+      mapKey: 'ortakoy',
+      world: 'ortakoy',
+      intro: [
+        N('Ortaköy Meydan... Köprü ışıkları sisin içinde kayboluyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('ORTAKÖY üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Ortaköy Meydan çıkışına ulaş', 'Ortaköy Meydan • 4. Gün, 04:05'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'ORTAKÖY',
+          kicker: '4. Gün, 04:05 — ORTAKÖY MEYDAN',
+          nodes: [
+            N('Ortaköy Meydan çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'sarnic' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 10 — YEREBATAN ============ */
+    yerebatan: {
+      key: 'yerebatan',
+      number: 'EK BÖLÜM 10',
+      title: 'YEREBATAN',
+      subtitle: 'Su damlıyor, sütunlar nefes alıyor.',
+      objective: 'Yerebatan Sarnıcı çıkışına ulaş',
+      objectiveSub: 'Yerebatan Sarnıcı • 4. Gün, 04:30',
+      mapKey: 'yerebatan',
+      world: 'yerebatan',
+      intro: [
+        N('Yerebatan Sarnıcı... Su damlıyor, sütunlar nefes alıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('YEREBATAN üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Yerebatan Sarnıcı çıkışına ulaş', 'Yerebatan Sarnıcı • 4. Gün, 04:30'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'YEREBATAN',
+          kicker: '4. Gün, 04:30 — YEREBATAN SARNICI',
+          nodes: [
+            N('Yerebatan Sarnıcı çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'kapalicarsi' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 11 — KAPALIÇARŞI ============ */
+    kapalicarsi: {
+      key: 'kapalicarsi',
+      number: 'EK BÖLÜM 11',
+      title: 'KAPALIÇARŞI',
+      subtitle: 'Labirent gibi dükkanlar, bir lamba yanıyor.',
+      objective: 'Kapalıçarşı çıkışına ulaş',
+      objectiveSub: 'Kapalıçarşı • 4. Gün, 05:00',
+      mapKey: 'kapalicarsi',
+      world: 'kapalicarsi',
+      intro: [
+        N('Kapalıçarşı... Labirent gibi dükkanlar, bir lamba yanıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('KAPALIÇARŞI üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Kapalıçarşı çıkışına ulaş', 'Kapalıçarşı • 4. Gün, 05:00'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'KAPALIÇARŞI',
+          kicker: '4. Gün, 05:00 — KAPALIÇARŞI',
+          nodes: [
+            N('Kapalıçarşı çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'ch2' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 12 — ÜSKÜDAR ============ */
+    uskudar: {
+      key: 'uskudar',
+      number: 'EK BÖLÜM 12',
+      title: 'ÜSKÜDAR',
+      subtitle: 'Kız Kulesi silueti, rıhtım sessiz.',
+      objective: 'Üsküdar Meydan çıkışına ulaş',
+      objectiveSub: 'Üsküdar Meydan • 5. Gün, 00:20',
+      mapKey: 'uskudar',
+      world: 'uskudar',
+      intro: [
+        N('Üsküdar Meydan... Kız Kulesi silueti, rıhtım sessiz.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('ÜSKÜDAR üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Üsküdar Meydan çıkışına ulaş', 'Üsküdar Meydan • 5. Gün, 00:20'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'ÜSKÜDAR',
+          kicker: '5. Gün, 00:20 — ÜSKÜDAR MEYDAN',
+          nodes: [
+            N('Üsküdar Meydan çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'tekne' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 13 — KADIKÖY ============ */
+    kadikoy: {
+      key: 'kadikoy',
+      number: 'EK BÖLÜM 13',
+      title: 'KADIKÖY',
+      subtitle: 'Çarşı ışıkları, martı sesleri.',
+      objective: 'Kadıköy Çarşı çıkışına ulaş',
+      objectiveSub: 'Kadıköy Çarşı • 5. Gün, 01:10',
+      mapKey: 'kadikoy',
+      world: 'kadikoy',
+      intro: [
+        N('Kadıköy Çarşı... Çarşı ışıkları, martı sesleri.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('KADIKÖY üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Kadıköy Çarşı çıkışına ulaş', 'Kadıköy Çarşı • 5. Gün, 01:10'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'KADIKÖY',
+          kicker: '5. Gün, 01:10 — KADIKÖY ÇARŞI',
+          nodes: [
+            N('Kadıköy Çarşı çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'ada' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 14 — ÇAMLICA ============ */
+    camlica: {
+      key: 'camlica',
+      number: 'EK BÖLÜM 14',
+      title: 'ÇAMLICA',
+      subtitle: 'Tepeden şehir bir ateş denizi gibi.',
+      objective: 'Çamlıca Tepesi çıkışına ulaş',
+      objectiveSub: 'Çamlıca Tepesi • 5. Gün, 02:00',
+      mapKey: 'camlica',
+      world: 'camlica',
+      intro: [
+        N('Çamlıca Tepesi... Tepeden şehir bir ateş denizi gibi.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('ÇAMLICA üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Çamlıca Tepesi çıkışına ulaş', 'Çamlıca Tepesi • 5. Gün, 02:00'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'ÇAMLICA',
+          kicker: '5. Gün, 02:00 — ÇAMLICA TEPESI',
+          nodes: [
+            N('Çamlıca Tepesi çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'ch3' }
+          ]
+        }
+      }
+    },
+
+    /* ============ EK BÖLÜM 15 — BELGRAD ============ */
+    belgrad: {
+      key: 'belgrad',
+      number: 'EK BÖLÜM 15',
+      title: 'BELGRAD',
+      subtitle: 'Ormanın içinde telsiz tekrar çalıyor.',
+      objective: 'Belgrad Ormanı çıkışına ulaş',
+      objectiveSub: 'Belgrad Ormanı • 5. Gün, 04:30',
+      mapKey: 'belgrad',
+      world: 'belgrad',
+      intro: [
+        N('Belgrad Ormanı... Ormanın içinde telsiz tekrar çalıyor.'),
+        N('Sis çöküyor, sokak lambaları titriyor. İstanbul artık aynı şehir değil.'),
+        LEY('BELGRAD üzerinden geçmen gerek — telsiz öyle söylüyor.'),
+        O('Belgrad Ormanı çıkışına ulaş', 'Belgrad Ormanı • 5. Gün, 04:30'),
+        { type: 'end' }
+      ],
+      events: {
+        cikis: {
+          cinematic: true,
+          shot: 'street',
+          title: 'BELGRAD',
+          kicker: '5. Gün, 04:30 — BELGRAD ORMANI',
+          nodes: [
+            N('Belgrad Ormanı çıkışına ulaştın. Sokak geride kalıyor, ama şehir seni bırakmıyor.'),
+            N('Bir sonraki semt tabelası sisin içinde beliriyor.'),
+            { type: 'chapter', chapter: 'secim' }
+          ]
+        }
+      }
+    },
+
     kizil: {
       key: 'kizil',
       number: 'BÖLÜM XVII',
@@ -1469,13 +1950,13 @@
         N('Basamakları çıkıyorsun. Her basamakta şehir biraz daha aşağıda kalıyor.'),
         LEY('Tepede bir telsiz var. Şehir frekansı. Panzehiri nasıl yayacağımızı oradan konuşacağız.'),
         N('Kulenin tepesine varıyorsun. Rüzgâr, ilk kez ılık.'),
-        { type: 'chapter', chapter: 'secim' }
+        { type: 'chapter', chapter: 'belgrad' }
       ],
       events: {
         tepe: [
           N('Kulenin tepesi. Şehir ayaklarının altında; Boğaz, kızıl ve maviye bölünmüş.'),
           LEY('Telsiz burada. Ama ondan önce... cebindeki flakonu bir daha düşün.'),
-          { type: 'chapter', chapter: 'secim' }
+          { type: 'chapter', chapter: 'belgrad' }
         ]
       }
     },

@@ -64,8 +64,11 @@
   };
 
   const $ = U.$;
-  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'p5', 'karantina', 'ch1', 'banka', 'hastane', 'metro',
-    'sarnic', 'ch2', 'kulemeydan', 'rihtim', 'tekne', 'ada', 'ch3', 'kizil', 'secim', 'final'];
+  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'p5', 'karantina', 'taksim',
+    'istiklal', 'ch1', 'eminonu', 'sultanahmet', 'banka', 'eyup', 'hastane',
+    'balat', 'fener', 'metro', 'besiktas', 'ortakoy', 'sarnic', 'yerebatan',
+    'kapalicarsi', 'ch2', 'kulemeydan', 'rihtim', 'uskudar', 'tekne', 'kadikoy',
+    'ada', 'camlica', 'ch3', 'kizil', 'belgrad', 'secim', 'final'];
 
   /* ============================================================
      SCREENS
@@ -693,6 +696,201 @@
       triggers: {},
       interactions: {},
       objective: { text: 'Son', sub: 'Kız Kulesi • 05:00', target: [27, 28] }
+    },
+    taksim: {
+      world: 'taksim',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Taksim Meydanı çıkışına ulaş', sub: 'Taksim Meydanı • 3. Gün, 22:30', target: [42, 42] }
+    },
+    istiklal: {
+      world: 'istiklal',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'İstiklal Caddesi çıkışına ulaş', sub: 'İstiklal Caddesi • 3. Gün, 23:10', target: [42, 42] }
+    },
+    eminonu: {
+      world: 'eminonu',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Eminönü • Yeni Cami çıkışına ulaş', sub: 'Eminönü • Yeni Cami • 4. Gün, 00:05', target: [42, 42] }
+    },
+    sultanahmet: {
+      world: 'sultanahmet',
+      sky: 'night',
+      ambience: 'indoor',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Sultanahmet Meydanı çıkışına ulaş', sub: 'Sultanahmet Meydanı • 4. Gün, 00:42', target: [42, 42] }
+    },
+    eyup: {
+      world: 'eyup',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Eyüp Sultan çıkışına ulaş', sub: 'Eyüp Sultan • 4. Gün, 02:10', target: [42, 42] }
+    },
+    balat: {
+      world: 'balat',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Balat Sokakları çıkışına ulaş', sub: 'Balat Sokakları • 4. Gün, 02:45', target: [42, 42] }
+    },
+    fener: {
+      world: 'fener',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Fener • Balat çıkışına ulaş', sub: 'Fener • Balat • 4. Gün, 03:15', target: [42, 42] }
+    },
+    besiktas: {
+      world: 'besiktas',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Beşiktaş İskele çıkışına ulaş', sub: 'Beşiktaş İskele • 4. Gün, 03:40', target: [42, 42] }
+    },
+    ortakoy: {
+      world: 'ortakoy',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Ortaköy Meydan çıkışına ulaş', sub: 'Ortaköy Meydan • 4. Gün, 04:05', target: [42, 42] }
+    },
+    yerebatan: {
+      world: 'yerebatan',
+      sky: 'night',
+      ambience: 'indoor',
+      intro: 'intro',
+      introShot: 'stair',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Yerebatan Sarnıcı çıkışına ulaş', sub: 'Yerebatan Sarnıcı • 4. Gün, 04:30', target: [42, 42] }
+    },
+    kapalicarsi: {
+      world: 'kapalicarsi',
+      sky: 'night',
+      ambience: 'indoor',
+      intro: 'intro',
+      introShot: 'stair',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Kapalıçarşı çıkışına ulaş', sub: 'Kapalıçarşı • 4. Gün, 05:00', target: [42, 42] }
+    },
+    uskudar: {
+      world: 'uskudar',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Üsküdar Meydan çıkışına ulaş', sub: 'Üsküdar Meydan • 5. Gün, 00:20', target: [42, 42] }
+    },
+    kadikoy: {
+      world: 'kadikoy',
+      sky: 'night',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Kadıköy Çarşı çıkışına ulaş', sub: 'Kadıköy Çarşı • 5. Gün, 01:10', target: [42, 42] }
+    },
+    camlica: {
+      world: 'camlica',
+      sky: 'dawn',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Çamlıca Tepesi çıkışına ulaş', sub: 'Çamlıca Tepesi • 5. Gün, 02:00', target: [42, 42] }
+    },
+    belgrad: {
+      world: 'belgrad',
+      sky: 'dawn',
+      ambience: 'street',
+      intro: 'intro',
+      introShot: 'street',
+      start: { x: 8, y: 8, a: 0 },
+      triggers: { exit_t: 'cikis' },
+      interactions: {
+        cikis: { event: 'cikis' },
+      },
+      objective: { text: 'Belgrad Ormanı çıkışına ulaş', sub: 'Belgrad Ormanı • 5. Gün, 04:30', target: [42, 42] }
     },
     ch1: {
       world: 'karakoy',

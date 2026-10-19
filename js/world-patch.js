@@ -51,6 +51,21 @@
       metro: { outdoorBase: 0.06, indoorBase: 0.42, fog: 0.08 },
       sarnic: { outdoorBase: 0.05, indoorBase: 0.38, fog: 0.09 },
       rihtim: { outdoorBase: 0.18, indoorBase: 0.40, fog: 0.06 },
+      taksim: { outdoorBase: 0.20, indoorBase: 0.45, fog: 0.055 },
+      istiklal: { outdoorBase: 0.18, indoorBase: 0.40, fog: 0.06 },
+      eminonu: { outdoorBase: 0.19, indoorBase: 0.42, fog: 0.055 },
+      sultanahmet: { outdoorBase: 0.17, indoorBase: 0.48, fog: 0.05 },
+      eyup: { outdoorBase: 0.21, indoorBase: 0.50, fog: 0.05 },
+      balat: { outdoorBase: 0.23, indoorBase: 0.46, fog: 0.055 },
+      fener: { outdoorBase: 0.20, indoorBase: 0.44, fog: 0.055 },
+      besiktas: { outdoorBase: 0.22, indoorBase: 0.40, fog: 0.06 },
+      ortakoy: { outdoorBase: 0.20, indoorBase: 0.38, fog: 0.065 },
+      yerebatan: { outdoorBase: 0.05, indoorBase: 0.38, fog: 0.09 },
+      kapalicarsi: { outdoorBase: 0.07, indoorBase: 0.55, fog: 0.06 },
+      uskudar: { outdoorBase: 0.20, indoorBase: 0.42, fog: 0.055 },
+      kadikoy: { outdoorBase: 0.21, indoorBase: 0.44, fog: 0.055 },
+      camlica: { outdoorBase: 0.24, indoorBase: 0.50, fog: 0.045 },
+      belgrad: { outdoorBase: 0.18, indoorBase: 0.42, fog: 0.07 },
       ada: { outdoorBase: 0.32, indoorBase: 0.45, fog: 0.05 }
     };
     const m = mood[key] || mood.karakoy;
