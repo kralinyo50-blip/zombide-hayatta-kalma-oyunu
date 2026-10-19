@@ -2857,8 +2857,7 @@
       chapter: G.chapterKey,
       worldKey: G.world._engId || G.chapterKey
     };
-    // ZORLA 3D — kullanıcı komple 3D istedi
-    const use3D = has3D;
+    const use3D = is3D;
     if (use3D) {
       try {
         ENGINE3D.render(scene);
