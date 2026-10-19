@@ -667,7 +667,7 @@
       ambience: 'indoor',
       introCinematic: true,
       introShot: 'stair',
-      start: { x: 27.2, y: 44.0, a: -Math.PI / 2 },
+      start: { x: 27.2, y: 41.0, a: -Math.PI / 2 },
       triggers: { kizil_tepe: 'tepe' },
       interactions: {},
       objective: { text: 'Kulenin tepesine çık', sub: 'Kız Kulesi • 04:41', target: [27, 28] }
@@ -720,7 +720,7 @@
       ambience: 'street',
       intro: 'intro',
       introShot: 'street',
-      start: { x: 21, y: 44, a: Math.PI },
+      start: { x: 10, y: 49.6, a: 0 },
       triggers: {
         square_arrive: 'arrive',
         tower_approach: 'finale'
@@ -740,6 +740,7 @@
       world: 'kizkulesi',
       ambience: 'red',
       intro: 'intro',
+      start: { x: 27.2, y: 41.0, a: -Math.PI / 2 },
       triggers: {
         ch3_intro: 'arrive',
         boss_trigger: 'boss'
@@ -1221,6 +1222,7 @@
       G.player.y = cfg.start.y;
       G.player.a = cfg.start.a === undefined ? G.player.a : cfg.start.a;
     }
+    G.ensureSpawnFree();
     G.setObjective(story.objective, story.objectiveSub, ...((cfg.objective && cfg.objective.target) || []));
     G.chapterCardTimer = 2.6;
     G.chapterCardPending = true;
@@ -1787,6 +1789,19 @@
     // environment
     const indoor = G.world.indoorAt(p.x, p.y);
     G.indoorView = !!indoor;
+  };
+
+  G.ensureSpawnFree = function () {
+    const p = G.player, w = G.world;
+    if (!w || !G.blocked(p.x, p.y, 0.27)) return;
+    for (let r = 0.4; r <= 5; r += 0.35) {
+      for (let i = 0; i < 28; i++) {
+        const a = (i / 28) * Math.PI * 2;
+        const x = p.x + Math.cos(a) * r, y = p.y + Math.sin(a) * r;
+        if (x < 0.4 || y < 0.4 || x > w.w - 0.4 || y > w.h - 0.4) continue;
+        if (!G.blocked(x, y, 0.27)) { p.x = x; p.y = y; return; }
+      }
+    }
   };
 
   G.tryMove = function (ent, dx, dy, r) {

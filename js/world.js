@@ -516,6 +516,16 @@
           if (n) { p.x = n.x; p.y = n.y; }
         }
       }
+      // dar (1 hücre) geçişlerde duran eşyalar geçişi tıkamasın
+      for (const p of this.props) {
+        if (!p.collide) continue;
+        const cx = p.x | 0, cy = p.y | 0;
+        const solidC = (x, y) => this.solidCell(x, y);
+        const n = solidC(cx, cy - 1), s2 = solidC(cx, cy + 1);
+        const e = solidC(cx + 1, cy), w2 = solidC(cx - 1, cy);
+        const narrow = ((e && w2) !== (n && s2));
+        if (narrow && p.radius + 0.27 >= 0.5) p.radius = 0.18;
+      }
       // reachability with doors considered open
       const { seen } = this._bfs(this.start.x, this.start.y, true);
       const W = this.w;
@@ -745,7 +755,7 @@
     });
     [[32, 23], [40, 23], [35, 23.5]].forEach(([x, y]) => w.addProp('barricade', x, y, { solid: true, radius: .55, worldH: .9 }));
     [[41.6, 56.2], [40.2, 56.4], [22, 55], [21.2, 56.2]].forEach(([x, y]) => w.addProp('sandbag', x, y, { solid: true, radius: .6, worldH: .7 }));
-    [[22.4, 44], [50.5, 45], [58, 50], [12, 50]].forEach(([x, y]) => w.addProp('dumpster', x, y, { solid: true, radius: .5, worldH: 1.1 }));
+    [[22.4, 44], [50.5, 45], [58, 50], [12, 50.4]].forEach(([x, y]) => w.addProp('dumpster', x, y, { solid: true, radius: .30, worldH: 1.1 }));
     [[29.5, 56.5], [47, 58]].forEach(([x, y]) => w.addProp('simitcart', x, y, { solid: true, radius: .5, worldH: 1.2 }));
     [[52, 51.5], [18.4, 38.6], [12, 44.5]].forEach(([x, y]) => w.addProp('rubble', x, y, { solid: true, radius: .45, worldH: .6 }));
     [[38.5, 29.4], [23.5, 39], [51.5, 39]].forEach(([x, y]) => w.addProp('sign', x, y, { solid: false, radius: .1, worldH: 1.7 }));
@@ -836,7 +846,7 @@
     w.addLight(9, 43, 4, .5);
     w.addLight(17, 40, 4, .5);
     w.addProp('crate', 17.4, 43.2, { solid: true, radius: .38, worldH: .8 });
-    w.addProp('sandbag', 8.4, 40.4, { solid: true, radius: .55, worldH: .7 });
+    w.addProp('sandbag', 8.4, 42.4, { solid: true, radius: .30, worldH: .7 });
     // strongroom (inside the bank, x=9..13 y=40..41)
     w.wallRing(8, 39, 7, 4, M.bank_marble);
     w.addDoor(11, 42, 'vault_door', { id: 'vault_ch2', label: 'Kasa dairesi', locked: true, need: 'bank_key' });
@@ -1000,7 +1010,7 @@
     w.addTrigger('ch3_intro', 27, 37, 4, { once: true });
     w.addTrigger('boss_trigger', 27.5, 29.6, 3.2, { once: true, data: 'boss' });
 
-    w.start = { x: 27.2, y: 44.0, a: -Math.PI / 2 };
+    w.start = { x: 27.2, y: 41.0, a: -Math.PI / 2 };
     w.finalize();
     return w;
   }
@@ -1028,8 +1038,8 @@
     w.carve(12, 8, 3, 4, F.wood, true);       // ebeveyn x12..14 y8..11
     w.carve(2, 8, 6, 4, F.wood, true);        // oda   x2..7 y8..11
     // ---- duvarlar ----
-    w.fill(2, 8, 10, 1, M.home_wall);         // x=8
-    w.fill(2, 11, 10, 1, M.home_wall);        // x=11
+    w.fill(2, 8, 1, 10, M.home_wall);         // x=8 dikey duvar
+    w.fill(2, 11, 1, 10, M.home_wall);        // x=11 dikey duvar
     w.fill(7, 2, 6, 1, M.home_wall);          // y=7 (salon | oda)
     w.fill(7, 12, 3, 1, M.home_wall);         // y=7 (mutfak | ebeveyn)
     // ---- kapı boşlukları ----
@@ -1043,6 +1053,7 @@
     w.setMat(1, 9, winMat); w.setMat(1, 10, winMat);    // oda batı
     w.setMat(4, 1, winMat); w.setMat(5, 1, winMat);     // salon kuzey
     w.setMat(13, 1, winMat);                            // mutfak kuzey
+    w.setMat(15, 9, winMat); w.setMat(15, 10, winMat);  // ebeveyn dogu
     w.setMat(1, 5, M.glass_door);                       // balkon kapısı
     // ---- giriş kapısı ----
     w.addDoor(10, 12, 'wood_door', { id: 'ev_door', label: 'Daire kapısı', open: !!siege });
@@ -1091,11 +1102,17 @@
     w.addInteractable('telefon', 'phone', 5.7, 10.0, { radius: 1.2, label: 'Telefonun' });
 
     // ---- hol ----
+    // holü ikiye bölen iç kapı (giriş holü | koridor)
+    w.fill(7, 9, 1, 1, M.home_wall);
+    w.addDoor(10, 7, 'wood_door', { id: 'ev_ic_kapi', label: 'Koridor kapısı', open: true });
+    // koridorda yolluk, girişte paspas
+    for (let y = 2; y <= 6; y++) for (let x = 9; x <= 10; x++) w.setFloor(x, y, F.carpet);
+    for (let y = 8; y <= 11; y++) for (let x = 9; x <= 10; x++) w.setFloor(x, y, F.carpet);
     w.addLight(9.8, 3.6, 3.6, dark ? .16 : .58);
     w.addLight(9.8, 8.4, 3.6, dark ? .12 : .52);
-    w.addProp('plant', 9.4, 2.6, { solid: true, radius: .24, worldH: 1.05 });
-    w.addProp('shelf', 10.6, 10.7, { solid: true, radius: .38, worldH: 1.45 });
-    w.addProp('table', 9.4, 7.0, { solid: true, radius: .4, worldH: .8 });
+    w.addLight(9.8, 10.4, 2.6, dark ? .08 : .42);
+    w.addProp('plant', 9.35, 2.55, { solid: true, radius: .22, worldH: 1.05 });
+    w.addProp('shelf', 9.22, 9.5, { solid: true, radius: .22, worldH: 1.45 });
     w.addProp('lamp', 9.3, 5.2, { solid: false, radius: .1, worldH: 1.8 });
     w.addInteractable('ev_exit', 'exit', 10, 11.4, { radius: 1.4, label: 'Daire kapısı' });
 
@@ -1370,7 +1387,7 @@
     w.addProp('lamp', 25.4, 4.2, { solid: false, radius: .12, worldH: 1.8 });
     w.addProp('crate', 24.4, 8.4, { solid: true, radius: .4, worldH: .8 });
     w.addProp('crate', 23.4, 8.4, { solid: true, radius: .4, worldH: .8 });
-    w.addProp('plant', 3.6, 8.4, { solid: true, radius: .26, worldH: 1.2 });
+    w.addProp('plant', 4.6, 11.6, { solid: true, radius: .22, worldH: 1.2 });
     w.addProp('shelf', 4.4, 16.4, { solid: true, radius: .45, worldH: 1.6 });
     w.addProp('safe', 24.4, 16.4, { solid: true, radius: .5, worldH: 1.3 });
     w.addProp('table', 24.0, 18.6, { solid: true, radius: .45, worldH: .7 });
