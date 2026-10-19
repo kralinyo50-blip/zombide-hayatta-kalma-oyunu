@@ -2830,6 +2830,10 @@
       G.skyMode = G.chapterKey;
       G.skyTex = TEX.makeSky((FLOW[G.chapterKey] && FLOW[G.chapterKey].sky) || (G.chapterKey === 'ch3' ? 'red' : 'night'));
     }
+    // Mode badge güncelle
+    const badge = document.getElementById('mode-badge');
+    const is3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    if (badge) { badge.textContent = is3D ? 'TAM 3D AKTİF' : '2.5D FALLBACK'; badge.style.color = is3D ? '#7af0ff' : '#ff9a7a'; badge.style.borderColor = is3D ? 'rgba(122,200,255,.6)' : 'rgba(255,140,80,.6)'; }
     const scene = {
       world: G.world,
       player: p,

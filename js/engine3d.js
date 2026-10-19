@@ -129,7 +129,10 @@
       ENG.weaponScene.add(new THREE.AmbientLight(0xffffff, 0.7));
 
       ENG.initialized = true;
-      console.log('[3D] Engine3D hazır');
+      console.log('[3D] Engine3D hazır — WebGL2:', !!ENG.renderer.capabilities.isWebGL2);
+      const badge = document.getElementById('mode-badge');
+      if (badge) badge.textContent = 'TAM 3D AKTİF (WebGL)';
+      if (badge) badge.style.borderColor = '#7af0a0';
     } catch (e) {
       console.error('Engine3D init fail', e);
       ENG.useFallback = true;
