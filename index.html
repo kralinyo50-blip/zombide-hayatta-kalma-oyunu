@@ -5,10 +5,10 @@
 <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>KARANLIK BOĞAZ — İstanbul'da Hayatta Kalma</title>
-<meta name="description" content="İstanbul'da geçen, 2.5D FPS görünümlü, seçimlerinle hikâyeyi yönlendirdiğin zombi hayatta kalma oyunu.">
+<title>KARANLIK BOĞAZ — İstanbul'da Hayatta Kalma | TAM 3D</title>
+<meta name="description" content="İstanbul'da geçen, tam 3D FPS, seçimlerinle hikâyeyi yönlendirdiğin zombi hayatta kalma oyunu — gerçek 3D haritalar, 3D ara sahneler.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23090d12'/><path d='M32 8 L40 30 L56 40 L40 44 L36 58 L28 44 L8 40 L24 30 Z' fill='%23d8453e'/></svg>">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
 <div id="app">
@@ -81,14 +81,14 @@
       <div class="title-left">
         <div class="title-kicker">İSTANBUL'DA BİR HAYATTA KALMA HİKÂYESİ</div>
         <h1 class="game-title"><span>KARANLIK</span><span class="accent">BOĞAZ</span></h1>
-        <p class="title-lead">Bir cumartesi akşamı. Cihangir'de bir daire, bir aile ve televizyonda dönen son dakika haberi.<br>Her şeyin son sıradan gecesi... ve sonrası.</p>
+        <p class="title-lead">Bir cumartesi akşamı. Cihangir'de bir daire, bir aile ve televizyonda dönen son dakika haberi.<br>Her şeyin son sıradan gecesi... ve sonrası. <b style="color:var(--gold)">Şimdi tam 3D — İstanbul sokaklarında gerçekten yürü, gerçek 3D ara sahneleri izle.</b></p>
         <div class="title-actions">
           <button class="btn primary" id="btn-start"><span>YENİ OYUN</span><small>Hikâyeye başla</small></button>
           <button class="btn" id="btn-continue"><span>DEVAM ET</span><small id="continue-sub">Kayıt yok</small></button>
           <button class="btn" id="btn-howto"><span>NASIL OYNANIR?</span><small>Kontroller</small></button>
         </div>
         <div class="title-meta">
-          <span>2.5D FPS</span><span>SEÇİMLER HİKÂYEYİ DEĞİŞTİRİR</span><span id="ending-count">SONLAR 0/4</span>
+          <span>TAM 3D FPS</span><span>GERÇEK 3D HARİTALAR</span><span>SEÇİMLER HİKÂYEYİ DEĞİŞTİRİR</span><span id="ending-count">SONLAR 0/4</span>
         </div>
       </div>
       <div class="title-right">
@@ -108,7 +108,7 @@
     <div class="title-bottom">
       <span>© 2026 BOĞAZ PROTOKOLÜ</span>
       <span class="tb-center">HARİTA GERÇEK İSTANBUL COĞRAFYASI ESAS ALINARAK ÇİZİLMİŞTİR · GOOGLE MAPS'TEN ESİNLENİLMİŞTİR</span>
-      <span id="version-tag">v4.0 · PROLOG + 19 BÖLÜM · 4 SON</span>
+      <span id="version-tag">v5.0 · TAM 3D · PROLOG + 19 BÖLÜM · 4 SON · GERÇEK 3D HARİTALAR</span>
     </div>
   </section>
 
@@ -316,16 +316,20 @@
   <div id="rotate-hint" class="hidden"><div class="rot-icon">⟳</div><b>EN İYİ DENEYİM İÇİN TELEFONUNU YATAY ÇEVİR</b></div>
 </div>
 
-<script src="js/util.js?v=4"></script>
-<script src="js/textures.js?v=4"></script>
-<script src="js/sprites.js?v=4"></script>
-<script src="js/audio.js?v=4"></script>
-<script src="js/raycaster.js?v=4"></script>
-<script src="js/world.js?v=4"></script>
-<script src="js/cine.js?v=4"></script>
-<script src="js/story.js?v=4"></script>
-<script src="js/istmap.js?v=4"></script>
-<script src="js/game.js?v=4"></script>
-<script src="js/main.js?v=4"></script>
+<script src="js/lib/three.min.js"></script>
+<script src="js/util.js?v=5"></script>
+<script src="js/textures.js?v=5"></script>
+<script src="js/sprites.js?v=5"></script>
+<script src="js/audio.js?v=5"></script>
+<script src="js/raycaster.js?v=5"></script>
+<script src="js/engine3d.js?v=5"></script>
+<script src="js/world.js?v=5"></script>
+<script src="js/world-patch.js?v=5"></script>
+<script src="js/cine.js?v=5"></script>
+<script src="js/cine3d.js?v=5"></script>
+<script src="js/story.js?v=5"></script>
+<script src="js/istmap.js?v=5"></script>
+<script src="js/game.js?v=5"></script>
+<script src="js/main.js?v=5"></script>
 </body>
 </html>

@@ -759,11 +759,18 @@
     TEX.init();
     SPR.init();
     if (global.CINE) CINE.init();
+    if (global.CINE3D) { try { CINE3D.init(); CINE3D.compat(); } catch(e){} }
     RAY.init();
+    if (typeof ENGINE3D !== 'undefined') { try { ENGINE3D.init(); } catch(e){ console.warn('ENGINE3D init fail',e); } }
 
     G.view = document.getElementById('view');
-    G.vctx = G.view.getContext('2d', { alpha: false });
-    RAY.resize(window.innerWidth, window.innerHeight, G.settings.quality);
+    // 2D context sadece fallback için — 3D modda WebGL kullanıyor
+    try { G.vctx = G.view.getContext('2d', { alpha: false }); } catch(e){ G.vctx = null; }
+    if (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized) {
+      ENGINE3D.resize(window.innerWidth, window.innerHeight, G.settings.quality);
+    } else {
+      RAY.resize(window.innerWidth, window.innerHeight, G.settings.quality);
+    }
     G.resize();
 
     // grain overlay
@@ -802,17 +809,26 @@
   G.resize = function () {
     const w = window.innerWidth, h = window.innerHeight;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    G.view.width = Math.round(w * dpr);
-    G.view.height = Math.round(h * dpr);
+    // 3D modda WebGL canvas boyutunu ENGINE3D ayarlıyor, 2D için manuel
+    const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    if (!use3D) {
+      G.view.width = Math.round(w * dpr);
+      G.view.height = Math.round(h * dpr);
+    }
     G.view.style.width = w + 'px';
     G.view.style.height = h + 'px';
     G.dpr = dpr;
     G.vw = w; G.vh = h;
     const q = U.isTouch() ? Math.min(G.settings.quality, 0.52) : G.settings.quality;
-    RAY.resize(w, h, q);
+    if (use3D) ENGINE3D.resize(w, h, q);
+    else RAY.resize(w, h, q);
     G.vignette = null;
     TitleScreen.resize();
     if (G.mode === 'map') { ISTMAP.resize(); ISTMAP.show(); }
+    // Cine3D canvas resize
+    if (typeof CINE3D !== 'undefined' && CINE3D.renderer) {
+      CINE3D.renderer.setSize(960, 540, false);
+    }
   };
 
   /* ============================================================
@@ -970,8 +986,9 @@
     document.addEventListener('mousemove', (e) => {
       if (G.mode !== 'play') return;
       if (G.locked) {
+        // TAM 3D: dikey bakış artık -85° / +85° arası — gerçekten yukarı-aşağı bak
         G.player.a += (e.movementX || 0) * G.settings.sens;
-        G.player.pitch = U.clamp(G.player.pitch - (e.movementY || 0) * G.settings.sens * .55, -.16, .16);
+        G.player.pitch = U.clamp(G.player.pitch - (e.movementY || 0) * G.settings.sens * .55, -1.45, 1.45);
       } else if (!G.noLock && !G.touch.active) {
         // soft-aim before lock
         const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
@@ -1064,7 +1081,7 @@
         T.lookX = t.clientX; T.lookY = t.clientY;
         if (G.mode === 'play') {
           G.player.a += dx * 0.006;
-          G.player.pitch = U.clamp(G.player.pitch - dy * 0.0035, -.16, .16);
+          G.player.pitch = U.clamp(G.player.pitch - dy * 0.0035, -1.45, 1.45);
         }
       }
       e.preventDefault();
@@ -1757,12 +1774,12 @@
     if (k['arrowleft']) p.a -= 2.1 * dt;
     if (k['arrowright']) p.a += 2.1 * dt;
 
-    // soft aim fallback (no pointer lock)
+    // soft aim fallback (no pointer lock) — tam 3D
     if ((!G.locked && !G.touch.active) || G.noLock) {
       const targetA = Math.atan2(G.lookTarget.y * .9, G.lookTarget.x * 1.35) * .55;
       if (Math.abs(G.lookTarget.x) > .08 || Math.abs(G.lookTarget.y) > .08) {
         p.a += targetA * dt * 3.4;
-        p.pitch = U.clamp(p.pitch + (-G.lookTarget.y * .10 - p.pitch) * dt * 3.2, -.14, .14);
+        p.pitch = U.clamp(p.pitch + (-G.lookTarget.y * .32 - p.pitch) * dt * 3.2, -1.35, 1.35);
       }
     }
 
@@ -2632,32 +2649,45 @@
       moonEl: 0.19,
       indoorView: G.indoorView,
       ceilTex: G.world.ceilTex || 'dark',
-      lightMul: G.chapterKey === 'ch3' ? 1.05 : 1
+      lightMul: G.chapterKey === 'ch3' ? 1.05 : 1,
+      skyMode: (FLOW[G.chapterKey] && FLOW[G.chapterKey].sky) || (G.chapterKey === 'ch3' ? 'red' : 'night'),
+      skyTexId: G.skyMode,
+      shake: G.shake,
+      recoil: G.recoil,
+      chapter: G.chapterKey,
+      worldKey: G.world._engId || G.chapterKey
     };
-    RAY.render(scene);
-
-    // draw scene buffer
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, G.view.width, G.view.height);
-    const dpr = G.dpr;
-    ctx.save();
-    ctx.scale(1, 1);
-    const mx = Math.abs(sx), my = Math.abs(sy);
-    RAY.blit(ctx, G.view.width + mx * 2, G.view.height + my * 2, -mx + sx, -my + sy, 0);
-    ctx.restore();
-
-    // muzzle flash light
-    if (G.muzzle > .02) {
-      const g = ctx.createRadialGradient(G.view.width * .72, G.view.height * .72, 10, G.view.width * .72, G.view.height * .72, G.view.width * .55);
-      g.addColorStop(0, `rgba(255,220,150,${.30 * G.muzzle})`);
-      g.addColorStop(1, 'rgba(255,180,80,0)');
-      ctx.fillStyle = g;
+    // TAM 3D MOTOR — raycaster yerine ENGINE3D kullan (gerçek WebGL)
+    const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
+    if (use3D) {
+      // ENGINE3D kendi canvas'ını WebGL olarak çiziyor, 2D blit gerekmez
+      ENGINE3D.render(scene);
+      // shake'i WebGL kamera ile yaptık, 2D overlay shake gerekmez
+      // muzzle ışığı ENGINE3D içinde
+      // silah viewmodel'i ENGINE3D weaponScene'de — 2D silah çizme
+    } else {
+      RAY.render(scene);
+      // draw scene buffer
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, G.view.width, G.view.height);
+      const dpr = G.dpr;
+      ctx.save();
+      ctx.scale(1, 1);
+      const mx = Math.abs(sx), my = Math.abs(sy);
+      RAY.blit(ctx, G.view.width + mx * 2, G.view.height + my * 2, -mx + sx, -my + sy, 0);
+      ctx.restore();
+      // muzzle flash light
+      if (G.muzzle > .02) {
+        const g = ctx.createRadialGradient(G.view.width * .72, G.view.height * .72, 10, G.view.width * .72, G.view.height * .72, G.view.width * .55);
+        g.addColorStop(0, `rgba(255,220,150,${.30 * G.muzzle})`);
+        g.addColorStop(1, 'rgba(255,180,80,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, G.view.width, G.view.height);
+      }
+      // weapon viewmodel (sadece fallback'de)
+      G.drawWeapon(ctx, W * dpr, H * dpr, dpr);
     }
-
-    // weapon viewmodel
-    G.drawWeapon(ctx, W * dpr, H * dpr, dpr);
 
     // damage / heal vignette
     if (G.damageFlash > 0) {
