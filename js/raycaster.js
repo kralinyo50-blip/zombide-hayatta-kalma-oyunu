@@ -26,8 +26,8 @@
     const s = quality || RAY.scale;
     let W = Math.round(cssW * s);
     let H = Math.round(cssH * s);
-    W = Math.max(320, Math.min(1024, W));
-    H = Math.max(180, Math.min(640, H));
+    W = Math.max(320, Math.min(1152, W));
+    H = Math.max(180, Math.min(648, H));
     if (RAY.W === W && RAY.H === H) return;
     RAY.W = W; RAY.H = H;
     RAY.canvas.width = W; RAY.canvas.height = H;

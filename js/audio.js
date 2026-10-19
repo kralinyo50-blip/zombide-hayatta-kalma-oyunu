@@ -13,6 +13,10 @@
     noiseBuf: null,
     muted: U.store.get('kb_muted', false),
     started: false,
+    speechEnabled: true,
+    speechReady: false,
+    speechVoices: [],
+    speechToken: 0,
     ambientNodes: [],
     musicTimer: null,
     mode: 'street',
@@ -45,7 +49,14 @@
     AUD.ctx = ctx;
     AUD.master = ctx.createGain();
     AUD.master.gain.value = AUD.muted ? 0 : 0.62;
-    AUD.master.connect(ctx.destination);
+    AUD.compressor = ctx.createDynamicsCompressor();
+    AUD.compressor.threshold.value = -18;
+    AUD.compressor.knee.value = 14;
+    AUD.compressor.ratio.value = 3;
+    AUD.compressor.attack.value = 0.004;
+    AUD.compressor.release.value = 0.24;
+    AUD.master.connect(AUD.compressor);
+    AUD.compressor.connect(ctx.destination);
     AUD.sfx = ctx.createGain(); AUD.sfx.gain.value = 0.85; AUD.sfx.connect(AUD.master);
     AUD.music = ctx.createGain(); AUD.music.gain.value = 0.5; AUD.music.connect(AUD.master);
     AUD.noiseBuf = makeNoise(ctx, 2);
@@ -53,6 +64,7 @@
 
   AUD.setMuted = function (m) {
     AUD.muted = m;
+    if (m) AUD.stopSpeech();
     U.store.set('kb_muted', m);
     if (AUD.master) {
       AUD.master.gain.cancelScheduledValues(now());
@@ -60,6 +72,43 @@
     }
     return m;
   };
+
+  // Use the browser's Turkish speech voice for voiced character lines; narration remains text-only.
+  AUD.refreshSpeechVoices = function () {
+    if (!('speechSynthesis' in window)) return;
+    AUD.speechVoices = window.speechSynthesis.getVoices() || [];
+    AUD.speechReady = true;
+  };
+
+  AUD.stopSpeech = function () {
+    AUD.speechToken++;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  };
+
+  AUD.speak = function (node) {
+    if (!node || !node.who || !node.text || !AUD.speechEnabled || AUD.muted || !('speechSynthesis' in window)) return;
+    const synth = window.speechSynthesis;
+    if (!AUD.speechReady) AUD.refreshSpeechVoices();
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(String(node.text).replace(/[*\\[\\]]/g, ''));
+    utterance.lang = 'tr-TR';
+    const voices = AUD.speechVoices;
+    const turkish = voices.filter(v => /^tr([-_]|$)/i.test(v.lang || ''));
+    const isWoman = /ANNEM|ADA|LEYLA|SELİN|KIZIL ANA|NURTEN/i.test(node.who || '');
+    const voice = turkish.find(v => isWoman ? /female|kadın|woman|女/i.test(v.name) : /male|erkek|man/i.test(v.name)) || turkish[0];
+    if (voice) utterance.voice = voice;
+    utterance.rate = /RADYO|TELSİZ|SUNUCU/i.test(node.role || '') ? 0.94 : 1.0;
+    utterance.pitch = isWoman ? 1.08 : (/KIZIL ANA/i.test(node.who || '') ? 0.72 : 0.92);
+    utterance.volume = 0.92;
+    const token = ++AUD.speechToken;
+    utterance.onerror = () => { if (token === AUD.speechToken) AUD.speechToken++; };
+    try { synth.speak(utterance); } catch (e) { /* keep dialogue playable if device TTS is unavailable */ }
+  };
+
+  if ('speechSynthesis' in window) {
+    AUD.refreshSpeechVoices();
+    window.speechSynthesis.addEventListener && window.speechSynthesis.addEventListener('voiceschanged', AUD.refreshSpeechVoices);
+  }
 
   function env(gain, t, a, d, peak = 1) {
     gain.gain.cancelScheduledValues(t);

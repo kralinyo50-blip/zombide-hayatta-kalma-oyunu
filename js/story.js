@@ -447,7 +447,7 @@
             ANNE('Sen önde git. Biz arkandayız.'),
             ME('Basamakları saymayın. Sadece yürüyün.'),
             N('Dışarısı... dışarısı dün geceki gibi değil.'),
-            { type: 'chapter', chapter: 'p4' }
+            { type: 'chapter', chapter: 'baslangic_01' }
           ]
         }
       }
@@ -1678,6 +1678,65 @@
       }
     }
   };
+
+  // 30 yeni, sıralı başlangıç bölümü: evden mahalleye ve şehirler arası kaçış kararına.
+  const prelude = [
+    ['APARTMAN ÖNÜ','Daireden ve merdiven boşluğundan çıktınız. Cihangir sokağının başında aileni toparla; ilk güvenli geçidi bul.'],
+    ['BİNA ÇIKIŞI','Apartmanın demir kapısı sıkışmış. Kapıdaki çizikler ve komşunun yarım kalmış poşeti, içeride birilerinin olduğunu düşündürüyor.'],
+    ['ARKA SOKAK','Cihangir yokuşunun arka sokağında kepenkler kapalı. Dar geçitlerden ilerleyip ana caddeye ulaş.'],
+    ['BİNA GİRİŞİ','Kapıcı kulübesinde anahtarlar, su bidonları ve sokağa açılan kilitli demir kapı.'],
+    ['CİHANGİR SOKAĞI','Park etmiş araçlar yolu daraltıyor. Kaldırımda bırakılmış bir çocuk bisikleti var.'],
+    ['FIRININ ÖNÜ','Mahalle fırınında yarım kalmış hamur, sıcak taşın üstünde son ekmekler ve yardım isteyen bir fırıncı.'],
+    ['BİKKAL DEFTERİ','Bakkalın kepengi aralık. Raflarda su, konserve ve komşuların veresiye defteri duruyor.'],
+    ['ECZANE IŞIĞI','Eczanenin yeşil ışığı yanıp sönüyor; içeride gerekli ilaçlar ve kapanmayan arka kapı.'],
+    ['ÇIKMAZ SOKAK','Yıkılmış bir tabela geçidi kapatmış. Çöp konteynerleri arasından alternatif yol bul.'],
+    ['MAHALLE PARKI','Salıncak kendi kendine hareket ediyor. Parkta saklanan aileye yardım et ya da yolu açık tut.'],
+    ['MUHTARLIK','Duvardaki mahalle krokisi, toplanma noktalarını ve kullanılmayan servis geçidini gösteriyor.'],
+    ['YAĞMUR SİPERİ','Aniden bastıran yağmur görüşü düşürüyor. Tentelerin altından, ses çıkarmadan ilerle.'],
+    ['PAZAR YERİ','Devrilmiş tezgâhlar arasında yiyecek ve izler var; dar geçişlerde dikkatli ol.'],
+    ['OKUL BAHÇESİ','Sınıflarda kalan öğrenciler için kapı açılmış. Bahçedeki zincirli kapı çıkış yolunu tutuyor.'],
+    ['ATÖLYE','Tamirci dükkânında el feneri, pense ve eski bir motosiklet. Motoru çalıştırmak riskli.'],
+    ['ALT GEÇİT','Su basan alt geçitte elektrik kabloları kıvılcım çıkarıyor. Kuru kenar hattını izle.'],
+    ['DOLMUŞ DURAĞI','Terk edilmiş dolmuşun camında güzergâh yazıyor: Taksim, Karaköy, Eminönü.'],
+    ['TAKSİM’E YÜRÜYÜŞ','Meydanın ışıkları sönmüş; barikatlar ve kalabalık arasında güvenli koridor aç.'],
+    ['İSTİKLAL’DE SESSİZLİK','Kepenklerin ardında saklananlar var. Tramvay rayları boyunca iz sür.'],
+    ['TÜNEL AĞZI','Tünel girişinde telsizden zayıf bir yardım çağrısı geliyor; ray hattı kapalı, yokuş açık.'],
+    ['KARAKÖY YOKUŞU','Taş merdivenler ıslak ve kaygan. Yukarıdan yuvarlanan eşyalar yolu kesiyor.'],
+    ['RIHTIMDAKİ TEKNE','Balıkçı teknesinin sahibi yakıt karşılığında geçiş teklif ediyor. Güvenini kazan.'],
+    ['EMİNÖNÜ İSKELESİ','Vapur iskelesinde tahliye listeleri ve boş can yelekleri. Karşıya geçiş için son fırsat.'],
+    ['BOĞAZ KARARI','Köprü yolu kapalı, deniz yolu tehlikeli. Telsiz İstanbul dışından üç güvenli rota bildiriyor.'],
+    ['YOLA HAZIRLIK','Haritada erzak noktaları ve kontrol bölgeleri işaretli. Yanına alacaklarını seç.'],
+    ['KONTROL NOKTASI','Askerî bariyerde sağlık kontrolü var. Aileyi ayırmadan geçmenin yolunu bul.'],
+    ['SON İSTANBUL GECESİ','Kızıl sis kıyıya iniyor. Geri dönmek mümkün, ama zaman daralıyor.'],
+    ['KARŞI KIYI','Tekne kıyıya vuruyor; uzakta sirenler ve yeni bir şehir silueti beliriyor.'],
+    ['YOL AYRIMI','Marmara kıyısındaki kavşakta yakıt ve erzak yalnızca bir güzergâha yetiyor.'],
+    ['YENİ BİR ŞEHİR','İstanbul geride kalırken, sıradaki ili ve izlenecek yolu sen seçiyorsun.']
+  ];
+  const preludeKeys = [];
+  prelude.forEach(([title, detail], i) => {
+    const key = 'baslangic_' + String(i + 1).padStart(2, '0');
+    preludeKeys.push(key);
+    const nodes = [
+      B('BÖLÜM ' + String(i + 1).padStart(2, '0') + ' — ' + title),
+      N(detail),
+      N(i === 0 ? 'Ailenle apartman kapısının önünde buluşuyorsun. Herkes burada; şimdi sokağın güvenli geçidini bulup mahalleye ilerle.' : 'Not defterine konumu ve gördüklerini yazıyorsun. Bir sonraki sokağa geçmeden önce nefesini toparla.'),
+      { type: 'end' }
+    ];
+    const nextChapter = i === 29 ? 'p4' : 'baslangic_' + String(i + 2).padStart(2, '0');
+    const completion = [
+      N('Yolu açtın. Arkanda kalan sokağın sesi azalırken, önündeki rota telsiz haritasında beliriyor.'),
+      N('Kısa bir nefes alıp not defterine bu durağı işaretliyorsun.'),
+      ...(i === 29 ? [C('İstanbul’dan sonra hangi ile gideceksin?', [
+        { label: 'Bursa — Mudanya üzerinden', sub: 'Daha kısa deniz geçişi; liman çevresi belirsiz.', tag: 'BURSA', flags: { nextProvince: 'Bursa' } },
+        { label: 'İzmir — Ege kıyısına doğru', sub: 'Uzun rota, daha fazla erzak noktası.', tag: 'İZMİR', flags: { nextProvince: 'İzmir' } },
+        { label: 'Ankara — iç kesimlere', sub: 'Karadan uzun yol; kontrol noktaları olabilir.', tag: 'ANKARA', flags: { nextProvince: 'Ankara' } },
+        { label: 'Tekirdağ — Trakya hattı', sub: 'Batıya giden kıyı yolu; köprü geçişi riskli.', tag: 'TEKİRDAĞ', flags: { nextProvince: 'Tekirdağ' } }
+      ])] : []),
+      { type: 'chapter', chapter: nextChapter }
+    ];
+    STORY[key] = { key, number: 'ÖN BÖLÜM ' + String(i + 1).padStart(2, '0'), title, subtitle: detail, objective: 'Rotanın sonuna ulaş', objectiveSub: 'İstanbul • ' + (i + 1) + '/30', mapKey: 'cihangir', world: 'ev', intro: nodes, events: { routeComplete: completion } };
+  });
+  STORY.preludeKeys = preludeKeys;
 
   global.STORY = STORY;
 })(window);
