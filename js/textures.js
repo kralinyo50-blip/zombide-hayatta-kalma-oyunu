@@ -707,13 +707,21 @@
   function carpet(ctx, s) {
     const rng = new U.RNG(707);
     ctx.fillStyle = '#5d1d20'; ctx.fillRect(0, 0, s, s);
-    ctx.strokeStyle = '#c39a4d'; ctx.lineWidth = 2;
-    ctx.strokeRect(6, 6, s - 12, s - 12);
-    ctx.strokeRect(12, 12, s - 24, s - 24);
-    ctx.fillStyle = 'rgba(195,154,77,.35)';
-    for (let y = 24; y < s - 20; y += 22) for (let x = 24; x < s - 20; x += 22) {
+    // kusursuz (seamless) kilim deseni: tek bir buyuk halI gibi gorunur
+    ctx.strokeStyle = 'rgba(195,154,77,.30)'; ctx.lineWidth = 2;
+    for (let y = 0; y <= s; y += 32) {
+      ctx.beginPath(); ctx.moveTo(0, y);
+      for (let x = 0; x <= s; x += 16) ctx.lineTo(x, y + ((x / 16) % 2 ? 8 : -8));
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    for (let x = 0; x <= s; x += 32) { ctx.moveTo(x, 0); ctx.lineTo(x + 8, s); }
+    for (let x = 8; x <= s; x += 32) { ctx.moveTo(x, 0); ctx.lineTo(x - 8, s); }
+    ctx.strokeStyle = 'rgba(140,96,48,.16)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = 'rgba(195,154,77,.18)';
+    for (let y = 12; y < s; y += 24) for (let x = 12; x < s; x += 24) {
       ctx.save(); ctx.translate(x, y); ctx.rotate(Math.PI / 4);
-      ctx.fillRect(-4, -4, 8, 8); ctx.restore();
+      ctx.fillRect(-3, -3, 6, 6); ctx.restore();
     }
     blotches(ctx, s, rng, '#1c0708', 10, 8, 30, 0.35);
     noise(ctx, s, rng, 10, true);

@@ -13,7 +13,7 @@
     zbuf: null,
     wallX: null, side: null, matIdx: null, dists: null, drawS: null, drawE: null,
     texH: 128,
-    fov: 0.72,
+    fov: 0.64,
     scale: 0.62
   };
 
