@@ -759,18 +759,15 @@
     TEX.init();
     SPR.init();
     if (global.CINE) CINE.init();
-    if (global.CINE3D) { try { CINE3D.init(); CINE3D.compat(); } catch(e){} }
-    RAY.init();
-    if (typeof ENGINE3D !== 'undefined') { try { ENGINE3D.init(); } catch(e){ console.warn('ENGINE3D init fail',e); } }
 
     G.view = document.getElementById('view');
-    // 2D context sadece fallback için — 3D modda WebGL kullanıyor
-    try { G.vctx = G.view.getContext('2d', { alpha: false }); } catch(e){ G.vctx = null; }
-    if (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized) {
-      ENGINE3D.resize(window.innerWidth, window.innerHeight, G.settings.quality);
-    } else {
-      RAY.resize(window.innerWidth, window.innerHeight, G.settings.quality);
-    }
+    G.vctx = G.view.getContext('2d', { alpha: false });
+    RAY.init();
+    RAY.resize(window.innerWidth, window.innerHeight, G.settings.quality);
+
+    if (global.CINE3D) { try { CINE3D.init(); CINE3D.compat(); } catch(e){ console.warn('CINE3D fail',e);} }
+    if (typeof ENGINE3D !== 'undefined') { try { ENGINE3D.init(); } catch(e){ console.warn('ENGINE3D init fail',e); } }
+
     G.resize();
 
     // grain overlay
@@ -809,19 +806,17 @@
   G.resize = function () {
     const w = window.innerWidth, h = window.innerHeight;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    // 3D modda WebGL canvas boyutunu ENGINE3D ayarlıyor, 2D için manuel
-    const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
-    if (!use3D) {
-      G.view.width = Math.round(w * dpr);
-      G.view.height = Math.round(h * dpr);
-    }
+    G.view.width = Math.round(w * dpr);
+    G.view.height = Math.round(h * dpr);
     G.view.style.width = w + 'px';
     G.view.style.height = h + 'px';
     G.dpr = dpr;
     G.vw = w; G.vh = h;
     const q = U.isTouch() ? Math.min(G.settings.quality, 0.52) : G.settings.quality;
-    if (use3D) ENGINE3D.resize(w, h, q);
-    else RAY.resize(w, h, q);
+    RAY.resize(w, h, q);
+    if (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback) {
+      ENGINE3D.resize(w, h, q);
+    }
     G.vignette = null;
     TitleScreen.resize();
     if (G.mode === 'map') { ISTMAP.resize(); ISTMAP.show(); }
@@ -2660,12 +2655,20 @@
     // TAM 3D MOTOR — raycaster yerine ENGINE3D kullan (gerçek WebGL)
     const use3D = (typeof ENGINE3D !== 'undefined' && ENGINE3D.initialized && !ENGINE3D.useFallback);
     if (use3D) {
-      // ENGINE3D kendi canvas'ını WebGL olarak çiziyor, 2D blit gerekmez
       ENGINE3D.render(scene);
-      // shake'i WebGL kamera ile yaptık, 2D overlay shake gerekmez
-      // muzzle ışığı ENGINE3D içinde
-      // silah viewmodel'i ENGINE3D weaponScene'de — 2D silah çizme
+      // Overlay canvas'ı temizle — 3D'nin üstüne sadece vignette/particle çiziyoruz
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, G.view.width, G.view.height);
+      // muzzle ışığını 3D zaten yapıyor, 2D flash sadece hafif
+      if (G.muzzle > .02) {
+        const g = ctx.createRadialGradient(G.view.width * .72, G.view.height * .72, 10, G.view.width * .72, G.view.height * .72, G.view.width * .55);
+        g.addColorStop(0, `rgba(255,220,150,${.18 * G.muzzle})`);
+        g.addColorStop(1, 'rgba(255,180,80,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, G.view.width, G.view.height);
+      }
     } else {
+      if (typeof ENGINE3D !== 'undefined' && ENGINE3D.canvas) ENGINE3D.show(false);
       RAY.render(scene);
       // draw scene buffer
       ctx.setTransform(1, 0, 0, 1, 0, 0);

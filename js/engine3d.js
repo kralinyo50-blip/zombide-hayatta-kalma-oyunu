@@ -43,7 +43,6 @@
     if (!hasThree()) {
       console.warn('THREE yok — raycaster fallback');
       ENG.useFallback = true;
-      if (global.RAY) RAY.init();
       return;
     }
     try {
@@ -51,7 +50,16 @@
       ENG.camera = new THREE.PerspectiveCamera(75, 1, 0.08, 120);
       ENG.camera.rotation.order = 'YXZ';
 
-      const canvas = document.getElementById('view');
+      // Ayrı WebGL canvas oluştur — #view (2D) bozulmasın, başlık ekranı kararmasın
+      const existing = document.getElementById('view3d');
+      const canvas = existing || document.createElement('canvas');
+      if (!existing) {
+        canvas.id = 'view3d';
+        canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:none;z-index:1';
+        const app = document.getElementById('app');
+        if (app) app.insertBefore(canvas, document.getElementById('view'));
+      }
+      ENG.canvas = canvas;
       ENG.renderer = new THREE.WebGLRenderer({
         canvas: canvas,
         antialias: true,
@@ -129,12 +137,33 @@
     }
   };
 
+  ENG.show = function(show){
+    if (ENG.canvas) ENG.canvas.style.display = show ? 'block' : 'none';
+    const v = document.getElementById('view');
+    if (v) {
+      if (show){
+        // 3D modda #view şeffaf overlay — HUD/vignette için üstte, input'u almaya devam eder
+        v.style.background = 'transparent';
+        v.style.display = 'block';
+        v.style.zIndex = '2';
+        v.style.pointerEvents = 'auto';
+        if (ENG.canvas) ENG.canvas.style.zIndex = '1';
+      } else {
+        v.style.background = '#05080b';
+        v.style.display = 'block';
+        v.style.zIndex = '1';
+        v.style.pointerEvents = 'auto';
+      }
+    }
+  };
   ENG.resize = function (cssW, cssH, quality) {
     ENG.W = cssW; ENG.H = cssH;
     ENG.quality = quality || 0.62;
     ENG.dpr = Math.min(window.devicePixelRatio || 1, 1.8);
     if (!ENG.initialized || ENG.useFallback) {
+      // fallback hala 2D raycaster kullanıyor — view canvas'ı göster
       if (global.RAY) RAY.resize(cssW, cssH, quality);
+      ENG.show(false);
       return;
     }
     const w = cssW, h = cssH;
@@ -144,6 +173,11 @@
     ENG.weaponCamera.updateProjectionMatrix();
     ENG.renderer.setSize(w, h, false);
     ENG.renderer.setPixelRatio(ENG.dpr * ENG.quality);
+    // canvas'ın style boyutunu da ayarla
+    if (ENG.canvas){
+      ENG.canvas.style.width = w + 'px';
+      ENG.canvas.style.height = h + 'px';
+    }
   };
 
   // Utility: canvas texture to Three texture
@@ -766,8 +800,11 @@
   ENG.render = function (sceneData) {
     if (ENG.useFallback || !ENG.initialized) {
       if (global.RAY) RAY.render(sceneData);
+      ENG.show(false);
       return;
     }
+    // 3D aktifken view canvas'ını gizle, 3D canvas'ı göster
+    ENG.show(true);
 
     const world = sceneData.world;
     const player = sceneData.player;
@@ -1233,21 +1270,12 @@
     }
   };
 
-  // Expose as RAY-compatible but also as ENGINE3D
+  // Expose as ENGINE3D — RAY'i ASLA ezme, fallback kalsın
   global.ENGINE3D = ENG;
-  // Keep RAY alive as fallback, but overwrite global RAY's render to use 3D if available
   if (hasThree()) {
     global.RAY3D = ENG;
-    // If user explicitly wants 3D, we make RAY point to ENG
-    // Store original
-    const origRAY = global.RAY;
-    global.RAY = new Proxy(ENG, {
-      get(target, prop) {
-        if (prop in target) return target[prop];
-        if (origRAY && prop in origRAY) return origRAY[prop];
-        return undefined;
-      }
-    });
+    // Orijinal RAY'i sakla ama üzerine yazma
+    global.RAY_ORIG = global.RAY;
   }
 
 })(window);
