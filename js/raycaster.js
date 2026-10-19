@@ -240,8 +240,8 @@
         const ty = ((fy - cellY) * texH) | 0;
         const c = tex.data[(ty & mask) * tex.w + (tx & mask)];
         let r = c & 255, g = (c >>> 8) & 255, b = (c >>> 16) & 255;
-        const flash = 0.34 * Math.exp(-rowDist * 0.22);
-        let lum = toneMap((0.12 + light * 1.05 + flash + muzzle * 0.75) * lightMul);
+        const flash = (sc.indoorView ? 0.14 : 0.34) * Math.exp(-rowDist * 0.22);
+        let lum = toneMap((0.14 + light * 1.10 + flash + muzzle * 0.75) * lightMul);
         r = (r * lum * fogStr * tr + fr) | 0;
         g = (g * lum * fogStr * tg + fg) | 0;
         b = (b * lum * fogStr * tb + fb) | 0;
@@ -281,7 +281,7 @@
           const ty = ((fy - Math.floor(fy)) * ct.h) | 0;
           const c = ct.data[ty * ct.w + tx];
           let r = c & 255, g = (c >>> 8) & 255, b = (c >>> 16) & 255;
-          const lum = toneMap((0.13 + cl * 0.9 + muzzle * 0.7) * lightMul);
+          const lum = toneMap((0.10 + cl * 0.58 + muzzle * 0.7) * lightMul);
           r = (r * lum * fog + baseR) | 0;
           g = (g * lum * fog + baseG) | 0;
           b = (b * lum * fog + baseB) | 0;
@@ -331,7 +331,8 @@
       // flashlight cone from screen center
       const cd = Math.abs(x - flashX) / (W * 0.5);
       const cone = Math.max(0, 1 - cd * 1.05) ** 1.6 * 0.75;
-      let lum = 0.14 + light * 1.10 + cone * 1.35 + muzzle * 1.05;
+      const coneK = sc.indoorView ? 0.42 : 1.35;
+      let lum = 0.12 + light * 0.98 + cone * coneK + muzzle * 1.05;
       if (sides[x] === 1) lum *= 0.80;
       lum = toneMap(lum * lightMul);
       const fog = Math.exp(-dist * fogDensity);

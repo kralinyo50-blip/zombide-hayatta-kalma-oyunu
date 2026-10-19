@@ -157,8 +157,10 @@
 
   const ROUTE = [
     { lon: 28.9810, lat: 41.0318, chapter: 'p1', label: 'Cihangir', badge: false },
-    { lon: 28.9827, lat: 41.0302, chapter: 'p3', label: 'Cihangir Sokakları', badge: false },
-    { lon: 28.9774, lat: 41.0237, chapter: 'p4', label: 'Sahil Yolu', badge: false },
+    { lon: 28.9812, lat: 41.0316, chapter: 'p2', label: 'Cihangir — Gece', badge: false },
+    { lon: 28.9814, lat: 41.0314, chapter: 'p3', label: 'Cihangir — Sabah', badge: false },
+    { lon: 28.9827, lat: 41.0302, chapter: 'p4', label: 'Cihangir Sokakları', badge: false },
+    { lon: 28.9774, lat: 41.0237, chapter: 'p5', label: 'Sahil Yolu', badge: false },
     { lon: 28.9757, lat: 41.0240, chapter: 'ch1', label: 'Karaköy' },
     { lon: 28.9744, lat: 41.0256, chapter: 'ch1', label: 'Galata Kulesi' },
     { lon: 28.9720, lat: 41.0235, chapter: 'ch2', label: 'Bankalar Cd.' },
@@ -939,7 +941,7 @@
     ctx.restore();
 
     // current location (blue dot, Google style)
-    const curChapter = IST.activeChapter === 'p2' ? 'p1' : IST.activeChapter;
+    const curChapter = IST.activeChapter;
     const cur = ROUTE.find(r => r.chapter === curChapter);
     if (cur) {
       const p = worldToScreen(P(cur.lon, cur.lat).x, P(cur.lon, cur.lat).y);
@@ -1081,15 +1083,17 @@
 
   IST.setChapter = function (key) {
     IST.activeChapter = key;
-    const anchor = key === 'p1' || key === 'p2' ? [28.9810, 41.0318]
-      : key === 'p3' ? [28.9827, 41.0302]
-      : key === 'p4' ? [28.9774, 41.0237]
+    const anchor = key === 'p1' ? [28.9810, 41.0318]
+      : key === 'p2' ? [28.9812, 41.0316]
+      : key === 'p3' ? [28.9814, 41.0314]
+      : key === 'p4' ? [28.9827, 41.0302]
+      : key === 'p5' ? [28.9774, 41.0237]
       : key === 'ch1' ? [28.9762, 41.0225]
       : key === 'ch2' ? [28.9736, 41.0238]
       : [28.9900, 41.0215];
     const c = P(anchor[0], anchor[1]);
     IST.cam.x = c.x; IST.cam.y = c.y;
-    IST.cam.zoom = Math.max(IST.cam.zoom, key === 'ch3' ? 2.4 : (key === 'p1' || key === 'p2' || key === 'p3') ? 3.4 : 4.6);
+    IST.cam.zoom = Math.max(IST.cam.zoom, key === 'ch3' ? 2.4 : (key === 'p1' || key === 'p2' || key === 'p3') ? 3.4 : key === 'p4' ? 3.6 : 4.6);
     clampCam();
     IST.dirty = true;
     draw();

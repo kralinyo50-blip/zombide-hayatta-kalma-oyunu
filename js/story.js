@@ -43,9 +43,10 @@
     /* ============ COLD OPEN ============ */
     opening: [
       B('KARANLIK BOĞAZ'),
-      N("İstanbul. Bir cumartesi akşamı."),
+      N('İstanbul. Bir cumartesi akşamı.'),
       N("Boğaz'ın üzerinde ince bir sis var. Kimse aldırmıyor; eylül akşamları hep böyle olur."),
-      N("Bu, her şeyin son sıradan gecesi."),
+      N('Cihangir\'de bir apartmanın üçüncü katında, bir aile akşam yemeğine oturuyor.'),
+      N('Bu, her şeyin son sıradan gecesi.'),
       { type: 'end' }
     ],
 
@@ -130,12 +131,18 @@
           FN((g) => { g.flags.p1_pencere = true; }),
           { type: 'end' }
         ],
-        balkon: [
+        balkon: {
+          cinematic: true,
+          visual: 'bogaz',
+          title: 'BALKON',
+          kicker: '0. GÜN — 22:12',
+          nodes: [
           N('Balkona çıkıyorsun. Boğaz, aşağıda koyu bir kurşun gibi.'),
           N("Kız Kulesi'nin ışığı yanıyor. Uzakta bir gemi, motorsuz gibi, akıntıyla sürükleniyor."),
           N('Sisin içinden bir martı sesi. Sonra bir başkası. Sonra hepsi birden kesiliyor.'),
           { type: 'end' }
-        ],
+          ]
+        },
         tv: {
           cinematic: true,
           visual: 'news',
@@ -176,17 +183,190 @@
             N('Gölge kapının önünde duruyor. Sonra ağır ağır merdivenlerden aşağı iniyor.'),
             BABA('Sabahı bekleyeceğiz. Sabah ordu gelir.'),
             FN((g) => { g.flags.p1_kapi = true; }),
-            N('Sabah gelmedi.'),
+            N('Saat 23:10. Elektrik kesiliyor. Buzdolabı bir kez ötüyor, sonra susuyor.'),
+            N('Karanlıkta, merdiven boşluğundan gelen ses: ıslak, ağır bir sürüklenme.'),
+            N('Sabah gelmedi. Gece geldi.'),
             { type: 'chapter', chapter: 'p2' }
           ]
         }
       }
     },
 
-    /* ============ PROLOGUE 2 — SABAH ============ */
+    /* ============ PROLOGUE 2 — GECE ============ */
     p2: {
       key: 'p2',
       number: 'BÖLÜM I',
+      title: 'GECE',
+      subtitle: 'Elektrik yok. Şehir karanlık. Dairenin içinde üç kişi daha var.',
+      objective: 'Salona git',
+      objectiveSub: 'Cihangir • 0. Gün, 23:14',
+      mapKey: 'cihangir',
+      world: 'ev_gece',
+      intro: [
+        N('23:14. Elektrik yok. Buzdolabı bir kez ötüyor, sonra susuyor.'),
+        N('Koridordan sesler geliyor: sürtünen ayak, devrilen bir şişe, sonra tekrar sessizlik.'),
+        ME('Anne? Ada?'),
+        ANNE('Salondayız. Sessiz ol, kapıyı açma.'),
+        N('Cebindeki telefonun ekranında tek bir çubuk var. Saat 23:14.'),
+        O('Salona git', 'Cihangir • 0. Gün, 23:14'),
+        { type: 'end' }
+      ],
+      events: {
+        aile: [
+          N('Salon. İki mum, bir battaniye. Ada kanepenin köşesine sokulmuş; alnı ateş gibi.'),
+          ANNE('Baban camın önünde. Bir saattir tek kelime etmedi.'),
+          BABA('Sokakta ışık yok. Sadece aşağıda, apartmanın girişinde bir fener var.'),
+          N('Perdeyi aralıyorsun. Aşağıda bir adam, elinde fenerle, arabaların arasında duruyor. Sonra yavaşça dönüyor.'),
+          ME('Baba, o Bayram Amca mı?'),
+          BABA('Bayram Amca iki gündür yok. Kapısını çaldım, açmadı.'),
+          ADA('Ağabey... televizyon açılmıyor.'),
+          ANNE('Elektrik yok, kızım.'),
+          ADA('Hayır. Kumandaya bastım, ışığı yandı. Ama ekran... ekran kendi kendine kapandı.'),
+          C('Aileye ne söyleyeceksin?', [
+            { label: '"Sabaha kadar bekleyelim. Ordu gelir."', sub: 'Sesi sakin tut. Annen sana bakıyor.', tag: 'SAKİN', flags: { p2_sakin: true, p2_salon: true }, goto: 'sakin' },
+            { label: '"Hazırlanın. Burada kalmayacağız."', sub: 'Belki de haklısın.', tag: 'GERÇEK', flags: { p2_gercek: true, p2_salon: true }, goto: 'gercek' }
+          ]),
+          LBL('sakin'),
+          BABA('Ordu... Ordu da karanlıkta, oğlum. Ama haklısın. Sabah olsun.'),
+          ANNE('Sabah olsun.'),
+          N('Kimse inanmıyor. Ama söylenmiş oluyor.'),
+          G('son'),
+          LBL('gercek'),
+          BABA('Nereye? Aşağıda ne olduğunu bilmiyoruz.'),
+          ME('Biliyoruz. Haberlerde gördük.'),
+          ANNE('Ada hasta. Onu bu soğukta sokağa çıkaramam.'),
+          N('Cevap veremiyorsun. Çünkü haklı.'),
+          LBL('son'),
+          { type: 'objective', text: 'Koridordaki sesi kontrol et', sub: 'Cihangir • 0. Gün, 23:19' },
+          { type: 'end' }
+        ],
+        anne_gece: [
+          ANNE('Mumları mutfaktan aldım. Kibrit de var. Cebinde tut.'),
+          ANNE('Oğlum... baban bir şey saklıyor. Gece yarısı kalkıp kapıyı dinliyor.'),
+          ME('Ne saklıyor olabilir?'),
+          ANNE('Bilmiyorum. Ama 99\'da da böyle yapmıştı. O zaman da kimse inanmamıştı.'),
+          ANNE('Ada\'ya iyi bak. Ben... ben ona bir şey söyleyemiyorum.'),
+          { type: 'end' }
+        ],
+        ada_gece: [
+          ADA('Ağabey, uyuyamıyorum.'),
+          ME('Ateşin var. Gözlerini kapat.'),
+          ADA('Kapının dışında biri var. Nefes alıyor. Ama... düzensiz. Bir türlü düzenli olmuyor.'),
+          N('Kız kardeşin on beş yaşında ve koridordaki nefesi senden iyi sayıyor.'),
+          C('Ada\'ya ne diyeceksin?', [
+            { label: '"Ben buradayım. Uyu."', sub: 'Yalan söylemek bazen en büyük iyiliktir.', tag: 'ABİ', flags: { p2_ada_rahat: true }, goto: 'a1' },
+            { label: '"O nefes senin hayal gücün. Ama hazır ol."', sub: 'Yalan söyleme.', tag: 'DÜRÜST', flags: { p2_ada_uyandi: true }, goto: 'a2' }
+          ]),
+          LBL('a1'),
+          ADA('Tamam. Elimi tut. Sadece beş dakika.'),
+          N('Beş dakika sonra uyuyor. Elini bırakmıyorsun.'),
+          G('ae'),
+          LBL('a2'),
+          ADA('Hazırım. Ama sen de hazır ol, ağabey.'),
+          G('ae'),
+          LBL('ae'),
+          { type: 'end' }
+        ],
+        baba_gece: [
+          BABA('Gel buraya.'),
+          N('Ceketinin astarından iki şarjör çıkarıyor. Eski, ağır, bakımlı.'),
+          BABA('Babamdan kaldı. 99\'da da yanımdaydı.'),
+          ME('Baba, sen kullan—'),
+          BABA('Ben kullanamam. Sen kuryesin. Şehri herkesten iyi bilirsin.'),
+          FN((g) => {
+            g.flags.p2_silah = true;
+            g.weapons.pistol.reserve = Math.min(120, g.weapons.pistol.reserve + 24);
+            g.weapons.pistol.mag = g.weapons.pistol.magSize;
+            g.toast('Babanın şarjörleri alındı · <b>+24 mermi</b>');
+          }),
+          BABA('İki şey söyleyeceğim. Birincisi: insan gibi görünen her şey insan değil. İkincisi: bir insanı vurmadan önce iki kez bak.'),
+          BABA('Ve oğlum... o ses kapıya gelirse, beni bekleme. Ada\'yı götür.'),
+          { type: 'end' }
+        ],
+        sigorta: [
+          N('Elektrik panosu. Anahtarın yerinde, sigortalar sağlam.'),
+          ME('Sigorta değil. Şehirde elektrik yok.'),
+          N('Panoyu kapatırken, iki kat aşağıdan bir ses: metal bir kapı, duvara vuruyor. Bir kez. İki kez.'),
+          N('Sonra bir ses daha. Bu sefer insan sesi: "Açma... açma..."'),
+          FN((g) => { g.flags.p2_sigorta = true; }),
+          { type: 'end' }
+        ],
+        kapi_ses: {
+          cinematic: true,
+          shot: 'stair',
+          title: 'KORİDOR',
+          kicker: '0. GÜN — 23:26',
+          nodes: [
+            N('Kapıyı aralıyorsun. Koridor zifiri karanlık.'),
+            N('Bayram Amca\'nın kapısı açık. Beş yıldır o kapının açıldığını görmemiştin.'),
+            N('Işığı yukarı tutuyorsun. Merdiven boşluğunda biri var. Sırtı dönük, başı öne eğik.'),
+            ME('Bayram Amca?'),
+            N('Adam dönmüyor. Ama başını bir yana çeviriyor. Sonra öbür yana. Bir kuş gibi. Yanlış bir şey.'),
+            N('Merdivenlerin altından bir ses daha geliyor: ıslak, uzun bir hırıltı. Yalnız değil.'),
+            ANNE('Oğlum, içeri gel!'),
+            FN((g) => { g.flags.p2_kapi = true; g.flags.p2_kapi_gordu = true; }),
+            { type: 'objective', text: 'Balkon kapısını kontrol et', sub: 'Cihangir • 0. Gün, 23:31' },
+            { type: 'end' }
+          ]
+        },
+        pencere_gece: [
+          N('Sokağa bakıyorsun. Bir ambulans, ışıkları kapalı, yolun ortasında duruyor.'),
+          N('Yanından geçen olmuyor. Sadece bir köpek, bir de rüzgâr.'),
+          { type: 'end' }
+        ],
+        telefon_gece: [
+          N('Telefon. Tek çubuk da gitti. Acil aramalar meşgul.'),
+          N('Komşu kurye grubundan bir mesaj düşüyor: "Aşağıdayım. Kapıyı açma. Kızıl olan bize de bulaştı."'),
+          ME('Ali?'),
+          N('Cevap yok.'),
+          { type: 'end' }
+        ],
+        balkon: {
+          cinematic: true,
+          shot: 'window',
+          title: 'SOKAK',
+          kicker: '0. GÜN — 23:38',
+          nodes: [
+            N('Balkon kapısının camı buz gibi. Aşağıda Cihangir, bütün ışıkları sönmüş hâliyle bir kuyu.'),
+            N('Sokağın ortasında bir taksi, kapısı açık. Yanında bir kadın, kucağında bir çocuk, koşuyor.'),
+            N('Sonra bir başka gölge. Kadının önünü kesiyor. Değil... düşüyor. Adamın üstüne düşüyor.'),
+            N('Uzaktan bir çığlık. Sonra bina kapısından gelen, çok daha yakın bir ses.'),
+            N('Camda bir el izi beliriyor. İçeriden.'),
+            ME('...Ada, arkaya geç. Şimdi!'),
+            FN((g) => {
+              g.flags.p2_balkon = true;
+              g.spawnAt('walker', 9.4, 8.2);
+              g.spawnAt('walker', 8.6, 6.4);
+              g.toast('Daireye bir şey girdi');
+            }),
+            N('Mutfak kapısının ardından bir cam kırılışı. Balkon kapısı zorlanıyor.'),
+            { type: 'objective', text: 'Daireyi temizle', sub: 'Cihangir • 0. Gün, 23:41' },
+            { type: 'end' }
+          ]
+        },
+        son: {
+          cinematic: true,
+          shot: 'stair',
+          title: 'KAPI',
+          kicker: '0. GÜN — 23:58',
+          nodes: [
+            N('Daire kapısı. Dışarıdan gelen ses artık tek değil.'),
+            N('Annen gardırobu sürüklüyor. Baban masayı deviriyor. Ada mumu sana uzatıyor.'),
+            BABA('Sabaha kadar dayanacağız. Sonra birlikte çıkacağız.'),
+            ANNE('Hep birlikte.'),
+            N('Kapıya sırtını dayıyorsun. Ahşap, tırnaklarla kazınıyor: uzun, sabırlı, hiç durmayan.'),
+            N('Elektrik geri gelmiyor. Şehir karanlıkta. Ama kapının ardındaki ses... ses öğreniyor.'),
+            FN((g) => { g.flags.p2_direndi = true; }),
+            { type: 'chapter', chapter: 'p3' }
+          ]
+        }
+      }
+    },
+
+    /* ============ PROLOGUE 3 — SABAH ============ */
+    p3: {
+      key: 'p3',
+      number: 'BÖLÜM II',
       title: 'SABAH',
       subtitle: 'Elektrik yok, sular yok. Dairenin içinde bir ses var.',
       objective: 'Salona git',
@@ -210,8 +390,8 @@
           ADA('Ağabey, koridorda biri var.'),
           N('Ses kapıya yaklaşıyor. Bir el, kapıyı tırmalıyor. Tırnaklar vernikte kayıyor.'),
           C('Ne yapacaksın?', [
-            { label: 'Kapıyı aç. Ne olduğunu görmelisin.', sub: "Belki de Bayram Amca'dır.", tag: 'CESUR', flags: { p2_ac: true }, goto: 'ac' },
-            { label: 'Önce kapıyı barikatla.', sub: 'Ada ve annen arkada dursun.', tag: 'SAKİN', flags: { p2_barikat: true }, goto: 'bar' }
+            { label: 'Kapıyı aç. Ne olduğunu görmelisin.', sub: "Belki de Bayram Amca'dır.", tag: 'CESUR', flags: { p3_ac: true }, goto: 'ac' },
+            { label: 'Önce kapıyı barikatla.', sub: 'Ada ve annen arkada dursun.', tag: 'SAKİN', flags: { p3_barikat: true }, goto: 'bar' }
           ]),
           LBL('ac'),
           N('Kapıyı aralıyorsun. Koridorda bir adam var; sırtı dönük, omuzları düşük. Sonra başını çeviriyor.'),
@@ -227,7 +407,7 @@
           N('Kilit, içeriden açılıyor.'),
           LBL('fight'),
           FN((g) => {
-            g.flags.p2_salon = true;
+            g.flags.p3_salon = true;
             g.spawnAt('walker', 13.8, 18.4);
             g.spawnAt('walker', 13.8, 11.4);
             g.spawnAt('runner', 7.4, 14.4);
@@ -267,16 +447,16 @@
             ANNE('Sen önde git. Biz arkandayız.'),
             ME('Basamakları saymayın. Sadece yürüyün.'),
             N('Dışarısı... dışarısı dün geceki gibi değil.'),
-            { type: 'chapter', chapter: 'p3' }
+            { type: 'chapter', chapter: 'p4' }
           ]
         }
       }
     },
 
-    /* ============ PROLOGUE 3 — MAHALLE ============ */
-    p3: {
-      key: 'p3',
-      number: 'BÖLÜM II',
+    /* ============ PROLOGUE 4 — MAHALLE ============ */
+    p4: {
+      key: 'p4',
+      number: 'BÖLÜM III',
       title: 'MAHALLE',
       subtitle: "Cihangir'in dar sokakları. Hava hâlâ kırmızı.",
       objective: 'Eczaneye ulaş',
@@ -323,7 +503,7 @@
         ],
         radyo: {
           cinematic: true,
-          visual: 'coast',
+          visual: 'radio',
           title: '104.6 MHz',
           kicker: '1. GÜN — 08:33',
           nodes: [
@@ -368,16 +548,16 @@
             LBL('git'),
             N('Minibüsün kapısını kapatıyorsun. Dikiz aynasında cami küçülüyor, adam küçülüyor, sonra hiç oluyor.'),
             ANNE('Ağlama. Sür.'),
-            { type: 'chapter', chapter: 'p4' }
+            { type: 'chapter', chapter: 'p5' }
           ]
         }
       }
     },
 
     /* ============ PROLOGUE 4 — SAHİL ============ */
-    p4: {
-      key: 'p4',
-      number: 'BÖLÜM III',
+    p5: {
+      key: 'p5',
+      number: 'BÖLÜM IV',
       title: 'SAHİL',
       subtitle: "Boğaz'a inen yol. Karantina kapısı kapanmadan geçmelisiniz.",
       objective: 'Karantina kapısına ulaş',
@@ -478,7 +658,7 @@
     /* ============ CHAPTER 1 ============ */
     ch1: {
       key: 'ch1',
-      number: 'BÖLÜM IV',
+      number: 'BÖLÜM V',
       title: 'KARAKÖY',
       subtitle: 'Kızıl Sis\'in dokuzuncu gecesi. Rıhtımda bir sinyal yanıyor.',
       objective: 'Karaköy Meydanı\'na ulaş',
@@ -795,7 +975,7 @@
     /* ============ CHAPTER 3 ============ */
     ch3: {
       key: 'ch3',
-      number: 'BÖLÜM VI',
+      number: 'BÖLÜM VII',
       title: 'KIZ KULESİ',
       subtitle: 'Boğaz\'ın ortasında, tek başına bir kule.',
       objective: 'Kuleye gir',
@@ -947,6 +1127,17 @@
           'Bayram Amca (daire 3) iki gündür görülmemektedir. Kapısını çalmayın.\n\n' +
           'Su deposu arızalıdır. Jeneratör çalışmıyor. Merdiven boşluğunu karanlıkta kullanmayın.\n\n' +
           '— Kapıcı İrfan"'
+      },
+      p2c: {
+        type: 'MUTFAK ÇEKMECESİ',
+        title: 'KİBRİT VE BİR NOT',
+        body:
+          'Çekmecede bir kutu kibrit, iki mum ve annenin alışveriş listesi.\n\n' +
+          'Listenin arkasında, aceleyle yazılmış bir not:\n' +
+          '"Ada\'nın ateşi 38,6. Eczane kapalıysa hastaneye götüreceğiz.\n' +
+          'Hasan, sen sakın sokağa çıkma. Oğlum, sen de.\n' +
+          'Sabah olunca konuşuruz."\n\n' +
+          'Notun üstüne, babanın el yazısıyla bir çizgi çekilmiş. Yanına: "Sabah olmayacak."'
       },
       p2b: {
         type: 'BULUNAN CÜZDAN',

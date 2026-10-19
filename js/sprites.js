@@ -1201,6 +1201,48 @@
   }
 
 
+  function propCandle() {
+    return make(46, 96, (ctx, w, h) => {
+      // warm halo
+      const g = ctx.createRadialGradient(w * .5, h * .42, 2, w * .5, h * .42, w * .48);
+      g.addColorStop(0, 'rgba(255,208,140,.55)');
+      g.addColorStop(.45, 'rgba(255,176,90,.18)');
+      g.addColorStop(1, 'rgba(255,170,80,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(w * .5, h * .42, w * .48, 0, 6.283); ctx.fill();
+      // saucer
+      ctx.fillStyle = '#3a3229';
+      ctx.beginPath(); ctx.ellipse(w * .5, h * .90, w * .38, h * .06, 0, 0, 6.283); ctx.fill();
+      // candle body
+      const cg = ctx.createLinearGradient(w * .34, 0, w * .66, 0);
+      cg.addColorStop(0, '#b9a887');
+      cg.addColorStop(.45, '#f2e6cf');
+      cg.addColorStop(1, '#a99a7c');
+      ctx.fillStyle = cg;
+      ctx.fillRect(w * .38, h * .50, w * .24, h * .40);
+      // melted top
+      ctx.fillStyle = '#f7eedd';
+      ctx.beginPath(); ctx.ellipse(w * .5, h * .50, w * .12, h * .035, 0, 0, 6.283); ctx.fill();
+      // wick
+      ctx.strokeStyle = '#2a2119'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(w * .5, h * .50); ctx.lineTo(w * .5, h * .44); ctx.stroke();
+      // flame
+      const fl = 1 + Math.sin(Date.now() * .012) * .06;
+      const fg = ctx.createRadialGradient(w * .5, h * .40, 1, w * .5, h * .40, w * .22);
+      fg.addColorStop(0, 'rgba(255,252,226,.98)');
+      fg.addColorStop(.35, 'rgba(255,206,110,.9)');
+      fg.addColorStop(1, 'rgba(255,150,50,0)');
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.ellipse(w * .5, h * .40, w * .10 * fl, h * .075 * fl, 0, 0, 6.283);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,244,206,.95)';
+      ctx.beginPath();
+      ctx.ellipse(w * .5, h * .41, w * .035, h * .04, 0, 0, 6.283);
+      ctx.fill();
+    });
+  }
+
   function propShelf() {
     return make(130, 170, (ctx, w, h) => {
       ctx.fillStyle = '#4a3527';
@@ -1371,7 +1413,7 @@
       galata_tower: propTower(), armor: propArmor(),
       tv: propTV(), sofa: propSofa(), table: propTable(), fridge: propFridge(),
       counter: propCounter(), bed: propBed(), wardrobe: propWardrobe(), plant: propPlant(), minibus: propMinibus(),
-      shelf: propShelf()
+      shelf: propShelf(), candle: propCandle()
     };
   };
 

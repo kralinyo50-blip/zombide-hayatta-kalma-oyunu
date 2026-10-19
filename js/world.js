@@ -1003,11 +1003,13 @@
   /* ============================================================
      PROLOGUE 1/2 — EV (Cihangir'de bir daire)
      ============================================================ */
-  function buildEv(siege) {
+  function buildEv(mode) {
+    const siege = mode === 'siege';
+    const dark = mode === 'dark';
     const W = 30, H = 24;
     const w = new World(W, H);
     w.defaultFloor = F.wood;
-    w.outdoorBase = 0.10;
+    w.outdoorBase = dark ? 0.03 : 0.10;
     w.ceilTex = 'plaster';
     w.fill(0, 0, W, H, M.plaster_warm);
     w.wallRing(2, 2, 26, 20, M.home_wall);
@@ -1015,14 +1017,15 @@
     w.carve(3, 3, 24, 18, F.wood, true);
     // ---- rooms ----
     w.carve(3, 3, 8, 7, F.wood, true);        // salon x3..10 y3..9
-    w.carve(12, 3, 4, 18, F.stone, true);     // hol x12..15 y3..20
+    w.carve(12, 3, 4, 18, F.carpet, true);    // hol x12..15 y3..20
     w.carve(17, 3, 10, 7, F.tile, true);      // mutfak x17..26 y3..9
     w.carve(17, 11, 10, 10, F.wood, true);    // ebeveyn x17..26 y11..20
     w.carve(3, 11, 8, 10, F.wood, true);      // oda x3..10 y11..20
     // ---- partitions ----
     w.fill(3, 11, 1, 18, M.home_wall);        // x=11
     w.fill(3, 16, 1, 18, M.home_wall);        // x=16
-    w.fill(10, 3, 1, 18, M.home_wall);        // y=10
+    w.fill(10, 3, 8, 1, M.home_wall);         // salon / oda
+    w.fill(10, 17, 10, 1, M.home_wall);       // mutfak / ebeveyn
     // ---- doorways ----
     w.carve(11, 5, 1, 3, F.wood, true);
     w.carve(11, 13, 1, 3, F.wood, true);
@@ -1033,46 +1036,69 @@
     w.addDoor(14, 21, 'wood_door', { id: 'ev_door', label: 'Daire kapısı', open: !!siege });
 
     // ---- salon ----
-    w.addLight(7.4, 5.4, 7.5, siege ? .95 : 1.12);
-    w.addLight(4.2, 8.2, 3.6, .7);
+    if (dark) {
+      w.addLight(6.4, 5.6, 5.4, .90);       // mum ışığı
+      w.addLight(8.4, 6.6, 3.6, .40);
+      w.addLight(4.2, 8.2, 3.0, .22);
+    } else {
+      w.addLight(7.4, 5.4, 7.5, siege ? .78 : .92);
+      w.addLight(4.2, 8.2, 3.6, .55);
+    }
     w.addProp('sofa', 5.4, 4.6, { solid: true, radius: .8, worldH: 1.0 });
-    w.addProp('tv', 8.8, 3.6, { solid: true, radius: .55, worldH: 1.25, scale: 1.1 });
+    if (!dark) w.addProp('tv', 8.8, 3.6, { solid: true, radius: .55, worldH: 1.25, scale: 1.1 });
+    else w.addProp('table', 8.8, 3.9, { solid: true, radius: .45, worldH: .5 });
     w.addProp('table', 7.0, 5.4, { solid: true, radius: .6, worldH: .55 });
     w.addProp('shelf', 3.6, 3.8, { solid: true, radius: .5, worldH: 1.75 });
     w.addProp('plant', 3.5, 8.4, { solid: true, radius: .3, worldH: 1.2 });
     w.addProp('lamp', 9.4, 8.4, { solid: false, radius: .12, worldH: 1.9 });
-    w.addInteractable('tv', 'tv', 8.2, 4.6, { radius: 2.0, label: 'Televizyon' });
+    if (dark) w.addProp('candle', 7.0, 5.4, { solid: false, radius: .1, worldH: .34 });
+    w.addProp('sofa', 9.6, 6.6, { solid: true, radius: .8, worldH: 1.0 });
+    w.addProp('teddy', 5.0, 5.3, { solid: false, radius: .12, worldH: .35 });
+    w.addProp('cat', 3.8, 7.4, { solid: false, radius: .14, worldH: .3 });
+    w.addProp('crate', 10.0, 9.0, { solid: true, radius: .35, worldH: .55 });
+    w.addProp('radio', 9.6, 8.6, { solid: false, radius: .16, worldH: .28 });
+    if (!dark) w.addInteractable('tv', 'tv', 8.2, 4.6, { radius: 2.0, label: 'Televizyon' });
     w.addInteractable('pencere', 'window', 3.5, 6.6, { radius: 1.6, label: 'Pencere' });
     w.addInteractable('pencere2', 'window', 7.6, 8.5, { radius: 1.5, label: 'Balkon kapısı' });
     w.addInteractable('aile_foto', 'doc', 9.2, 7.6, { radius: 1.4, label: 'Aile fotoğrafı', data: 'p1' });
 
     // ---- mutfak ----
-    w.addLight(21.5, 6, 8, 1.15);
+    w.addLight(21.5, 6, 8, dark ? .10 : .92);
     w.addProp('counter', 19.4, 4.2, { solid: true, radius: .66, worldH: .95 });
     w.addProp('fridge', 25.2, 5.2, { solid: true, radius: .45, worldH: 1.9 });
     w.addProp('table', 20.4, 8.2, { solid: true, radius: .6, worldH: .55 });
     w.addProp('plant', 17.6, 4.2, { solid: true, radius: .28, worldH: 1.1 });
-    if (!siege) w.addInteractable('anne', 'anne', 23.2, 8.4, { radius: 1.9, label: 'Annem' });
+    w.addProp('shelf', 17.6, 8.6, { solid: true, radius: .45, worldH: 1.5 });
+    w.addProp('crate', 24.6, 8.6, { solid: true, radius: .35, worldH: .55 });
+    if (!siege && !dark) w.addInteractable('anne', 'anne', 23.2, 8.4, { radius: 1.9, label: 'Annem' });
+    if (dark) w.addInteractable('mum', 'doc', 19.6, 5.2, { radius: 1.5, label: 'Mutfak çekmecesi', data: 'p2c' });
     w.addInteractable('buzdolabi', 'fridge', 25.2, 6.6, { radius: 1.5, label: 'Buzdolabı' });
 
     // ---- ebeveyn odası ----
-    w.addLight(21.5, 15, 7, .9);
+    w.addLight(21.5, 15, 7, dark ? .07 : .72);
     w.addProp('bed', 19.4, 13.4, { solid: true, radius: .85, worldH: .85 });
     w.addProp('wardrobe', 25.2, 18.4, { solid: true, radius: .45, worldH: 2.0 });
     w.addProp('plant', 17.6, 19.2, { solid: true, radius: .3, worldH: 1.1 });
+    w.addProp('lamp', 25.0, 12.6, { solid: false, radius: .12, worldH: 1.5 });
+    w.addProp('shelf', 23.0, 12.2, { solid: true, radius: .45, worldH: 1.4 });
 
     // ---- oda ----
-    w.addLight(6.6, 16.5, 6.5, .85);
+    w.addLight(6.6, 16.5, 6.5, dark ? .26 : .70);
     w.addProp('bed', 4.6, 18.6, { solid: true, radius: .85, worldH: .85 });
     w.addProp('wardrobe', 9.2, 19.4, { solid: true, radius: .45, worldH: 2.0 });
     w.addProp('table', 7.4, 13.4, { solid: true, radius: .55, worldH: .55 });
+    w.addProp('shelf', 3.6, 12.6, { solid: true, radius: .45, worldH: 1.4 });
+    w.addProp('teddy', 5.6, 19.4, { solid: false, radius: .12, worldH: .35 });
     w.addInteractable('telefon', 'phone', 7.4, 12.6, { radius: 1.4, label: 'Telefonun' });
 
     // ---- hol ----
-    w.addLight(13.6, 6, 6, .8);
-    w.addLight(13.6, 12, 6, .75);
-    w.addLight(13.6, 18, 6, .7);
+    w.addLight(13.6, 6, 6, dark ? .14 : .62);
+    w.addLight(13.6, 12, 6, dark ? .12 : .58);
+    w.addLight(13.6, 18, 6, dark ? .12 : .55);
     w.addProp('plant', 12.6, 4.2, { solid: true, radius: .26, worldH: 1.05 });
+    w.addProp('shelf', 15.3, 19.3, { solid: true, radius: .45, worldH: 1.5 });
+    w.addProp('table', 12.7, 16.6, { solid: true, radius: .5, worldH: .8 });
+    w.addProp('lamp', 12.6, 8.6, { solid: false, radius: .12, worldH: 1.85 });
     w.addInteractable('ev_exit', 'exit', 14, 19.6, { radius: 1.8, label: 'Daire kapısı' });
 
     if (siege) {
@@ -1080,14 +1106,23 @@
       w.addInteractable('ada', 'ada', 7.4, 7.6, { radius: 2.0, label: 'Kardeşin Ada' });
       w.addInteractable('baba_ceket', 'doc', 14.6, 12.4, { radius: 1.5, label: 'Babanın ceketi', data: 'p2b' });
       w.addTrigger('salon', 7, 6.5, 4.5, { once: true });
+    } else if (dark) {
+      w.addInteractable('anne', 'anne', 4.8, 6.2, { radius: 1.8, label: 'Annem' });
+      w.addInteractable('ada', 'ada', 7.2, 5.2, { radius: 1.8, label: 'Kardeşin Ada' });
+      w.addInteractable('baba', 'baba', 9.2, 7.4, { radius: 1.8, label: 'Baban' });
+      w.addInteractable('kapi_ses', 'exit', 14, 16.2, { radius: 1.6, label: 'Koridor kapısı' });
+      w.addInteractable('sigorta', 'exit', 15.4, 4.4, { radius: 1.5, label: 'Elektrik panosu' });
+      w.addTrigger('salon', 7, 6.2, 4.2, { once: true });
     } else {
       w.addInteractable('baba', 'baba', 7.4, 3.8, { radius: 1.8, label: 'Baban' });
       w.addInteractable('ada', 'ada', 4.9, 6.4, { radius: 1.8, label: 'Kardeşin Ada' });
     }
 
-    w.start = siege
-      ? { x: 7.4, y: 17.4, a: -Math.PI / 2 }
-      : { x: 12.8, y: 6.2, a: Math.PI };
+    w.start = dark
+      ? { x: 6.4, y: 17.4, a: -Math.PI / 2 }
+      : siege
+        ? { x: 7.4, y: 17.4, a: -Math.PI / 2 }
+        : { x: 14.2, y: 12.6, a: -Math.PI / 2 };
     w.finalize();
     return w;
   }
@@ -1288,7 +1323,7 @@
   }
 
   const BUILDERS = {
-    ev: () => buildEv(false), ev2: () => buildEv(true),
+    ev: () => buildEv('normal'), ev2: () => buildEv('siege'), ev_gece: () => buildEv('dark'),
     mahalle: buildMahalle, sahil: buildSahil,
     karakoy: buildKarakoy, galata: buildGalata, kizkulesi: buildKizkulesi
   };

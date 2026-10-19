@@ -788,9 +788,9 @@
 
   function homeWall(ctx, s) {
     const rng = new U.RNG(773);
-    ctx.fillStyle = '#b7ae9c'; ctx.fillRect(0, 0, s, s);
-    blotches(ctx, s, rng, '#a89d89', 14, 8, 34, 0.16);
-    blotches(ctx, s, rng, '#c8c1b0', 12, 7, 30, 0.14);
+    ctx.fillStyle = '#9c917c'; ctx.fillRect(0, 0, s, s);
+    blotches(ctx, s, rng, '#8d8370', 14, 8, 34, 0.16);
+    blotches(ctx, s, rng, '#b0a793', 12, 7, 30, 0.14);
     // picture rail
     ctx.fillStyle = 'rgba(96,80,62,.35)'; ctx.fillRect(0, s * .28, s, 2);
     // skirting board

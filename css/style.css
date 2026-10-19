@@ -409,18 +409,21 @@ kbd{font-family:var(--font-cond);font-size:10px;letter-spacing:.06em;border:1px 
 
 
 /* ---------- cinematic visual stage (TV / street cam) ---------- */
-#screen-cinematic.has-visual{justify-content:flex-start}
-#screen-cinematic.has-visual .cine-wrap{max-width:42vw;margin-left:4vw}
-.cine-stage{position:absolute;right:4vw;top:50%;transform:translateY(-50%);width:min(46vw,640px);aspect-ratio:16/9;z-index:6;border:1px solid rgba(255,255,255,.10);background:#04070a;box-shadow:0 0 0 1px rgba(0,0,0,.6),0 30px 90px rgba(0,0,0,.75);overflow:hidden}
-.cine-stage canvas{width:100%;height:100%;display:block;filter:saturate(.92) contrast(1.04)}
-.cine-stage.hidden{display:none}
-.cine-stage::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(0,0,0,.55) 100%)}
-.cine-scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);opacity:.35;mix-blend-mode:multiply}
-.cine-live{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:7px;font-family:var(--font-cond);font-size:10px;letter-spacing:.22em;color:#f3e8e6;background:rgba(140,18,16,.85);padding:4px 9px;z-index:3}
-.cine-live i{width:6px;height:6px;border-radius:50%;background:#ff5b4d;box-shadow:0 0 10px #ff5b4d;animation:cineLive 1.4s infinite}
-@keyframes cineLive{0%,100%{opacity:1}50%{opacity:.25}}
+/* ---- cinematic stage (procedural shot canvas) ---- */
+.cine-stage{position:absolute;right:3.2vw;top:50%;transform:translateY(-50%);width:min(44vw,620px);aspect-ratio:16/9;
+  border:1px solid rgba(255,255,255,.10);background:#03060a;z-index:6;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.7),0 34px 90px rgba(0,0,0,.75);opacity:0;pointer-events:none;transition:opacity .5s}
+#screen-cinematic.has-shot .cine-stage{opacity:1}
+.cine-stage canvas{filter:saturate(.94) contrast(1.03)}
+.cine-stage canvas{width:100%;height:100%;display:block}
+.cine-stage::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,transparent 52%,rgba(0,0,0,.55) 100%)}
+.cine-stage-tag{position:absolute;left:10px;top:9px;font-family:var(--font-cond,Inter,Arial);font-size:9px;letter-spacing:.2em;
+  color:rgba(240,244,248,.72);background:rgba(6,10,14,.7);border:1px solid rgba(255,255,255,.12);padding:3px 7px}
+#screen-cinematic.has-shot .cine-wrap{max-width:min(46vw,560px);margin-right:auto;margin-left:5vw}
+#screen-cinematic.has-shot .cine-bg{opacity:.22}
 @media (max-width:900px){
-  #screen-cinematic.has-visual .cine-wrap{max-width:88vw;margin-left:0}
-  .cine-stage{right:50%;transform:translate(50%,-50%);width:86vw;opacity:.35;z-index:1}
-  #screen-cinematic.has-visual .cine-wrap{position:relative;z-index:8}
+  .cine-stage{position:relative;right:auto;top:auto;transform:none;width:86vw;max-width:520px;margin:0 auto 18px}
+  #screen-cinematic.has-shot .cine-wrap{max-width:88vw;margin-left:0}
+  #screen-cinematic.has-shot{flex-direction:column;justify-content:flex-start;padding-top:6vh;overflow-y:auto}
 }

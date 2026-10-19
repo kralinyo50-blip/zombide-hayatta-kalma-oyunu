@@ -64,7 +64,7 @@
   };
 
   const $ = U.$;
-  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'ch1', 'ch2', 'ch3'];
+  const CHAPTERS = ['p1', 'p2', 'p3', 'p4', 'p5', 'ch1', 'ch2', 'ch3'];
 
   /* ============================================================
      SCREENS
@@ -125,6 +125,10 @@
       if (this.mode === 'cinematic') {
         Screens.close('screen-dialogue');
         Screens.open('screen-cinematic');
+        const shot = opts.shot || opts.visual || null;
+        const cw = document.getElementById('screen-cinematic');
+        if (cw) cw.classList.toggle('has-shot', !!shot);
+        if (global.CINE) { CINE.init(); if (shot) CINE.start(shot); else CINE.stop(); }
         const cl = document.getElementById('cine-lines');
         if (cl) cl.innerHTML = '';
         const cc = document.getElementById('cine-choices');
@@ -138,7 +142,6 @@
           bg.style.backgroundImage = opts.bg ? `url(${opts.bg})` : 'none';
           bg.style.opacity = opts.bg ? .55 : 0;
         }
-        if (global.CINE) CINE.set(opts.visual || null);
         const nextBtn = document.getElementById('cine-next');
         if (nextBtn) nextBtn.classList.add('hidden');
       } else {
@@ -224,7 +227,7 @@
 
     /* ---------- cinematic ---------- */
     showCineLine(node) {
-      if (node.visual && global.CINE) CINE.set(node.visual);
+      if ((node.shot || node.visual) && global.CINE) CINE.start(node.shot || node.visual);
       const wrap = document.getElementById('cine-lines');
       if (!wrap) return;
       const el = document.createElement('div');
@@ -384,6 +387,7 @@
       sky: 'night',
       ambience: 'indoor',
       intro: 'intro',
+      introShot: 'home',
       triggers: {},
       interactions: {
         anne: { event: 'anne', doneFlag: 'p1_anne', repeat: ['ANNEM', 'Ye bakalım. Sonra babanla konuş.'] },
@@ -406,10 +410,43 @@
       ]
     },
     p2: {
+      world: 'ev_gece',
+      sky: 'night',
+      ambience: 'indoor',
+      intro: 'intro',
+      triggers: { salon: 'aile' },
+      interactions: {
+        anne: { event: 'anne_gece' },
+        ada: { event: 'ada_gece' },
+        baba: { event: 'baba_gece', doneFlag: 'p2_silah', repeat: ['BABAM', 'Kapıyı dinle. Sadece dinle.'] },
+        mum: { doc: 'p2c', flag: 'read_p2c' },
+        sigorta: { event: 'sigorta', doneFlag: 'p2_sigorta', repeat: ['SEN', 'Şehirde elektrik yok. Sigorta değil.'] },
+        kapi_ses: { event: 'kapi_ses', doneFlag: 'p2_kapi', repeat: ['SEN', 'Koridor hâlâ sessiz. Ama... nefes gibi.'] },
+        pencere: { event: 'pencere_gece' },
+        pencere2: { event: 'balkon', require: (g) => !!g.flags.p2_kapi, gateText: 'Önce koridordaki sesi kontrol et.' },
+        telefon: { event: 'telefon_gece' },
+        buzdolabi: { doc: 'p1b', flag: 'read_doc_p1b' },
+        aile_foto: { doc: 'p1', flag: 'read_doc_p1' },
+        ev_exit: {
+          event: 'son',
+          require: (g) => !!g.flags.p2_balkon && g.zombies.every(z => z.dead),
+          gateText: 'Önce dairedeki sesi temizle.'
+        }
+      },
+      objective: { text: 'Salona git', sub: 'Cihangir • 0. Gün, 23:14', target: [7, 6] },
+      objectives: [
+        { when: (g) => !!g.flags.p2_salon, text: 'Koridordaki sesi kontrol et', sub: 'Cihangir • 0. Gün, 23:19', target: [14, 16.2] },
+        { when: (g) => !!g.flags.p2_kapi, text: 'Balkon kapısını kontrol et', sub: 'Cihangir • 0. Gün, 23:31', target: [7.6, 8.5] },
+        { when: (g) => !!g.flags.p2_balkon && g.zombies.some(z => !z.dead), text: 'Daireyi temizle', sub: 'Cihangir • 0. Gün, 23:41', target: [7, 6] },
+        { when: (g) => !!g.flags.p2_balkon && g.zombies.every(z => z.dead), text: 'Annene ve Ada\'ya dön', sub: 'Cihangir • 0. Gün, 23:52', target: [5.4, 6.4] }
+      ]
+    },
+    p3: {
       world: 'ev2',
       sky: 'dawn',
       ambience: 'indoor',
       intro: 'intro',
+      introShot: 'stair',
       triggers: { salon: 'salon' },
       interactions: {
         anne: { event: 'anne2' },
@@ -419,17 +456,21 @@
         buzdolabi: { doc: 'p1b', flag: 'read_doc_p1b' },
         ev_exit: {
           event: 'cikis2',
-          require: (g) => !!g.flags.p2_salon && g.zombies.every(z => z.dead),
+          require: (g) => !!g.flags.p3_salon && g.zombies.every(z => z.dead),
           gateText: 'Önce dairedeki sesi temizle.'
         }
       },
-      objective: { text: 'Salona git', sub: 'Cihangir • 1. Gün, 06:44', target: [7, 6] }
+      objective: { text: 'Salona git', sub: 'Cihangir • 1. Gün, 06:44', target: [7, 6] },
+      objectives: [
+        { when: (g) => !!g.flags.p3_salon, text: 'Daireyi temizle', sub: 'Cihangir • 1. Gün, 06:52', target: [13.8, 18.4] }
+      ]
     },
-    p3: {
+    p4: {
       world: 'mahalle',
       sky: 'dawn',
       ambience: 'street',
       intro: 'intro',
+      introShot: 'street',
       triggers: {
         mah_cikis: 'cikis',
         mah_cadde: 'cadde',
@@ -439,7 +480,7 @@
         mah_apartman_doc: { doc: 'p2', flag: 'read_doc_p2' },
         mah_meds: {
           event: 'ilac', doneFlag: 'p3_meds',
-          require: (g) => !!(g.world.doors.get('mah_pharmacy') && g.world.doors.get('mah_pharmacy').open),
+          require: (g) => { const d = g.world.doors.get('mah_pharmacy'); return !!(d && d.open); },
           gateText: 'Eczanenin kapısı kapalı.'
         },
         mah_radio: { event: 'radyo', doneFlag: 'heard_leyla' },
@@ -451,11 +492,12 @@
         { when: (g) => !!g.flags.p3_ilac, text: 'Camii avlusundaki minibüse ulaş', sub: 'Cihangir • 1. Gün, 08:31', target: [29.6, 47.4] }
       ]
     },
-    p4: {
+    p5: {
       world: 'sahil',
       sky: 'dawn',
       ambience: 'street',
       intro: 'intro',
+      introShot: 'coast',
       triggers: { sahil_start: 'varis', sahil_gate_t: 'kapi', sahil_end: 'son' },
       interactions: {
         sahil_doc: { doc: 'p4', flag: 'read_doc_p4' },
@@ -891,8 +933,9 @@
     G.mode = 'cine';
     DLG.start(STORY.opening, {
       cinematic: true,
+      shot: 'bogaz',
       title: 'KARANLIK BOĞAZ',
-      kicker: 'PROLOG — 09. GÜN, 22:41',
+      kicker: 'CİHANGİR — 0. GÜN, 20:55',
       onEnd: () => {
         G.startChapter('p1');
       }
@@ -1012,7 +1055,7 @@
     G.mode = cfg.introCinematic ? 'cine' : 'dialogue';
     DLG.start(nodes, {
       cinematic: !!cfg.introCinematic,
-      visual: cfg.introVisual || null,
+      shot: cfg.introShot || cfg.introVisual || null,
       title: story.title,
       kicker: story.objectiveSub,
       onEnd: () => {
