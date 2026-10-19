@@ -756,17 +756,19 @@
      INIT
      ============================================================ */
   G.init = function () {
+    // ?no3d parametresiyle 3D'yi tamamen kapat — siyah ekran testi için
+    if (location.search.includes('no3d')) { if (typeof ENGINE3D!=='undefined') ENGINE3D.useFallback=true; }
     TEX.init();
     SPR.init();
     if (global.CINE) CINE.init();
 
     G.view = document.getElementById('view');
-    G.vctx = G.view.getContext('2d', { alpha: false });
+    try { G.vctx = G.view.getContext('2d', { alpha: false }); } catch(e){ G.vctx=null; console.error('vctx fail',e); }
     RAY.init();
     RAY.resize(window.innerWidth, window.innerHeight, G.settings.quality);
 
     if (global.CINE3D) { try { CINE3D.init(); CINE3D.compat(); } catch(e){ console.warn('CINE3D fail',e);} }
-    if (typeof ENGINE3D !== 'undefined') { try { ENGINE3D.init(); } catch(e){ console.warn('ENGINE3D init fail',e); } }
+    if (typeof ENGINE3D !== 'undefined') { try { if(!location.search.includes('no3d')) ENGINE3D.init(); } catch(e){ console.warn('ENGINE3D init fail',e); } }
 
     G.resize();
 

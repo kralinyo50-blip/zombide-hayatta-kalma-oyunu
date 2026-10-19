@@ -9,7 +9,7 @@
 <meta name="description" content="İstanbul'da geçen, tam 3D FPS, seçimlerinle hikâyeyi yönlendirdiğin zombi hayatta kalma oyunu — gerçek 3D haritalar, 3D ara sahneler.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23090d12'/><path d='M32 8 L40 30 L56 40 L40 44 L36 58 L28 44 L8 40 L24 30 Z' fill='%23d8453e'/></svg>">
 <link rel="stylesheet" href="css/style.css?v=5">
-<script>window.__gameErrors=[];window.addEventListener('error',function(e){window.__gameErrors.push(e.message+' @ '+(e.filename||'')+':'+(e.lineno||''));var d=document.getElementById('err-overlay');if(!d){d=document.createElement('div');d.id='err-overlay';d.style.cssText='position:fixed;bottom:10px;left:10px;right:10px;z-index:99999;background:rgba(20,0,0,.9);color:#ffb4a0;border:1px solid #d8453e;padding:10px 14px;font:12px/1.4 monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';document.body.appendChild(d);}d.textContent='HATA: '+window.__gameErrors.join('\n');});</script>
+<script>window.__gameErrors=[];window.addEventListener('error',function(e){window.__gameErrors.push(e.message+' @ '+(e.filename||'')+':'+(e.lineno||''));var d=document.getElementById('err-overlay');if(!d){d=document.createElement('div');d.id='err-overlay';d.style.cssText='position:fixed;bottom:10px;left:10px;right:10px;z-index:99999;background:rgba(20,0,0,.9);color:#ffb4a0;border:1px solid #d8453e;padding:10px 14px;font:12px/1.4 monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';document.body.appendChild(d);}d.textContent='HATA: '+window.__gameErrors.join('\n');});window.addEventListener('DOMContentLoaded',function(){setTimeout(function(){var t=document.getElementById('title-screen');var v=document.getElementById('view');var tc=document.getElementById('title-canvas');var dbg=document.getElementById('dbg');if(dbg)dbg.textContent='DBG: title-screen '+(t?t.className:'yok')+' | view '+(v?'var':'yok')+' | title-canvas '+(tc?tc.width+'x'+tc.height:'yok')+' | THREE '+(typeof THREE!==\'undefined\'?'var':'YOK')+' | ENGINE3D '+(typeof ENGINE3D!==\'undefined'?(ENGINE3D.initialized?'hazır':'init yok'):'yok');},800);});</script>
 </head>
 <body>
 <div id="app">
@@ -111,6 +111,7 @@
       <span class="tb-center">HARİTA GERÇEK İSTANBUL COĞRAFYASI ESAS ALINARAK ÇİZİLMİŞTİR · GOOGLE MAPS'TEN ESİNLENİLMİŞTİR</span>
       <span id="version-tag">v5.0 · TAM 3D · PROLOG + 19 BÖLÜM · 4 SON · GERÇEK 3D HARİTALAR</span>
     </div>
+    <div id="dbg" style="position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:99998;background:rgba(0,0,0,.7);color:#8af0a0;border:1px solid rgba(255,255,255,.2);padding:6px 10px;font:11px monospace;border-radius:6px;max-width:90vw">yükleniyor...</div>
   </section>
 
   <!-- ======== SİNEMATİK / PROLOG ======== -->
