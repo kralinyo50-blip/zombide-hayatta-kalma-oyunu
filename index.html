@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>KARANLIK BOĞAZ — İstanbul'da Hayatta Kalma</title>
+<meta name="description" content="İstanbul'da geçen, 2.5D FPS görünümlü, seçimlerinle hikâyeyi yönlendirdiğin zombi hayatta kalma oyunu.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23090d12'/><path d='M32 8 L40 30 L56 40 L40 44 L36 58 L28 44 L8 40 L24 30 Z' fill='%23d8453e'/></svg>">
+<link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+<div id="app">
+
+  <!-- ======== OYUN EKRANI ======== -->
+  <canvas id="view" width="1600" height="900" aria-label="Oyun görüntüsü"></canvas>
+  <div id="hud" class="hidden" aria-hidden="true">
+    <div id="damage-vignette"></div>
+    <div id="heal-flash"></div>
+    <div id="rain-overlay"></div>
+
+    <div class="hud-objective">
+      <div class="obj-kicker"><span class="live-dot"></span><span id="chapter-tag">BÖLÜM I</span></div>
+      <div class="obj-title" id="objective-title">Annenle konuş</div>
+      <div class="obj-sub" id="objective-sub">Cihangir • 0. Gün, 21:12</div>
+    </div>
+
+    <div class="hud-minimap">
+      <div class="mm-head"><span id="mm-place">CİHANGİR</span><span id="mm-compass">K</span></div>
+      <canvas id="minimap" width="320" height="320"></canvas>
+      <div class="mm-foot"><span id="mm-route">GALATA KULESİ</span><span id="mm-dist">—</span></div>
+    </div>
+
+    <div class="hud-vitals">
+      <div class="vital-row">
+        <span class="vital-icon">♥</span>
+        <div class="bar"><div class="fill hp-fill" id="hp-fill"></div><span id="hp-text">100</span></div>
+      </div>
+      <div class="vital-row stamina-row">
+        <span class="vital-icon">⚡</span>
+        <div class="bar"><div class="fill stam-fill" id="stam-fill"></div></div>
+      </div>
+      <div class="vital-meta"><span id="armor-tag" class="hidden">Yelek</span><span id="charm-tag" class="hidden">Mavi Boncuk</span></div>
+    </div>
+
+    <div class="hud-weapon">
+      <div class="wp-name" id="weapon-name">TABANCA</div>
+      <div class="wp-ammo"><span id="ammo-mag">12</span><span class="wp-slash">/</span><span id="ammo-reserve">48</span></div>
+      <div class="wp-hint">R — ŞARJÖR &nbsp;·&nbsp; Q — SİLAH</div>
+    </div>
+
+    <div id="crosshair"><span></span></div>
+    <div id="hitmarker"></div>
+    <div id="prompt" class="hidden"><b>E</b><span id="prompt-text">Etkileşim</span></div>
+    <div id="subtitle" class="hidden"></div>
+    <div id="toasts"></div>
+
+    <div id="boss-bar" class="hidden">
+      <div class="boss-name" id="boss-name">KIZIL ANA</div>
+      <div class="boss-track"><div class="boss-fill" id="boss-fill"></div></div>
+    </div>
+
+    <div class="hud-keys">
+      <span><b>WASD</b> hareket</span><span><b>FARE</b> nişan</span><span><b>E</b> etkileşim</span><span><b>TAB</b> harita</span>
+    </div>
+  </div>
+
+  <!-- ======== ANA MENÜ ======== -->
+  <section id="title-screen" class="screen active">
+    <canvas id="title-canvas" width="1600" height="900"></canvas>
+    <div class="title-grain"></div>
+    <div class="title-top">
+      <div class="brand-small"><span class="brand-dot"></span> BOĞAZ PROTOKOLÜ <span class="brand-slash">/</span> 0. GÜN · CİHANGİR</div>
+      <div class="title-top-right">
+        <button class="ghost-btn" id="btn-menu-map">İSTANBUL HARİTASI</button>
+        <button class="icon-btn" id="btn-sound" title="Ses">♪</button>
+      </div>
+    </div>
+    <div class="title-wrap">
+      <div class="title-left">
+        <div class="title-kicker">İSTANBUL'DA BİR HAYATTA KALMA HİKÂYESİ</div>
+        <h1 class="game-title"><span>KARANLIK</span><span class="accent">BOĞAZ</span></h1>
+        <p class="title-lead">Bir cumartesi akşamı. Cihangir'de bir daire, bir aile ve televizyonda dönen son dakika haberi.<br>Her şeyin son sıradan gecesi... ve sonrası.</p>
+        <div class="title-actions">
+          <button class="btn primary" id="btn-start"><span>YENİ OYUN</span><small>Hikâyeye başla</small></button>
+          <button class="btn" id="btn-continue"><span>DEVAM ET</span><small id="continue-sub">Kayıt yok</small></button>
+          <button class="btn" id="btn-howto"><span>NASIL OYNANIR?</span><small>Kontroller</small></button>
+        </div>
+        <div class="title-meta">
+          <span>2.5D FPS</span><span>SEÇİMLER HİKÂYEYİ DEĞİŞTİRİR</span><span id="ending-count">SONLAR 0/4</span>
+        </div>
+      </div>
+      <div class="title-right">
+        <div class="district-card">
+          <div class="dc-head"><span class="dc-pin">◉</span> CİHANGİR, İSTANBUL <span class="dc-live">CANLI</span></div>
+          <div class="dc-grid">
+            <div><small>SAAT</small><b>21:12</b></div>
+            <div><small>SICAKLIK</small><b>18°</b></div>
+            <div><small>GÖRÜŞ</small><b>60 m</b></div>
+            <div><small>DURUM</small><b class="danger">SON DAKİKA</b></div>
+          </div>
+          <div class="dc-line"></div>
+          <div class="dc-note">"İstanbul Valiliği... kentte olağanüstü hâl ilan etti. Evlerinizde kalın."<span>— Haber 24, canlı yayın</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="title-bottom">
+      <span>© 2026 BOĞAZ PROTOKOLÜ</span>
+      <span class="tb-center">HARİTA GERÇEK İSTANBUL COĞRAFYASI ESAS ALINARAK ÇİZİLMİŞTİR · GOOGLE MAPS'TEN ESİNLENİLMİŞTİR</span>
+      <span id="version-tag">v4.0 · PROLOG + 19 BÖLÜM · 4 SON</span>
+    </div>
+  </section>
+
+  <!-- ======== SİNEMATİK / PROLOG ======== -->
+  <section id="screen-cinematic" class="screen overlay-screen">
+    <div class="cine-bars"></div>
+    <div class="cine-bg" id="cine-bg"></div>
+    <div class="cine-stage" id="cine-stage">
+      <canvas id="cine-canvas" width="960" height="540"></canvas>
+      <div class="cine-live" id="cine-live"><i></i><span>CANLI</span></div>
+      <div class="cine-scan"></div>
+    </div>
+    <div class="cine-wrap">
+      <div class="cine-kicker" id="cine-kicker">KAYIT 001 — CİHANGİR</div>
+      <h2 class="cine-title" id="cine-title"></h2>
+      <div class="cine-lines" id="cine-lines"></div>
+      <div class="cine-choices" id="cine-choices"></div>
+      <button class="cine-next" id="cine-next">DEVAM <span>›</span></button>
+    </div>
+    <div class="cine-footer">BOĞAZ PROTOKOLÜ — KARANTİNA GÜNLÜĞÜ</div>
+  </section>
+
+  <!-- ======== DİYALOG ======== -->
+  <section id="screen-dialogue" class="screen overlay-screen">
+    <div class="dialogue-stage">
+      <div class="dlg-portrait-wrap">
+        <canvas id="dlg-portrait" width="220" height="220"></canvas>
+        <div class="dlg-portrait-glow"></div>
+      </div>
+      <div class="dlg-panel">
+        <div class="dlg-head">
+          <span class="dlg-name" id="dlg-name">DR. LEYLA</span>
+          <span class="dlg-role" id="dlg-role">RADYO · 104.6 MHz</span>
+        </div>
+        <div class="dlg-text" id="dlg-text"></div>
+        <div class="dlg-choices" id="dlg-choices"></div>
+        <div class="dlg-foot"><span id="dlg-tip">Devam etmek için tıkla / BOŞLUK</span><span class="dlg-num" id="dlg-count">1/1</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== BÖLÜM KARTI ======== -->
+  <section id="screen-chapter" class="screen overlay-screen blackout">
+    <div class="chapter-card">
+      <div class="chapter-line"></div>
+      <div class="ch-kicker" id="ch-kicker">PROLOG</div>
+      <h2 class="ch-title" id="ch-title">EV</h2>
+      <div class="ch-sub" id="ch-sub">Cihangir'de bir cumartesi akşamı.</div>
+      <div class="ch-objective"><span>HEDEF</span><b id="ch-objective">Annenle konuş.</b></div>
+      <div class="ch-loading"><i></i><span>BÖLGE YÜKLENİYOR</span></div>
+    </div>
+  </section>
+
+  <!-- ======== DURAKLAT ======== -->
+  <section id="screen-pause" class="screen overlay-screen">
+    <div class="menu-card">
+      <div class="menu-kicker">BOĞAZ PROTOKOLÜ</div>
+      <h2 class="menu-title">DURAKLATILDI</h2>
+      <div class="menu-buttons">
+        <button class="menu-btn" id="btn-resume"><b>DEVAM ET</b><span>Esc</span></button>
+        <button class="menu-btn" id="btn-pause-map"><b>İSTANBUL HARİTASI</b><span>Tab</span></button>
+        <button class="menu-btn" id="btn-pause-restart"><b>BÖLÜMÜ YENİDEN BAŞLAT</b><span>⟳</span></button>
+        <button class="menu-btn" id="btn-pause-help"><b>KONTROLLER</b><span>?</span></button>
+        <button class="menu-btn" id="btn-pause-menu"><b>ANA MENÜ</b><span>⌂</span></button>
+      </div>
+      <div class="menu-side">
+        <div class="ms-kicker">SEÇİMLER</div>
+        <div id="pause-flags" class="ms-flags">Henüz bir seçim yapmadın.</div>
+        <div class="ms-kicker" style="margin-top:18px">İSTATİSTİK</div>
+        <div class="ms-stats" id="pause-stats"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== ÖLÜM ======== -->
+  <section id="screen-death" class="screen overlay-screen">
+    <div class="death-wrap">
+      <div class="death-kicker">SİNYAL KAYBI</div>
+      <h2 class="death-title">SİS SENİ ALDI</h2>
+      <p class="death-text" id="death-text">Cihangir'in sokakları bir ismi daha unuttu.</p>
+      <div class="death-actions">
+        <button class="btn primary" id="btn-retry"><span>BÖLÜMÜ TEKRAR DENE</span><small>Seçimlerin korunur</small></button>
+        <button class="btn" id="btn-death-menu"><span>ANA MENÜ</span><small>Kayda dön</small></button>
+      </div>
+      <div class="death-quote">"Şehir ölmedi. Sadece sakinlerini değiştirdi."</div>
+    </div>
+  </section>
+
+  <!-- ======== FİNAL ======== -->
+  <section id="screen-ending" class="screen overlay-screen">
+    <div class="ending-bg" id="ending-bg"></div>
+    <div class="ending-wrap">
+      <div class="ending-kicker" id="ending-kicker">FİNAL — 4 / 4</div>
+      <h2 class="ending-title" id="ending-title">ŞAFAK</h2>
+      <div class="ending-sub" id="ending-sub">Boğaz'a güneş doğuyor.</div>
+      <div class="ending-text" id="ending-text"></div>
+      <div class="ending-stats" id="ending-stats"></div>
+      <div class="ending-actions">
+        <button class="btn primary" id="btn-ending-again"><span>YENİDEN OYNA</span><small>Başka bir yol dene</small></button>
+        <button class="btn" id="btn-ending-menu"><span>ANA MENÜ</span><small>Sonları gör</small></button>
+      </div>
+      <div class="ending-sign">KARANLIK BOĞAZ · İSTANBUL</div>
+    </div>
+  </section>
+
+  <!-- ======== HARİTA ======== -->
+  <section id="screen-map" class="screen overlay-screen map-screen">
+    <div class="map-topbar">
+      <div class="map-brand"><span class="map-pin-logo">◉</span><b>İstanbul</b><span class="map-brand-sub">Operasyon Haritası</span></div>
+      <div class="map-search"><span>⌕</span><input id="map-search" placeholder="İstanbul'da bir yer ara — Galata Kulesi, Kız Kulesi..." autocomplete="off"><span class="map-search-key">ARA</span></div>
+      <button class="map-close" id="btn-map-close">KAPAT ✕</button>
+    </div>
+    <div class="map-canvas-wrap">
+      <canvas id="istanbul-map"></canvas>
+      <div class="map-controls">
+        <button id="map-zoom-in">+</button>
+        <button id="map-zoom-out">−</button>
+        <button id="map-reset" title="Merkeze dön">◎</button>
+      </div>
+      <div class="map-layers">
+        <button class="active" id="map-layer-map">HARİTA</button>
+        <button id="map-layer-sat">UYDU</button>
+      </div>
+      <div class="map-legend">
+        <div><span class="lg-route"></span> Hikâye rotası</div>
+        <div><span class="lg-pin"></span> Kilit nokta</div>
+        <div><span class="lg-now"></span> Şu anki bölge</div>
+      </div>
+      <div class="map-info hidden" id="map-info">
+        <button id="map-info-close">✕</button>
+        <div class="mi-kicker" id="mi-kicker">KİLİT NOKTA</div>
+        <h3 id="mi-title">Galata Kulesi</h3>
+        <div class="mi-meta" id="mi-meta">41.0256° K · 28.9744° D</div>
+        <p id="mi-text"></p>
+      </div>
+      <div class="map-compass">K<span>▲</span></div>
+      <div class="map-scale"><i></i><span>2 km</span></div>
+    </div>
+    <div class="map-bottombar">
+      <span>İSTANBUL · 41.0082° K, 28.9784° D</span>
+      <span class="map-credit">Stilize harita — Google Maps örnek alınarak, gerçek İstanbul coğrafyası üzerine çizilmiştir.</span>
+      <span id="map-chapter-label">PROLOG — EV</span>
+    </div>
+  </section>
+
+  <!-- ======== YARDIM ======== -->
+  <section id="screen-help" class="screen overlay-screen">
+    <div class="help-card">
+      <button class="help-close" id="btn-help-close">✕</button>
+      <div class="menu-kicker">SAHA KILAVUZU</div>
+      <h2 class="menu-title">NASIL HAYATTA KALINIR?</h2>
+      <div class="help-grid">
+        <div class="help-col">
+          <h3>KONTROLLER</h3>
+          <div class="keyrow"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>Hareket</span></div>
+          <div class="keyrow"><kbd>FARE</kbd><span>Etrafa bak / nişan al</span></div>
+          <div class="keyrow"><kbd>← →</kbd><span>Klavyeyle dön</span></div>
+          <div class="keyrow"><kbd>SOL TIK</kbd><span>Ateş et</span></div>
+          <div class="keyrow"><kbd>R</kbd><span>Şarjör değiştir</span></div>
+          <div class="keyrow"><kbd>E</kbd><span>Kapı, eşya, konuşma</span></div>
+          <div class="keyrow"><kbd>SHIFT</kbd><span>Koş (dayanıklılık harcar)</span></div>
+          <div class="keyrow"><kbd>Q</kbd><span>Silah değiştir</span></div>
+          <div class="keyrow"><kbd>V</kbd><span>Yakın dövüş (bıçak)</span></div>
+          <div class="keyrow"><kbd>TAB</kbd><span>İstanbul haritası</span></div>
+          <div class="keyrow"><kbd>ESC</kbd><span>Duraklat</span></div>
+        </div>
+        <div class="help-col">
+          <h3>HAYATTA KALMA</h3>
+          <ul>
+            <li><b>Simit</b> sağlık verir. Medkit daha fazla.</li>
+            <li><b>Mermi</b> kutuları silahlarını doldurur. İsraf etme.</li>
+            <li><b>Koşucular</b> hızlıdır; köşede bekle, kısa seri ateş et.</li>
+            <li><b>Külçe</b> yavaştır ama çok dayanır. Pompalı işe yarar.</li>
+            <li>Yaralıların yanında <b>mavi boncuk</b> bulunur; hasarı azaltır.</li>
+            <li>Kapıları aç kapat; bazı odalarda mühimmat saklı.</li>
+            <li>Her bölüm sonunda hikâye seçimleri seni bekliyor.</li>
+          </ul>
+          <div class="help-note">İpucu: Haritada sarı rota hikâyenin gidişatını gösterir. Kırmızı iğneler bölüm hedefleridir.</div>
+          <div class="help-note">Fare kilidi tarayıcıda kapalıysa imleci ekranın kenarına götürerek dön; imleci merkeze getirince bakış durur.</div>
+        </div>
+      </div>
+      <div class="help-foot">İSTANBUL'DA HAYATTA KALMAK İÇİN TEK BİR KURAL VAR: <b>SEÇİM YAP.</b></div>
+    </div>
+  </section>
+
+  <!-- ======== NOT / BELGE ======== -->
+  <section id="screen-doc" class="screen overlay-screen">
+    <div class="doc-paper">
+      <div class="doc-head"><span id="doc-type">BULUNAN BELGE</span><span>BOĞAZ PROTOKOLÜ</span></div>
+      <h3 id="doc-title">ASKERİ NOT</h3>
+      <div class="doc-body" id="doc-body"></div>
+      <button class="doc-close" id="btn-doc-close">KAPAT</button>
+    </div>
+  </section>
+
+  <!-- ======== DOKUNMATİK ======== -->
+  <div id="touch-controls" class="hidden">
+    <div id="touch-stick"><i></i></div>
+    <div id="touch-look"></div>
+    <button id="touch-fire">ATEŞ</button>
+    <button id="touch-use">E</button>
+    <button id="touch-swap">Q</button>
+  </div>
+
+  <div id="rotate-hint" class="hidden"><div class="rot-icon">⟳</div><b>EN İYİ DENEYİM İÇİN TELEFONUNU YATAY ÇEVİR</b></div>
+</div>
+
+<script src="js/util.js?v=4"></script>
+<script src="js/textures.js?v=4"></script>
+<script src="js/sprites.js?v=4"></script>
+<script src="js/audio.js?v=4"></script>
+<script src="js/raycaster.js?v=4"></script>
+<script src="js/world.js?v=4"></script>
+<script src="js/cine.js?v=4"></script>
+<script src="js/story.js?v=4"></script>
+<script src="js/istmap.js?v=4"></script>
+<script src="js/game.js?v=4"></script>
+<script src="js/main.js?v=4"></script>
+</body>
+</html>
